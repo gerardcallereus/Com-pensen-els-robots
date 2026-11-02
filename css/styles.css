@@ -1,0 +1,1280 @@
+/* ============================================================================
+   ESTÈTICA MODERNA, LLUMINOSA I CLARA: COM PENSEN ELS ROBOTS?
+   Paleta: Fons Blanc i Gris Perla Clar (#ffffff, #f8fafc), Blau Elèctric (#2563eb),
+           Verd Maragda (#10b981), Ambre (#f59e0b), Vermell Corall (#ef4444).
+   Tipografia: 'Plus Jakarta Sans' (Neta, llegible, professional i didàctica)
+   ============================================================================ */
+
+:root {
+    --primary: #2563eb;
+    --primary-light: #eff6ff;
+    --primary-dark: #1d4ed8;
+    --primary-border: #bfdbfe;
+    
+    --accent: #f59e0b;
+    --accent-light: #fffbeb;
+    --accent-dark: #d97706;
+    --accent-border: #fde68a;
+
+    --success: #10b981;
+    --success-light: #ecfdf5;
+    --success-dark: #059669;
+    --success-border: #a7f3d0;
+
+    --danger: #ef4444;
+    --danger-light: #fef2f2;
+    --danger-dark: #dc2626;
+    --danger-border: #fecaca;
+
+    --purple: #8b5cf6;
+    --purple-light: #f5f3ff;
+    --purple-dark: #6d28d9;
+    --purple-border: #ddd6fe;
+
+    --cyan: #0284c7;
+    --cyan-light: #f0f9ff;
+    --cyan-dark: #0369a1;
+    --cyan-border: #bae6fd;
+
+    /* FONS I SUPERFÍCIES CLARÍSSIMES */
+    --bg: #f8fafc;
+    --bg-surface: #ffffff;
+    --card-bg: #ffffff;
+    --card-sub: #f1f5f9;
+    --border: #e2e8f0;
+    --border-subtle: #edf2f7;
+    --border-glow: #3b82f6;
+
+    /* TEXT ALTA LLEGIBILITAT */
+    --text-main: #0f172a;
+    --text-sub: #334155;
+    --text-muted: #64748b;
+
+    /* OMBRES SUAUS I ELEGANTS */
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+    --shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.06), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
+    --shadow-lg: 0 12px 30px -4px rgba(15, 23, 42, 0.1), 0 4px 10px -2px rgba(15, 23, 42, 0.05);
+
+    --radius-lg: 14px;
+    --radius-md: 10px;
+    --radius-sm: 6px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    background-color: var(--bg);
+    background-image: radial-gradient(#cbd5e1 1.2px, transparent 1.2px);
+    background-size: 24px 24px;
+    color: var(--text-main);
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+h1, h2, h3, h4, h5 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    color: var(--text-main);
+    letter-spacing: -0.015em;
+}
+
+/* ============================================================================
+   CAPÇALERA MODERNA I NETA (FROSTED WHITE)
+   ============================================================================ */
+header {
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    position: sticky;
+    top: 0;
+    z-index: 60;
+    padding: 0.65rem 1.25rem;
+}
+
+.header-inner {
+    max-width: 1260px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.brand-box {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.brand-tag {
+    background: #eff6ff;
+    color: var(--primary);
+    border: 1px solid var(--primary-border);
+    font-size: 0.76rem;
+    font-weight: 800;
+    padding: 0.25rem 0.6rem;
+    border-radius: var(--radius-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.brand-title {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--text-main);
+}
+
+.user-stats {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    flex-wrap: wrap;
+}
+
+.stat-pill {
+    background: #ffffff;
+    border: 1px solid var(--border);
+    padding: 0.35rem 0.85rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: var(--text-sub);
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.stat-pill.clickable {
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.stat-pill.clickable:hover {
+    border-color: var(--primary);
+    background: #eff6ff;
+    color: var(--primary);
+    transform: translateY(-1px);
+}
+
+.btn-header {
+    background: #f1f5f9;
+    border: 1px solid var(--border);
+    color: var(--text-sub);
+    padding: 0.35rem 0.75rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-header:hover {
+    background: #e2e8f0;
+    color: var(--text-main);
+}
+
+.btn-header-exit:hover {
+    background: #fee2e2;
+    border-color: #fca5a5;
+    color: #991b1b;
+}
+
+/* ============================================================================
+   NAVEGACIÓ PER FASES (PILL TABS)
+   ============================================================================ */
+.nav-stages {
+    background: #ffffff;
+    border-bottom: 1px solid var(--border);
+    padding: 0.5rem 1rem;
+    overflow-x: auto;
+    position: sticky;
+    top: 55px;
+    z-index: 50;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    scrollbar-width: thin;
+    scrollbar-color: #e2e8f0 transparent;
+}
+
+.nav-stages::-webkit-scrollbar {
+    height: 4px;
+}
+.nav-stages::-webkit-scrollbar-track {
+    background: transparent;
+}
+.nav-stages::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+.nav-stages-inner {
+    max-width: 1260px;
+    margin: 0 auto;
+    display: flex;
+    gap: 0.45rem;
+    align-items: center;
+    min-width: max-content;
+}
+
+.stage-nav-btn {
+    background: #f8fafc;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 0.42rem 0.85rem;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.stage-nav-btn:hover:not(.locked) {
+    background: #eff6ff;
+    color: var(--primary);
+    border-color: var(--primary-border);
+}
+
+.stage-nav-btn.active {
+    background: linear-gradient(135deg, #2563eb, #3b82f6);
+    color: #ffffff;
+    border-color: #2563eb;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+}
+
+.stage-nav-btn.completed:not(.active) {
+    background: #ecfdf5;
+    color: var(--success-dark);
+    border-color: var(--success-border);
+}
+
+.stage-nav-btn.locked {
+    opacity: 0.55;
+    cursor: not-allowed;
+    background: #f1f5f9;
+}
+
+/* ============================================================================
+   CONTENIDORS I VISTES
+   ============================================================================ */
+.app-container {
+    max-width: 1260px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 1.5rem 1.25rem 3.5rem 1.25rem;
+    flex: 1;
+}
+
+.section-view {
+    display: none;
+    animation: fadeIn 0.25s ease;
+}
+
+.section-view.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* CARDS BLANQUES I NETES */
+.card {
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow);
+    transition: box-shadow 0.2s ease;
+}
+
+.card:hover {
+    box-shadow: var(--shadow-lg);
+}
+
+/* HERO BANNER LLUMINÓS */
+.hero-banner {
+    background: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 50%, #faf5ff 100%);
+    border: 1px solid #dbeafe;
+    border-radius: var(--radius-lg);
+    padding: 1.6rem 1.75rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow);
+    position: relative;
+}
+
+.hero-banner h2 {
+    font-size: 1.55rem;
+    color: #1e3a8a;
+    margin: 0.35rem 0 0.5rem 0;
+}
+
+.hero-banner p {
+    font-size: 0.95rem;
+    color: var(--text-sub);
+    line-height: 1.65;
+    max-width: 1050px;
+}
+
+.phase-tag {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: #dbeafe;
+    color: #1e40af;
+    border: 1px solid #bfdbfe;
+    margin-bottom: 0.4rem;
+}
+
+/* GRID LAYOUTS */
+.grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+@media (max-width: 900px) {
+    .grid-2 { grid-template-columns: 1fr; }
+}
+
+/* BOTONS */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.25rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.92rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+    text-decoration: none;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+.btn-primary:hover {
+    background: var(--primary-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
+}
+
+.btn-success {
+    background: var(--success);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+}
+.btn-success:hover {
+    background: var(--success-dark);
+    transform: translateY(-1px);
+}
+
+.btn-outline {
+    background: #ffffff;
+    border-color: var(--border);
+    color: var(--text-sub);
+}
+.btn-outline:hover {
+    background: #f8fafc;
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.btn-sm {
+    padding: 0.38rem 0.8rem;
+    font-size: 0.82rem;
+}
+
+/* ============================================================================
+   TAULER DE DIAGRAMES DE FLUX (WORKBENCH AMB RECTANGLES I ROMBES)
+   ============================================================================ */
+.flowchart-workbench {
+    display: grid;
+    grid-template-columns: 290px 1fr;
+    gap: 1.25rem;
+    align-items: start;
+    margin-top: 1rem;
+}
+
+@media (max-width: 960px) {
+    .flowchart-workbench { grid-template-columns: 1fr; }
+}
+
+/* PALETA DE CAPSES */
+.palette-panel {
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.15rem;
+    box-shadow: var(--shadow);
+    position: sticky;
+    top: 120px;
+}
+
+.palette-title {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: var(--text-main);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.4rem;
+}
+
+.palette-help {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    line-height: 1.45;
+    margin-bottom: 0.85rem;
+}
+
+.palette-items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+/* CAPSES ARROSSEGAR (DRAGGABLE BLOCKS) */
+.draggable-block {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.65rem 0.85rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: grab;
+    user-select: none;
+    transition: all 0.2s ease;
+    box-shadow: var(--shadow-sm);
+    background: #ffffff;
+}
+
+.draggable-block:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+}
+
+.draggable-block.dragging {
+    opacity: 0.45;
+    cursor: grabbing;
+}
+
+/* ============================================================================
+   GRIDS RESPONSIVES
+   ============================================================================ */
+.grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+}
+@media (max-width: 840px) {
+    .grid-2 { grid-template-columns: 1fr; }
+}
+
+.grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+}
+@media (max-width: 900px) {
+    .grid-3 { grid-template-columns: 1fr; }
+}
+
+.grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+}
+@media (max-width: 900px) {
+    .grid-4 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+    .grid-4 { grid-template-columns: 1fr; }
+}
+
+/* ============================================================================
+   BLOCS ARROSSEGABLES A LA PALETA
+   ============================================================================ */
+.draggable-block {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.65rem 0.95rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.88rem;
+    font-weight: 700;
+    cursor: grab;
+    transition: all 0.2s ease;
+    user-select: none;
+    background: #ffffff;
+    box-shadow: var(--shadow-sm);
+    border: 2px solid var(--border);
+    position: relative;
+}
+
+.draggable-block:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.draggable-block.dragging {
+    opacity: 0.45;
+    transform: scale(0.96);
+}
+
+.draggable-block.selected-for-place {
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.35) !important;
+    transform: scale(1.02);
+}
+
+/* 1. BLOC D'ACCIÓ (RECTANGLE BLAU) */
+.draggable-block.type-action {
+    border: 2px solid #3b82f6;
+    background: #eff6ff;
+    color: #1e3a8a;
+    border-radius: 8px;
+}
+.draggable-block.type-action:hover {
+    border-color: #2563eb;
+    background: #dbeafe;
+}
+
+/* 2. BLOC DE DECISIÓ (ROMBE AUTÈNTIC AMBRE EN SVG) */
+.draggable-block.type-decision {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    height: 86px;
+    width: 100%;
+    max-width: 275px;
+    margin: 0.35rem auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.draggable-block.type-decision .block-diamond-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+}
+.draggable-block.type-decision .block-diamond-svg polygon {
+    fill: #fffbeb;
+    stroke: #f59e0b;
+    stroke-width: 2.5;
+    transition: all 0.2s ease;
+    filter: drop-shadow(0 2px 6px rgba(245, 158, 11, 0.15));
+}
+.draggable-block.type-decision:hover .block-diamond-svg polygon {
+    fill: #fef3c7;
+    stroke: #d97706;
+    stroke-width: 3;
+    filter: drop-shadow(0 4px 12px rgba(245, 158, 11, 0.28));
+}
+.draggable-block.type-decision.selected-for-place .block-diamond-svg polygon {
+    fill: #fde68a;
+    stroke: #b45309;
+    stroke-width: 3.5;
+    filter: drop-shadow(0 0 12px rgba(217, 119, 6, 0.45));
+}
+.draggable-block.type-decision .diamond-text-wrap {
+    position: relative;
+    z-index: 2;
+    padding: 0.2rem 2.2rem;
+    text-align: center;
+    color: #92400e;
+    font-size: 0.81rem;
+    font-weight: 800;
+    line-height: 1.2;
+    max-width: 200px;
+    word-break: normal;
+    overflow-wrap: break-word;
+}
+.draggable-block.type-decision .diamond-tag {
+    font-size: 0.65rem;
+    font-weight: 800;
+    color: #b45309;
+    letter-spacing: 0.04em;
+    display: block;
+    margin-bottom: 0.1rem;
+}
+
+.block-badge-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 4px;
+    font-weight: 800;
+    font-size: 0.8rem;
+    flex-shrink: 0;
+}
+.draggable-block.type-action .block-badge-icon {
+    background: #bfdbfe;
+    color: #1e40af;
+}
+
+/* TAULER BLANC DE DISSENY DEL DIAGRAMA */
+.diagram-board {
+    background: #ffffff;
+    border: 2px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem 0.5rem;
+    box-shadow: var(--shadow);
+    background-image: 
+        linear-gradient(rgba(226, 232, 240, 0.6) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(226, 232, 240, 0.6) 1px, transparent 1px);
+    background-size: 20px 20px;
+    overflow-x: auto;
+}
+
+/* ============================================================================
+   SLOTS DEL DIAGRAMA: RECTANGLES PER A ACCIÓ I ROMBES REALS PER A DECISIÓ
+   ============================================================================ */
+
+/* 1. SLOTS D'ACCIÓ (RECTANGLES) */
+.flow-slot.slot-action {
+    width: 100%;
+    min-height: 58px;
+    height: auto;
+    border: 2px dashed #93c5fd;
+    border-radius: var(--radius-sm);
+    background: #f0f7ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.6rem 0.85rem;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    box-sizing: border-box;
+    word-break: normal;
+    overflow-wrap: break-word;
+}
+
+.flow-slot.slot-action:hover, .flow-slot.slot-action.drag-over {
+    border-color: #2563eb;
+    background: #dbeafe;
+    transform: scale(1.02);
+}
+
+.flow-slot.slot-action.filled {
+    border: 2px solid #2563eb;
+    background: #ffffff;
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.12);
+}
+
+.slot-filled-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+    width: 100%;
+    text-align: center;
+}
+
+.block-text-label {
+    font-size: 0.84rem;
+    font-weight: 700;
+    color: #1e3a8a;
+    line-height: 1.25;
+    text-align: center;
+    word-break: normal;
+    overflow-wrap: break-word;
+}
+
+/* 2. SLOTS DE DECISIÓ (ROMBES REALS EN SVG) */
+.flow-slot.slot-decision-diamond {
+    width: 275px;
+    height: 104px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    margin: 0.35rem auto;
+    background: transparent;
+    border: none;
+    box-sizing: border-box;
+}
+
+.flow-slot.slot-decision-diamond:hover, .flow-slot.slot-decision-diamond.drag-over {
+    transform: scale(1.03);
+}
+
+.slot-diamond-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+}
+
+.slot-diamond-bg polygon {
+    fill: #ffffff;
+    stroke: #d97706;
+    stroke-width: 2.5;
+    transition: all 0.2s ease;
+    filter: drop-shadow(0 4px 10px rgba(245, 158, 11, 0.15));
+}
+
+.slot-diamond-bg.empty polygon {
+    fill: #fffbeb;
+    stroke: #f59e0b;
+    stroke-width: 2.2;
+    stroke-dasharray: 6,4;
+}
+
+.flow-slot.slot-decision-diamond:hover .slot-diamond-bg polygon,
+.flow-slot.slot-decision-diamond.drag-over .slot-diamond-bg polygon {
+    fill: #fef3c7;
+    stroke: #b45309;
+    stroke-width: 3;
+}
+
+.slot-diamond-content {
+    position: relative;
+    z-index: 2;
+    width: 70%;
+    max-width: 195px;
+    text-align: center;
+    line-height: 1.2;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.slot-diamond-text-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.15rem;
+    width: 100%;
+    padding: 0 0.4rem;
+}
+
+.block-diamond-tag {
+    font-size: 0.65rem;
+    font-weight: 800;
+    color: #b45309;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: #fef3c7;
+    padding: 0.1rem 0.45rem;
+    border-radius: 4px;
+    border: 1px solid #fde68a;
+}
+
+.block-diamond-label {
+    font-size: 0.81rem;
+    font-weight: 800;
+    color: #92400e;
+    text-align: center;
+    line-height: 1.2;
+    word-break: normal;
+    overflow-wrap: break-word;
+}
+
+.diamond-hint {
+    display: block;
+    font-size: 0.72rem;
+    color: #d97706;
+    line-height: 1.2;
+    margin-top: 0.15rem;
+    font-weight: 600;
+}
+
+/* CORRECCIÓ I ERRORS */
+.flow-slot.slot-correct {
+    border-color: #10b981 !important;
+    background: #ecfdf5 !important;
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.3) !important;
+}
+.flow-slot.slot-correct.slot-decision-diamond .slot-diamond-bg polygon {
+    fill: #f0fdf4 !important;
+    stroke: #10b981 !important;
+    stroke-width: 3 !important;
+    stroke-dasharray: none !important;
+    filter: drop-shadow(0 4px 14px rgba(16, 185, 129, 0.35)) !important;
+}
+.flow-slot.slot-correct.slot-decision-diamond .block-diamond-label {
+    color: #065f46 !important;
+}
+.flow-slot.slot-correct.slot-decision-diamond .block-diamond-tag {
+    background: #dcfce7 !important;
+    color: #166534 !important;
+    border-color: #86efac !important;
+}
+
+.flow-slot.slot-wrong {
+    border-color: #ef4444 !important;
+    background: #fef2f2 !important;
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.3) !important;
+    animation: shakeSlot 0.4s ease;
+}
+.flow-slot.slot-wrong.slot-decision-diamond .slot-diamond-bg polygon {
+    fill: #fef2f2 !important;
+    stroke: #ef4444 !important;
+    stroke-width: 3 !important;
+    stroke-dasharray: none !important;
+    filter: drop-shadow(0 4px 14px rgba(239, 68, 68, 0.35)) !important;
+}
+.flow-slot.slot-wrong.slot-decision-diamond .block-diamond-label {
+    color: #991b1b !important;
+}
+.flow-slot.slot-wrong.slot-decision-diamond .block-diamond-tag {
+    background: #fee2e2 !important;
+    color: #991b1b !important;
+    border-color: #fca5a5 !important;
+}
+
+/* BOTÓ REMOVE X */
+.slot-remove-btn {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 20px;
+    height: 20px;
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fca5a5;
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: 800;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    pointer-events: auto;
+    z-index: 10;
+}
+.slot-remove-btn:hover {
+    background: #ef4444;
+    color: #ffffff;
+    transform: scale(1.15);
+}
+
+.slot-remove-btn.diamond-remove-btn {
+    top: 50%;
+    right: 14px;
+    transform: translateY(-50%);
+}
+.slot-remove-btn.diamond-remove-btn:hover {
+    transform: translateY(-50%) scale(1.15);
+}
+
+.slot-placeholder-label {
+    font-size: 0.77rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-align: center;
+    line-height: 1.35;
+    pointer-events: none;
+}
+
+.slot-filled-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2rem;
+    width: 100%;
+}
+
+.block-shape-tag {
+    font-size: 0.68rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.1rem 0.45rem;
+    border-radius: 4px;
+}
+.block-shape-tag.tag-action {
+    background: #dbeafe;
+    color: #1e40af;
+}
+.block-shape-tag.tag-decision {
+    background: #fde68a;
+    color: #b45309;
+}
+
+.block-text-label {
+    font-size: 0.84rem;
+    font-weight: 700;
+    color: var(--text-main);
+    text-align: center;
+}
+
+/* BRANQUES I BADGES SÍ / NO */
+.flow-branch-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.28rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 800;
+}
+.flow-branch-badge.branch-yes {
+    background: #ecfdf5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+}
+.flow-branch-badge.branch-no {
+    background: #fef2f2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+
+/* ============================================================================
+   FLETXES I CONNECTORS EN SVG
+   ============================================================================ */
+.flowchart-svg-connector {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+    display: block;
+    margin: 0.25rem auto;
+}
+
+@keyframes loopDashAnimation {
+    from { stroke-dashoffset: 44; }
+    to { stroke-dashoffset: 0; }
+}
+
+.loop-active-path {
+    animation: loopDashAnimation 2s linear infinite;
+}
+
+/* ============================================================================
+   SIMULADORS EN VIU (PANELLS NETS AMB ALTA VISIBILITAT)
+   ============================================================================ */
+.sim-panel {
+    background: #ffffff;
+    color: var(--text-main);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    border: 2px solid #bfdbfe;
+    margin-top: 1.5rem;
+    box-shadow: var(--shadow);
+}
+
+.sim-panel h4 {
+    color: #1e40af;
+    margin-bottom: 0.35rem;
+    font-size: 1.15rem;
+}
+
+.sim-controls-bar {
+    display: flex;
+    gap: 0.65rem;
+    flex-wrap: wrap;
+    align-items: center;
+    margin: 0.9rem 0;
+}
+
+/* ============================================================================
+   MODALS DE PERFIL I VICTORIA
+   ============================================================================ */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(8px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 1rem;
+}
+
+.modal-overlay.active {
+    display: flex;
+    animation: fadeIn 0.2s ease;
+}
+
+.modal-dialog, .modal-card {
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    max-width: 560px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 2rem 2.25rem;
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.2);
+    position: relative;
+    text-align: center;
+}
+
+.form-input, .form-control {
+    width: 100%;
+    padding: 0.65rem 0.9rem;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 0.92rem;
+    color: var(--text-main);
+    background: #ffffff;
+    transition: all 0.2s;
+    margin-bottom: 0.35rem;
+    font-family: inherit;
+}
+
+.form-input:focus, .form-control:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.input-error-hint {
+    display: none;
+    font-size: 0.76rem;
+    color: #dc2626;
+    margin-bottom: 0.5rem;
+}
+
+.level-card-option {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 0.85rem 1rem;
+    border: 2px solid var(--border);
+    border-radius: var(--radius-md);
+    background: #ffffff;
+    cursor: pointer;
+    margin-bottom: 0.65rem;
+    text-align: left;
+    transition: all 0.2s ease;
+}
+.level-card-option:hover {
+    border-color: #93c5fd;
+    background: #f8fafc;
+}
+.level-card-option.selected {
+    border-color: var(--primary);
+    background: #eff6ff;
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.12);
+}
+
+.avatar-btn {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    background: #f8fafc;
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+.avatar-btn:hover {
+    border-color: var(--primary);
+    transform: scale(1.1);
+}
+.avatar-btn.selected {
+    border-color: var(--primary);
+    background: #eff6ff;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
+    transform: scale(1.12);
+}
+
+/* ============================================================================
+   DEMOSTRACIÓ DE FIGURES GEOMÈTRIQUES (FASE 2)
+   ============================================================================ */
+.flow-shape-demo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.shape-action-rect {
+    padding: 0.55rem 0.85rem;
+    background: #ffffff;
+    border: 2px solid #2563eb;
+    border-radius: 8px;
+    color: #1e3a8a;
+    font-weight: 700;
+    font-size: 0.82rem;
+    line-height: 1.3;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.12);
+    box-sizing: border-box;
+    max-width: 100%;
+    word-break: normal;
+    overflow-wrap: break-word;
+}
+
+.shape-decision-diamond-wrap {
+    position: relative;
+    width: 250px;
+    height: 115px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.shape-decision-diamond-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+.shape-decision-diamond-text {
+    position: relative;
+    z-index: 2;
+    font-size: 0.82rem;
+    font-weight: 800;
+    color: #92400e;
+    text-align: center;
+    line-height: 1.25;
+    padding: 0 1.8rem;
+    max-width: 210px;
+    word-break: normal;
+    overflow-wrap: break-word;
+}
+
+.sort-dropzone {
+    transition: all 0.2s ease;
+}
+.sort-dropzone:hover, .sort-dropzone.drag-over {
+    transform: scale(1.01);
+}
+
+/* ============================================================================
+   QÜESTIONARI I KPIS
+   ============================================================================ */
+.quiz-container {
+    max-width: 860px;
+    margin: 0 auto;
+}
+.quiz-summary-kpi {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+}
+.quiz-kpi-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+/* ============================================================================
+   ESTILS DIPLOMA PRINTABLE
+   ============================================================================ */
+#printable-diploma {
+    background: #ffffff;
+    border: 8px double #1e3a8a;
+    border-radius: 12px;
+    padding: 2.5rem;
+    color: #0f172a;
+    box-shadow: var(--shadow-lg);
+    position: relative;
+}
+
+.diploma-frame {
+    border: 2px solid #93c5fd;
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+
+.diploma-student-name {
+    font-size: 1.7rem;
+    font-weight: 800;
+    color: #1e3a8a;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+.dip-analysis-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+    margin-top: 1.25rem;
+}
+@media (max-width: 700px) {
+    .dip-analysis-grid { grid-template-columns: 1fr; }
+}
+
+.dip-box {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.dip-strengths-box {
+    border-left: 4px solid #10b981;
+}
+
+.dip-weaknesses-box {
+    border-left: 4px solid #f59e0b;
+}
+
+.no-print {
+    /* visible en pantalla normal */
+}
+
+@media print {
+    body * { visibility: hidden; }
+    #printable-diploma, #printable-diploma * { visibility: visible; }
+    #printable-diploma {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        margin: 0;
+        border: 4px solid #1e3a8a;
+        box-shadow: none;
+    }
+    .no-print { display: none !important; }
+}
