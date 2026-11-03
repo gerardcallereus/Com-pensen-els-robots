@@ -1795,9 +1795,10 @@ function drawAct6Loop() {
     const svgG = document.getElementById('act6-loop-paths');
     const target = document.getElementById('act6-loop-target');
     const s2 = document.getElementById('slot-act6-2');
+    const s3 = document.getElementById('slot-act6-3');
     const s4 = document.getElementById('slot-act6-4');
     const s7 = document.getElementById('slot-act6-7');
-    if (!board || !svgEl || !svgG || !target || !s2 || !s4 || !s7) return;
+    if (!board || !svgEl || !svgG || !target || !s2 || !s3 || !s4 || !s7) return;
     if (board.offsetParent === null) return;
 
     const bRect = board.getBoundingClientRect();
@@ -1807,6 +1808,7 @@ function drawAct6Loop() {
 
     const tRect = target.getBoundingClientRect();
     const r2 = s2.getBoundingClientRect();
+    const r3 = s3.getBoundingClientRect();
     const r4 = s4.getBoundingClientRect();
     const r7 = s7.getBoundingClientRect();
 
@@ -1814,25 +1816,34 @@ function drawAct6Loop() {
     const targetRightX = tRect.right - bRect.left;
     const targetY = tRect.top - bRect.top + (tRect.height / 2);
 
-    // Branca esquerra (Sense cotxe -> Barrera baixada)
+    // 1. Branca esquerra (Sense cotxe -> Barrera baixada -> Torna a vigilar)
     const s2MidX = r2.left - bRect.left + (r2.width / 2);
     const s2BotY = r2.bottom - bRect.top;
-    const leftBottomY = s2BotY + 26;
-    const leftGutterX = 20;
+    const leftBottomY = s2BotY + 24;
+    const leftGutterX = 18;
 
-    // Branca dreta (Pàrquing complet o Pas completat)
-    const s4MidX = r4.left - bRect.left + (r4.width / 2);
-    const s4BotY = r4.bottom - bRect.top;
+    // 2. Branca dreta final (Cotxe ha entrat -> Baixar barrera -> Esperar nou cotxe)
     const s7MidX = r7.left - bRect.left + (r7.width / 2);
     const s7BotY = r7.bottom - bRect.top;
-    const rightBottomY = Math.max(s4BotY, s7BotY) + 26;
-    const rightGutterX = bRect.width - 20;
+    const rightBottomY = s7BotY + 24;
+    const rightGutterX = bRect.width - 18;
 
     const leftBranchPaths = `M ${s2MidX} ${s2BotY} L ${s2MidX} ${leftBottomY} L ${leftGutterX} ${leftBottomY} L ${leftGutterX} ${targetY} L ${targetLeftX} ${targetY}`;
-    const rightBranchPaths = `M ${s4MidX} ${s4BotY} L ${s4MidX} ${rightBottomY} M ${s7MidX} ${s7BotY} L ${s7MidX} ${rightBottomY} L ${rightGutterX} ${rightBottomY} L ${rightGutterX} ${targetY} L ${targetRightX} ${targetY}`;
+    const rightBranchPaths = `M ${s7MidX} ${s7BotY} L ${s7MidX} ${rightBottomY} L ${rightGutterX} ${rightBottomY} L ${rightGutterX} ${targetY} L ${targetRightX} ${targetY}`;
 
     const midYLeft = (leftBottomY + targetY) / 2;
     const midYRight = (rightBottomY + targetY) / 2;
+
+    // 3. Branca Reintenta Aforament (s4 COMPLET -> Torna al rombe s3 "Queden places lliures?")
+    const s4MidX = r4.left - bRect.left + (r4.width / 2);
+    const s4BotY = r4.bottom - bRect.top;
+    const s4LoopBottomY = s4BotY + 16;
+    const s4LoopLeftX = (r4.left - bRect.left) - 12;
+    const s3LeftX = r3.left - bRect.left;
+    const s3MidY = r3.top - bRect.top + (r3.height / 2);
+
+    const s4RetryPath = `M ${s4MidX} ${s4BotY} L ${s4MidX} ${s4LoopBottomY} L ${s4LoopLeftX} ${s4LoopBottomY} L ${s4LoopLeftX} ${s3MidY} L ${s3LeftX} ${s3MidY}`;
+    const midYRetry = (s4LoopBottomY + s3MidY) / 2;
 
     svgG.innerHTML = `
         <!-- Branca Esquerra Espera de Vehicle -->
@@ -1840,10 +1851,15 @@ function drawAct6Loop() {
         <rect x="${leftGutterX - 14}" y="${midYLeft - 80}" width="28" height="160" rx="6" fill="#ffffff" stroke="#64748b" stroke-width="2"/>
         <text x="${leftGutterX}" y="${midYLeft}" fill="#475569" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="800" text-anchor="middle" dominant-baseline="central" transform="rotate(-90 ${leftGutterX},${midYLeft})">VIGILÀNCIA D'ENTRADA ↺</text>
 
-        <!-- Branca Dreta Cicle Completat / Complet -->
+        <!-- Branca Dreta Cicle Completat / Nou Vehicle -->
         <path d="${rightBranchPaths}" fill="none" stroke="#2563eb" stroke-width="3" stroke-dasharray="7,4" class="loop-active-path" marker-end="url(#marker-loop-blue-act6)" filter="url(#glow-blue-act6)"/>
         <rect x="${rightGutterX - 14}" y="${midYRight - 80}" width="28" height="160" rx="6" fill="#ffffff" stroke="#2563eb" stroke-width="2"/>
-        <text x="${rightGutterX}" y="${midYRight}" fill="#1d4ed8" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="800" text-anchor="middle" dominant-baseline="central" transform="rotate(90 ${rightGutterX},${midYRight})">BUCLE DE CONTROL PÀRQUING ↺</text>
+        <text x="${rightGutterX}" y="${midYRight}" fill="#1d4ed8" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="800" text-anchor="middle" dominant-baseline="central" transform="rotate(90 ${rightGutterX},${midYRight})">NOU VEHICLE ↺</text>
+
+        <!-- Branca Bucle COMPLET -> Reintenta places a "Queden places lliures?" -->
+        <path d="${s4RetryPath}" fill="none" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="6,3" class="loop-active-path" marker-end="url(#marker-loop-red-act6)"/>
+        <rect x="${s4LoopLeftX - 11}" y="${midYRetry - 45}" width="22" height="90" rx="5" fill="#ffffff" stroke="#dc2626" stroke-width="1.8"/>
+        <text x="${s4LoopLeftX}" y="${midYRetry}" fill="#b91c1c" font-family="'JetBrains Mono', monospace" font-size="8.5" font-weight="800" text-anchor="middle" dominant-baseline="central" transform="rotate(-90 ${s4LoopLeftX},${midYRetry})">REINTENTA PLACES ↺</text>
     `;
 }
 
