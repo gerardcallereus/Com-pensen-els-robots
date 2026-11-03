@@ -46,31 +46,31 @@
     <nav class="nav-stages">
         <div class="nav-stages-inner">
             <button class="stage-nav-btn active" id="tab-btn-1" onclick="goToStage(1)">
-                <span id="nav-label-stage-1">1. Llenguatge Algorísmic</span>
+                <span id="nav-label-stage-1">1. Algorismes</span>
             </button>
             <button class="stage-nav-btn locked" id="tab-btn-2" onclick="goToStage(2)">
                 <span id="nav-label-stage-2">🔒 2. Tipus de Blocs</span>
             </button>
             <button class="stage-nav-btn locked" id="tab-btn-3" onclick="goToStage(3)">
-                <span id="nav-label-stage-3">🔒 3. Act. 1: El Despertador</span>
+                <span id="nav-label-stage-3">🔒 3. Despertador</span>
             </button>
             <button class="stage-nav-btn locked" id="tab-btn-4" onclick="goToStage(4)">
-                <span id="nav-label-stage-4">🔒 4. Act. 2: L'Ocellet en la Gàbia</span>
+                <span id="nav-label-stage-4">🔒 4. L'Ocellet</span>
             </button>
             <button class="stage-nav-btn locked" id="tab-btn-5" onclick="goToStage(5)">
-                <span id="nav-label-stage-5">🔒 5. Act. 3: La Làmpada Automàtica</span>
+                <span id="nav-label-stage-5">🔒 5. La Làmpada</span>
             </button>
             <button class="stage-nav-btn locked" id="tab-btn-6" onclick="goToStage(6)">
-                <span id="nav-label-stage-6">🔒 6. Act. 4: El Robot Aspirador</span>
+                <span id="nav-label-stage-6">🔒 6. L'Aspirador</span>
             </button>
             <button class="stage-nav-btn locked" id="tab-btn-7" onclick="goToStage(7)">
-                <span id="nav-label-stage-7">🔒 7. Act. 5: El Semàfor Intel·ligent</span>
+                <span id="nav-label-stage-7">🔒 7. El Semàfor</span>
             </button>
             <button class="stage-nav-btn locked" id="tab-btn-8" onclick="goToStage(8)">
-                <span id="nav-label-stage-8">🔒 8. Act. 6: La Barrera del Pàrquing</span>
+                <span id="nav-label-stage-8">🔒 8. La Barrera</span>
             </button>
             <button class="stage-nav-btn locked" id="tab-btn-9" onclick="goToStage(9)">
-                <span id="nav-label-stage-9">🔒 9. Diploma Oficial</span>
+                <span id="nav-label-stage-9">🔒 9. Diploma 🎓</span>
             </button>
         </div>
     </nav>
@@ -115,8 +115,8 @@
                     </div>
                     <div style="background:var(--pastel-purple-bg); border:1px solid var(--pastel-purple-border); padding:1.1rem; border-radius:var(--radius-md);">
                         <div style="font-size:1.5rem; margin-bottom:0.35rem;">⚙️</div>
-                        <strong style="color:var(--pastel-purple-text); font-size:0.92rem; display:block; margin-bottom:0.25rem;">4. Seqüència lògica</strong>
-                        <p style="font-size:0.84rem; color:var(--text-sub);">Desenvolupar habilitats de seqüència lògica, bucles i resolució de problemes.</p>
+                        <strong style="color:var(--pastel-purple-text); font-size:0.92rem; display:block; margin-bottom:0.25rem;">4. Resolució de reptes i bucles</strong>
+                        <p style="font-size:0.84rem; color:var(--text-sub);">Comprendre com els robots repeteixen accions i prenen decisions autònomes.</p>
                     </div>
                 </div>
             </div>
@@ -181,24 +181,94 @@
                         </div>
 
                         <!-- SIMULADOR DE PROVA DE CAMÍ -->
-                        <div class="sim-panel" style="margin-top:0;">
-                            <h4>🎮 Simulador Interactiu: Posa a prova el diagrama!</h4>
-                            <p style="font-size:0.85rem; color:#cbd5e1; margin-bottom:0.9rem;">
-                                Mou el control lliscant per canviar quants minuts falten pel bus i prem <strong>«Simular Camí Pas a Pas»</strong> per veure quin camí tria l'algorisme:
+                        <div class="sim-panel" style="margin-top:0; border:2px solid #38bdf8; background:#0f172a; color:#ffffff; border-radius:12px; padding:1.25rem;">
+                            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.75rem;">
+                                <h4 style="color:#38bdf8; margin:0; font-size:1.05rem; display:flex; align-items:center; gap:0.4rem;">
+                                    <span>🎮</span> Simulador Interactiu: Posa a prova el diagrama!
+                                </h4>
+                                <span id="bus-decision-pill" style="font-size:0.8rem; font-weight:800; padding:0.25rem 0.75rem; border-radius:999px; background:#10b981; color:#ffffff;">
+                                    Decisió: 🚌 AUTOBÚS
+                                </span>
+                            </div>
+
+                            <p style="font-size:0.86rem; color:#cbd5e1; margin-bottom:0.85rem; line-height:1.45;">
+                                Canvia els minuts d'espera amb el control o prova els exemples ràpids. Observa la decisió en temps real i prem <strong>«Simular Camí Pas a Pas»</strong> per il·luminar cadascuna de les capses del diagrama de la dreta:
                             </p>
-                            <div class="sim-controls-bar">
-                                <div style="flex:1; min-width:180px;">
-                                    <label for="bus-time-slider" style="font-size:0.82rem; font-weight:700; color:#38bdf8; display:block; margin-bottom:0.25rem;">
-                                        ⏱️ Temps que falta pel bus: <strong id="bus-time-val" style="color:#fde047; font-size:1rem;">6 minuts</strong>
+
+                            <!-- ACCIONS RÀPIDES -->
+                            <div style="display:flex; gap:0.4rem; flex-wrap:wrap; margin-bottom:0.85rem;">
+                                <button type="button" class="btn btn-sm" style="background:#1e293b; color:#38bdf8; border:1px solid #38bdf8; font-size:0.78rem; padding:0.25rem 0.6rem; cursor:pointer;" onclick="setBusSimTime(4)">
+                                    ⚡ 4 min (Autobús ràpid)
+                                </button>
+                                <button type="button" class="btn btn-sm" style="background:#1e293b; color:#fde047; border:1px solid #fde047; font-size:0.78rem; padding:0.25rem 0.6rem; cursor:pointer;" onclick="setBusSimTime(10)">
+                                    ⚡ 10 min (Temps límit)
+                                </button>
+                                <button type="button" class="btn btn-sm" style="background:#1e293b; color:#f87171; border:1px solid #f87171; font-size:0.78rem; padding:0.25rem 0.6rem; cursor:pointer;" onclick="setBusSimTime(16)">
+                                    ⚡ 16 min (Agafar Metro)
+                                </button>
+                            </div>
+
+                            <!-- CONTROL LLISCANT -->
+                            <div style="background:#1e293b; border:1px solid #334155; border-radius:8px; padding:0.85rem 1rem; margin-bottom:0.85rem;">
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+                                    <label for="bus-time-slider" style="font-size:0.84rem; font-weight:700; color:#94a3b8;">
+                                        ⏱️ Temps d'espera a la parada:
                                     </label>
-                                    <input type="range" id="bus-time-slider" min="1" max="25" value="6" style="width:100%; accent-color:#38bdf8; cursor:pointer;" oninput="updateBusSimSlider(this.value)">
+                                    <strong id="bus-time-val" style="color:#fde047; font-size:1.15rem; font-family:'JetBrains Mono',monospace;">6 minuts</strong>
                                 </div>
-                                <button class="btn btn-sm" style="background:#38bdf8; color:#0f172a;" onclick="runSchoolRouteSimulation()">
+                                <input type="range" id="bus-time-slider" min="1" max="25" value="6" style="width:100%; accent-color:#38bdf8; cursor:pointer;" oninput="updateBusSimSlider(this.value)">
+                            </div>
+
+                            <!-- MINI-MAPA DE RUTA VISUAL AMB ANIMACIÓ -->
+                            <div style="background:#111827; border:1px solid #334155; border-radius:10px; padding:0.75rem 0.9rem; margin-bottom:0.85rem;">
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+                                    <span style="font-size:0.72rem; text-transform:uppercase; letter-spacing:0.05em; color:#94a3b8; font-weight:700;">Ruta activa segons l'algorisme:</span>
+                                    <span id="route-active-step-badge" style="font-size:0.72rem; background:#38bdf8; color:#0f172a; padding:0.15rem 0.5rem; border-radius:4px; font-weight:800;">A punt per simular</span>
+                                </div>
+                                <div style="display:grid; grid-template-columns:auto 1fr auto; gap:0.5rem; align-items:center;">
+                                    <div style="text-align:center;">
+                                        <div style="font-size:1.5rem;">🏠</div>
+                                        <div style="font-size:0.68rem; color:#94a3b8; font-weight:700;">Casa</div>
+                                    </div>
+                                    <div style="height:44px; background:#0f172a; border-radius:8px; border:1px solid #334155; display:flex; align-items:center; justify-content:space-around; padding:0 0.5rem;">
+                                        <div id="sim-path-bus" style="display:flex; align-items:center; gap:0.35rem; padding:0.2rem 0.55rem; border-radius:6px; background:#064e3b; border:1.5px solid #10b981; transition:all 0.3s;">
+                                            <span style="font-size:1.25rem;">🚌</span>
+                                            <div style="text-align:left;">
+                                                <strong style="font-size:0.72rem; color:#a7f3d0; display:block; line-height:1.1;">Bus</strong>
+                                                <span style="font-size:0.65rem; color:#6ee7b7;">≤ 10 min</span>
+                                            </div>
+                                        </div>
+                                        <div style="font-size:0.72rem; color:#64748b; font-weight:800;">O BÉ</div>
+                                        <div id="sim-path-metro" style="display:flex; align-items:center; gap:0.35rem; padding:0.2rem 0.55rem; border-radius:6px; background:#1e293b; border:1.5px solid #475569; opacity:0.4; transition:all 0.3s;">
+                                            <span style="font-size:1.25rem;">🚇</span>
+                                            <div style="text-align:left;">
+                                                <strong style="font-size:0.72rem; color:#cbd5e1; display:block; line-height:1.1;">Metro</strong>
+                                                <span style="font-size:0.65rem; color:#94a3b8;">&gt; 10 min</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style="text-align:center;">
+                                        <div style="font-size:1.5rem;">🏫</div>
+                                        <div style="font-size:0.68rem; color:#94a3b8; font-weight:700;">Escola</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- TARGETA DE CONDICIÓ EN DIRECTE -->
+                            <div id="bus-condition-card" style="background:#111827; border:1.5px solid #22c55e; border-radius:8px; padding:0.75rem 1rem; margin-bottom:0.85rem; font-size:0.85rem;">
+                                <!-- Generat per JS -->
+                            </div>
+
+                            <!-- BOTÓ SIMULACIÓ -->
+                            <div style="display:flex; gap:0.5rem; margin-bottom:0.85rem;">
+                                <button class="btn btn-sm" id="btn-run-bus-sim" style="background:#38bdf8; color:#0f172a; font-weight:800; flex:1; padding:0.55rem;" onclick="runSchoolRouteSimulation()">
                                     ▶️ Simular Camí Pas a Pas
                                 </button>
                             </div>
-                            <div id="school-sim-log" style="background:#0f172a; border:1px solid #334155; border-radius:8px; padding:0.85rem; font-size:0.84rem; color:#a7f3d0; min-height:70px;">
-                                💡 Canvia els minuts i prem «Simular Camí Pas a Pas» per il·luminar les capses del diagrama de la dreta!
+
+                            <!-- LOG VISUAL DE SIMULACIÓ -->
+                            <div id="school-sim-log" style="background:#020617; border:1px solid #334155; border-radius:8px; padding:0.85rem; font-size:0.84rem; color:#a7f3d0; min-height:75px; line-height:1.45;">
+                                👉 Fes clic a «Simular Camí Pas a Pas» per veure com s'il·luminen les instruccions del diagrama una per una!
                             </div>
                         </div>
                     </div>
@@ -743,12 +813,9 @@
                         <p style="font-size:0.93rem; color:var(--text-sub); margin-bottom:0.75rem;">
                             Tot i que l'ocell queda ben protegit de la pluja, també <strong>queda tapat quan fa bon temps i no pot veure el cel ni rebre la llum del sol</strong>. Això passa perquè el diagrama era <em>obert</em> i s'acabava un cop obria el paraigües!
                         </p>
-                        <div style="background:#fffbeb; border:1px solid #fde68a; border-radius:8px; padding:0.9rem; font-size:0.86rem; color:#78350f;">
-                            <strong>💡 Requisits del dossier per millorar-lo:</strong>
-                            <ul style="padding-left:1.2rem; margin-top:0.35rem;">
-                                <li>Si plou, el paraigües ha d'estar <strong>obert</strong>. Si no plou, ha d'estar <strong>tancat</strong>. S'ha de comprovar <strong>constantment</strong> (bucle tancat!).</li>
-                                <li>Pensa en dos blocs de decisió combinats: 1r <em>Està plovent?</em> i 2n <em>El paraigües està obert?</em> (o tancat). Segons la combinació, el robot obrirà, tancarà o mantindrà el paraigües i tornarà a comprovar el temps!</li>
-                            </ul>
+                        <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; padding:0.9rem; font-size:0.9rem; color:#14532d; line-height:1.5;">
+                            <strong>🌱 Què volem aconseguir?</strong><br>
+                            L'objectiu és que l'ocell estigui protegit quan plou, però que pugui gaudir del sol quan faci bon temps. Per tant, el robot ha de vigilar el temps contínuament: obrir el paraigües si plou, tancar-lo si deixa de ploure, i tornar a comprovar el temps sense aturar-se mai.
                         </div>
                     </div>
 
@@ -869,7 +936,7 @@
 
                 <!-- TRAÇA EXPLICATIVA DEL DIAGRAMA -->
                 <div id="bird-logic-explanation" style="background:#ffffff; border:1.5px solid #38bdf8; border-radius:10px; padding:0.85rem 1.1rem; font-size:0.86rem; color:#0f172a; line-height:1.5;">
-                    💡 <strong>Com pensa l'algorisme:</strong> 1r Sensor: Plou? <strong>NO</strong> → 2n Sensor: Paraigües obert? <strong>NO</strong> → Acció: <em>Mantenir tancat</em> → L'ocell gaudeix de la llum natural. Torna a vigilar contínuament ↺.
+                    🤖 <strong>Comportament del robot:</strong> Fa bon temps i el paraigües està tancat. L'ocellet gaudeix de la llum natural i el robot continua observant el cel.
                 </div>
             </div>
 
@@ -1057,29 +1124,12 @@
                 </div>
             </div>
 
-            <!-- REQUISITS I PISTES OFICIALS DEL PDF PÀG. 9 -->
-            <div class="card" style="background:#f0fdf4; border:1.5px solid #bbf7d0;">
-                <div class="grid-2" style="font-size:0.89rem; color:#14532d;">
-                    <div>
-                        <h4 style="color:#166534; margin-bottom:0.4rem;">📋 Objectius del robot domòtic:</h4>
-                        <ul style="padding-left:1.25rem;">
-                            <li>Detectar si hi ha <strong>llum natural</strong>.</li>
-                            <li>Detectar si hi ha <strong>persones a l'aula</strong> (sensor de moviment).</li>
-                            <li><strong>Encendre la làmpada</strong> només quan <strong>no hi ha llum</strong> i quan <strong>hi ha algú present</strong>.</li>
-                            <li><strong>Apagar-la</strong> quan sí que hi ha llum natural o quan no hi ha ningú a l'aula.</li>
-                            <li>Repetir aquest procés de manera <strong>contínua</strong> mentre el sistema estigui actiu.</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h4 style="color:#166534; margin-bottom:0.4rem;">💡 Requisits de funcionament:</h4>
-                        <ul style="padding-left:1.25rem;">
-                            <li>Utilitza <strong>blocs d'acció</strong> (com: <em>Encén la làmpada, Apaga la làmpada</em>).</li>
-                            <li>Utilitza <strong>blocs de decisió</strong> (com: <em>Hi ha llum natural?, Hi ha persones a l'aula?</em>).</li>
-                            <li>El teu diagrama ha de formar un <strong>cercle lògic (bucle)</strong>, on el robot torna a començar el cicle un cop ha fet l'acció.</li>
-                            <li>Pensa en la seqüència correcta: <strong>primer comprovar, després actuar</strong>.</li>
-                        </ul>
-                    </div>
-                </div>
+            <!-- DESCRIPCIÓ DE L'ACTIVITAT 3 -->
+            <div class="card" style="border-left: 5px solid #10b981;">
+                <h3 style="color:#065f46; margin-bottom:0.5rem;">🌱 Com volem estalviar energia?</h3>
+                <p style="font-size:0.95rem; color:var(--text-sub); line-height:1.6;">
+                    Volem que una aula o habitació tingui un enllumenat intel·ligent que només consumeixi electricitat quan sigui realment necessari. La regla és ben senzilla: la làmpada s'ha d'encendre només si a fora és fosc <strong>i alhora hi ha persones a dins</strong>. Si fa prou sol, o si l'habitació és buida, la làmpada ha de romandre apagada. El sistema anirà observant aquestes dues condicions de manera continuada.
+                </p>
             </div>
 
             <!-- SIMULADOR INTERACTIU EN CAPÇALERA -->
@@ -1087,7 +1137,7 @@
                 <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.75rem;">
                     <div>
                         <span class="phase-tag" style="background:#d1fae5; color:#065f46; border-color:#a7f3d0; margin-bottom:0.25rem;">Simulador en Viu</span>
-                        <h4 style="color:#065f46; margin:0.2rem 0;">💡 Simulador Domòtic: Experimenta amb els Sensors de Llum i Presència</h4>
+                        <h4 style="color:#065f46; margin:0.2rem 0;">🔌 Simulador Domòtic: Experimenta amb els Sensors de Llum i Presència</h4>
                         <p style="font-size:0.88rem; color:#047857;">
                             Commuta els dos sensors per provar les 4 combinacions possibles i comprovar quan s'encén la làmpada i com s'estalvia energia:
                         </p>
@@ -1271,29 +1321,12 @@
                 </div>
             </div>
 
-            <!-- TAULA DE REQUISITS DE L'ACTIVITAT 4 -->
+            <!-- DESCRIPCIÓ DE L'ACTIVITAT 4 -->
             <div class="card" style="border-left: 5px solid #8b5cf6;">
-                <div class="grid-2">
-                    <div>
-                        <h4 style="color:#6d28d9; margin-bottom:0.4rem;">📋 Lògica de control del robot aspirador:</h4>
-                        <ul style="padding-left:1.25rem; font-size:0.9rem; color:var(--text-sub);">
-                            <li><strong>1a Comprovació (Prioritària):</strong> Té la bateria baixa (&lt; 15%)?</li>
-                            <li><strong>Si la bateria és crítica (SÍ):</strong> Ha d'aturar la neteja, tornar a la base de càrrega i carregar la bateria.</li>
-                            <li><strong>Si la bateria és correcta (NO):</strong> Passa a comprovar el sensor de xoc/infrarojos per netejar l'habitació.</li>
-                            <li><strong>2a Comprovació (Obstacles):</strong> Detecta algun moble o obstacle davant?</li>
-                            <li><strong>Si hi ha obstacle (SÍ):</strong> Gira 90° a la dreta per esquivar-lo i torna al bucle!</li>
-                            <li><strong>Si el camí és lliure (NO):</strong> Avança 50 cm i aspira la pols, tornant al bucle!</li>
-                        </ul>
-                    </div>
-                    <div style="background:#f5f3ff; border:1px solid #ddd6fe; border-radius:var(--radius-md); padding:1rem; font-size:0.86rem; color:#5b21b6;">
-                        <strong>💡 Lògica clau per al diagrama:</strong>
-                        <ul style="padding-left:1.15rem; margin-top:0.35rem;">
-                            <li>Hi ha <strong>2 blocs de decisió (rombes 🔶)</strong>: un per a la bateria i l'altre per a l'obstacle.</li>
-                            <li>Les dues accions de neteja (girar o avançar) formen un <strong>bucle tancat continu</strong> que torna a comprovar l'estat del robot.</li>
-                            <li>La branca de bateria baixa és la sortida del procés de neteja fins que el robot es recarrega completament.</li>
-                        </ul>
-                    </div>
-                </div>
+                <h3 style="color:#5b21b6; margin-bottom:0.5rem;">🧹 Com ha de funcionar el robot a casa?</h3>
+                <p style="font-size:0.95rem; color:var(--text-sub); line-height:1.6;">
+                    Aquest robot té la missió de netejar l'habitació sense quedar-se aturat pel camí. La seva prioritat és no quedar-se mai sense energia: si detecta que la bateria és massa baixa (menys del 15%), atura la neteja i marxa cap a la base de càrrega. Si la bateria és correcta, va fent la feina: si es troba una paret o un obstacle al davant gira per esquivar-lo, i si el camí és lliure avança aspirant la pols contínuament.
+                </p>
             </div>
 
             <!-- SIMULADOR INTERACTIU EN CAPÇALERA -->
@@ -1334,7 +1367,7 @@
                     </div>
 
                     <div id="roomba-status-text" style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:0.85rem 1.25rem; font-size:0.88rem; color:#334155; max-width:420px;">
-                        💡 <strong>Estat del Robot:</strong> Bateria al 85% i camí lliure. El robot avança 50 cm i aspira la pols! ↺
+                        🤖 <strong>Estat del robot:</strong> Bateria correcta (85%) i camí lliure. El robot avança netejant l'habitació.
                     </div>
                 </div>
             </div>
@@ -1500,30 +1533,12 @@
                 </div>
             </div>
 
-            <!-- TAULA DE REQUISITS DE L'ACTIVITAT 5 -->
+            <!-- DESCRIPCIÓ DE L'ACTIVITAT 5 -->
             <div class="card" style="border-left: 5px solid #2563eb;">
-                <div class="grid-2">
-                    <div>
-                        <h4 style="color:#1e40af; margin-bottom:0.4rem;">📋 Seqüència lògica del semàfor intel·ligent:</h4>
-                        <ul style="padding-left:1.25rem; font-size:0.9rem; color:var(--text-sub);">
-                            <li><strong>Estat habitual:</strong> Cotxes en VERD i vianants en VERMELL.</li>
-                            <li><strong>1a Pregunta:</strong> Un vianant ha premut el polsador de pas?</li>
-                            <li><strong>Si NO hi ha demanda:</strong> Manté cotxes en VERD i torna al bucle de vigilància.</li>
-                            <li><strong>Si SÍ s'ha premut:</strong> Comprova el temporitzador de seguretat.</li>
-                            <li><strong>2a Pregunta:</strong> Han passat &gt; 30 s des de l'últim verd de cotxes?</li>
-                            <li><strong>Si NO han passat 30 s:</strong> Espera 5 segons de seguretat i torna a comprovar el temps.</li>
-                            <li><strong>Si SÍ han passat 30 s:</strong> Posa cotxes en ÀMBRE (3 s) ➔ Posa cotxes en VERMELL i vianants en VERD amb senyal acústic ➔ Espera 15 segons de pas ➔ Reinicia el cicle tornant al bucle!</li>
-                        </ul>
-                    </div>
-                    <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:var(--radius-md); padding:1rem; font-size:0.86rem; color:#1e40af;">
-                        <strong>💡 Rombes i accions:</strong>
-                        <ul style="padding-left:1.15rem; margin-top:0.35rem;">
-                            <li>Conté <strong>2 rombes de decisió (🔶)</strong>: el polsador i el temporitzador de 30 segons.</li>
-                            <li>Conté <strong>5 rectangles d'acció (🟦)</strong> que regulen la seqüència exacta de llums i temps.</li>
-                            <li>Totes les branques formen un <strong>cicle continu de trànsit</strong>.</li>
-                        </ul>
-                    </div>
-                </div>
+                <h3 style="color:#1e40af; margin-bottom:0.5rem;">🚦 Com funciona aquest pas de vianants?</h3>
+                <p style="font-size:0.95rem; color:var(--text-sub); line-height:1.6;">
+                    En un carrer davant d'una escola, el semàfor manté el pas obert als vehicles i tancat als vianants per evitar embussos. Quan una persona vol creuar, prem el polsador de demanda. Per seguretat i fluïdesa del trànsit, el semàfor comprova que els cotxes hagin tingut almenys 30 segons de llum verda contínua; si no, fa esperar una mica abans de canviar. Quan arriba el moment, avisa els vehicles amb la llum ambre uns segons, després es posa vermell i obre el pas verd als vianants durant 15 segons abans de reprendre el trànsit normal.
+                </p>
             </div>
 
             <!-- SIMULADOR INTERACTIU EN CAPÇALERA -->
@@ -1749,32 +1764,12 @@
                 </div>
             </div>
 
-            <!-- TAULA DE REQUISITS DE L'ACTIVITAT 6 -->
+            <!-- DESCRIPCIÓ DE L'ACTIVITAT 6 -->
             <div class="card" style="border-left: 5px solid #2563eb;">
-                <div class="grid-2">
-                    <div>
-                        <h4 style="color:#1e40af; margin-bottom:0.4rem;">📋 Lògica de control de la barrera del pàrquing:</h4>
-                        <ul style="padding-left:1.25rem; font-size:0.9rem; color:var(--text-sub);">
-                            <li><strong>Estat inicial:</strong> Barrera baixada i semàfor d'entrada en vermell.</li>
-                            <li><strong>1a Pregunta:</strong> Detecta vehicle davant la barrera?</li>
-                            <li><strong>Si NO hi ha vehicle:</strong> Manté la barrera baixada i torna al bucle de vigilància.</li>
-                            <li><strong>Si SÍ detecta vehicle:</strong> Comprova l'aforament del pàrquing.</li>
-                            <li><strong>2a Pregunta:</strong> Queden places lliures al pàrquing?</li>
-                            <li><strong>Si NO queden places (0):</strong> Encén el llum vermell i el senyal «COMPLET» (la barrera queda baixada).</li>
-                            <li><strong>Si SÍ queden places (&gt;0):</strong> Aixeca la barrera i encén el llum verd ➔ Comprova si el cotxe ha travessat completament (fotocèl·lula de seguretat).</li>
-                            <li><strong>3a Pregunta:</strong> El vehicle ha travessat la barrera?</li>
-                            <li><strong>Si SÍ ha passat:</strong> Baixa la barrera i resta 1 plaça lliure a l'aforament. Torna a l'inici del cicle!</li>
-                        </ul>
-                    </div>
-                    <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:var(--radius-md); padding:1rem; font-size:0.86rem; color:#1e40af;">
-                        <strong>💡 Rombes i accions:</strong>
-                        <ul style="padding-left:1.15rem; margin-top:0.35rem;">
-                            <li>Conté <strong>3 rombes de decisió (🔶)</strong>: sensor de presència, comprovació d'aforament i fotocèl·lula de pas.</li>
-                            <li>Conté <strong>4 rectangles d'acció (🟦)</strong> que controlen la barrera, els llums i l'aforament.</li>
-                            <li>Totes les branques tanquen el flux formant un <strong>cicle de control automàtic continu</strong>.</li>
-                        </ul>
-                    </div>
-                </div>
+                <h3 style="color:#1e40af; margin-bottom:0.5rem;">🅿️ Com funciona l'entrada de l'aparcament?</h3>
+                <p style="font-size:0.95rem; color:var(--text-sub); line-height:1.6;">
+                    L'accés a l'aparcament és totalment autònom. Normalment la barrera està abaixada i el semàfor en vermell. Quan un vehicle arriba a l'entrada, el sistema comprova primer si queden places disponibles: si l'aparcament està ple, encén el rètol de COMPLET i no el deixa passar. Si hi ha places lliures, la barrera s'aixeca i el semàfor es posa verd. Per seguretat, la barrera no baixa fins que el cotxe ha travessat completament la línia de pas; un cop a dins, la barrera baixa, es descompta la plaça ocupada i el sistema queda llest per rebre el vehicle següent.
+                </p>
             </div>
 
             <!-- SIMULADOR INTERACTIU EN CAPÇALERA -->
@@ -1863,7 +1858,7 @@
                         </div>
 
                         <div id="parking-sim-log" style="background:#000000; border:1px solid #334155; border-radius:6px; padding:0.75rem; margin-top:0.85rem; font-size:0.82rem; min-height:55px; text-align:left; color:#a7f3d0; line-height:1.4;">
-                            💡 Tria els sensors i prem «▶️ Executar Cicle de la Barrera» per veure les decisions del controlador!
+                            🚗 Tria els sensors i prem «▶️ Executar Cicle de la Barrera» per provar el comportament del sistema!
                         </div>
                     </div>
                 </div>

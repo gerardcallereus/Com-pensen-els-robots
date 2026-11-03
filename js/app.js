@@ -48,15 +48,15 @@ let appState = {
 };
 
 const STAGE_TITLES = {
-    1: "1. Llenguatge Algorísmic",
+    1: "1. Algorismes",
     2: "2. Tipus de Blocs",
-    3: "3. Act. 1: El Despertador",
-    4: "4. Act. 2: L'Ocellet en la Gàbia",
-    5: "5. Act. 3: La Làmpada Automàtica",
-    6: "6. Act. 4: El Robot Aspirador",
-    7: "7. Act. 5: El Semàfor Intel·ligent",
-    8: "8. Act. 6: La Barrera del Pàrquing",
-    9: "9. Diploma Oficial"
+    3: "3. Despertador",
+    4: "4. L'Ocellet",
+    5: "5. La Làmpada",
+    6: "6. L'Aspirador",
+    7: "7. El Semàfor",
+    8: "8. La Barrera",
+    9: "9. Diploma 🎓"
 };
 
 // ============================================================================
@@ -293,15 +293,104 @@ function proceedToNextStage() {
 // ============================================================================
 // FASE 1: SIMULADOR CAMÍ A L'ESCOLA (BUS VS METRO) + 3 REPTES AUTOCORREGIBLES
 // ============================================================================
+let busSimTimer = null;
+let busStepTimeouts = [];
+
 function updateBusSimSlider(val) {
+    const minutes = parseInt(val, 10);
     const lbl = document.getElementById('bus-time-val');
-    if (lbl) lbl.textContent = `${val} minuts`;
+    if (lbl) lbl.textContent = `${minutes} minuts`;
+
+    const pill = document.getElementById('bus-decision-pill');
+    const condCard = document.getElementById('bus-condition-card');
+    const isMetro = minutes > 10;
+    const pathBusEl = document.getElementById('sim-path-bus');
+    const pathMetroEl = document.getElementById('sim-path-metro');
+    const routeBadge = document.getElementById('route-active-step-badge');
+
+    if (routeBadge) {
+        routeBadge.textContent = isMetro ? 'Ruta triada: Metro 🚇' : 'Ruta triada: Bus 🚌';
+        routeBadge.style.background = isMetro ? '#ef4444' : '#10b981';
+        routeBadge.style.color = '#ffffff';
+    }
+
+    if (pathBusEl && pathMetroEl) {
+        if (isMetro) {
+            pathMetroEl.style.opacity = '1';
+            pathMetroEl.style.background = '#7f1d1d';
+            pathMetroEl.style.borderColor = '#ef4444';
+            pathMetroEl.style.boxShadow = '0 0 10px rgba(239, 68, 68, 0.5)';
+            pathBusEl.style.opacity = '0.35';
+            pathBusEl.style.background = '#1e293b';
+            pathBusEl.style.borderColor = '#475569';
+            pathBusEl.style.boxShadow = 'none';
+        } else {
+            pathBusEl.style.opacity = '1';
+            pathBusEl.style.background = '#064e3b';
+            pathBusEl.style.borderColor = '#10b981';
+            pathBusEl.style.boxShadow = '0 0 10px rgba(16, 185, 129, 0.5)';
+            pathMetroEl.style.opacity = '0.35';
+            pathMetroEl.style.background = '#1e293b';
+            pathMetroEl.style.borderColor = '#475569';
+            pathMetroEl.style.boxShadow = 'none';
+        }
+    }
+
+    if (pill) {
+        if (isMetro) {
+            pill.style.background = '#ef4444';
+            pill.style.color = '#ffffff';
+            pill.textContent = 'Decisió: 🚇 METRO';
+        } else {
+            pill.style.background = '#10b981';
+            pill.style.color = '#ffffff';
+            pill.textContent = 'Decisió: 🚌 AUTOBÚS';
+        }
+    }
+
+    if (condCard) {
+        if (isMetro) {
+            condCard.style.borderColor = '#ef4444';
+            condCard.innerHTML = `
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.4rem;">
+                    <span>🔍 Condició: <strong>Falten més de 10 minuts?</strong> (${minutes} &gt; 10)</span>
+                    <span style="background:#fee2e2; color:#991b1b; padding:0.2rem 0.6rem; border-radius:4px; font-weight:800; font-size:0.8rem;">SÍ (Cert)</span>
+                </div>
+                <div style="color:#fca5a5; font-size:0.82rem; margin-top:0.45rem;">
+                    ➔ Camí Dret: Com que falta massa estona, anar al <strong>Metro</strong>, sentit Sant Andreu, baixar a la 2a parada i pujar per les escales de la dreta.
+                </div>
+            `;
+        } else {
+            condCard.style.borderColor = '#22c55e';
+            condCard.innerHTML = `
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.4rem;">
+                    <span>🔍 Condició: <strong>Falten més de 10 minuts?</strong> (${minutes} &gt; 10)</span>
+                    <span style="background:#dcfce7; color:#166534; padding:0.2rem 0.6rem; border-radius:4px; font-weight:800; font-size:0.8rem;">NO (Fals)</span>
+                </div>
+                <div style="color:#86efac; font-size:0.82rem; margin-top:0.45rem;">
+                    ➔ Camí Esquerre: Com que arriba aviat (≤ 10 min), esperar l'<strong>Autobús</strong>, pujar i baixar a la 3a parada.
+                </div>
+            `;
+        }
+    }
+}
+
+function setBusSimTime(val) {
+    const slider = document.getElementById('bus-time-slider');
+    if (slider) {
+        slider.value = val;
+        updateBusSimSlider(val);
+    }
 }
 
 function runSchoolRouteSimulation() {
+    busStepTimeouts.forEach(t => clearTimeout(t));
+    busStepTimeouts = [];
+
     const slider = document.getElementById('bus-time-slider');
     const minutes = slider ? parseInt(slider.value, 10) : 6;
     const logBox = document.getElementById('school-sim-log');
+    const btn = document.getElementById('btn-run-bus-sim');
 
     const allNodes = [
         'sch-node-start', 'sch-node-busstop', 'sch-node-look', 'sch-node-dec',
@@ -315,24 +404,61 @@ function runSchoolRouteSimulation() {
     });
 
     const isMetro = minutes > 10;
-    const pathIds = isMetro
-        ? ['sch-node-start', 'sch-node-busstop', 'sch-node-look', 'sch-node-dec', 'sch-node-gometro', 'sch-node-boardmetro', 'sch-node-exitmetro', 'sch-node-stairs', 'sch-node-walk', 'sch-node-end']
-        : ['sch-node-start', 'sch-node-busstop', 'sch-node-look', 'sch-node-dec', 'sch-node-waitbus', 'sch-node-boardbus', 'sch-node-exitbus', 'sch-node-walk', 'sch-node-end'];
+    const steps = isMetro ? [
+        { id: 'sch-node-start', text: "🏠 <strong>Pas 1:</strong> L'alumne/a surt de casa pel matí." },
+        { id: 'sch-node-busstop', text: "🚏 <strong>Pas 2:</strong> Arriba a l'estació de l'autobús." },
+        { id: 'sch-node-look', text: `⏱️ <strong>Pas 3:</strong> Consulta el panell informatiu: falten <strong>${minutes} minuts</strong>.` },
+        { id: 'sch-node-dec', text: `🔶 <strong>Pas 4 (Decisió):</strong> Falten més de 10 minuts? (${minutes} &gt; 10) ➔ <strong>SÍ (Cert)</strong>. Tria la branca del Metro!` },
+        { id: 'sch-node-gometro', text: "🚶 <strong>Pas 5:</strong> Camina cap a l'estació de metro." },
+        { id: 'sch-node-boardmetro', text: "🚇 <strong>Pas 6:</strong> Puja al metro en direcció Sant Andreu." },
+        { id: 'sch-node-exitmetro', text: "🛑 <strong>Pas 7:</strong> Baixa a la segona parada." },
+        { id: 'sch-node-stairs', text: "↗️ <strong>Pas 8:</strong> Puja al carrer per les escales de la dreta." },
+        { id: 'sch-node-walk', text: "🎒 <strong>Pas 9:</strong> Camina tranquil·lament fins a l'escola." },
+        { id: 'sch-node-end', text: `🎉 <strong>JA HAS ARRIBAT!</strong> S'ha completat l'algorisme arribant a l'escola puntualment en <strong>Metro</strong>!` }
+    ] : [
+        { id: 'sch-node-start', text: "🏠 <strong>Pas 1:</strong> L'alumne/a surt de casa pel matí." },
+        { id: 'sch-node-busstop', text: "🚏 <strong>Pas 2:</strong> Arriba a l'estació de l'autobús." },
+        { id: 'sch-node-look', text: `⏱️ <strong>Pas 3:</strong> Consulta el panell informatiu: falten <strong>${minutes} minuts</strong>.` },
+        { id: 'sch-node-dec', text: `🔶 <strong>Pas 4 (Decisió):</strong> Falten més de 10 minuts? (${minutes} &gt; 10) ➔ <strong>NO (Fals)</strong>. Tria la branca de l'Autobús!` },
+        { id: 'sch-node-waitbus', text: "⏳ <strong>Pas 5:</strong> S'espera a l'estació de bus tranquil·lament." },
+        { id: 'sch-node-boardbus', text: "🚌 <strong>Pas 6:</strong> Puja a l'autobús quan arriba." },
+        { id: 'sch-node-exitbus', text: "🛑 <strong>Pas 7:</strong> Baixa a la tercera parada." },
+        { id: 'sch-node-walk', text: "🎒 <strong>Pas 8:</strong> Camina tranquil·lament fins a l'escola." },
+        { id: 'sch-node-end', text: `🎉 <strong>JA HAS ARRIBAT!</strong> S'ha completat l'algorisme arribant a l'escola puntualment en <strong>Autobús</strong>!` }
+    ];
 
-    pathIds.forEach((nodeId, idx) => {
-        setTimeout(() => {
-            const el = document.getElementById(nodeId);
-            if (el) el.classList.add('sim-node-active');
-        }, idx * 180);
-    });
-
-    if (logBox) {
-        if (isMetro) {
-            logBox.innerHTML = `🚇 <strong>Resultat de l'algorisme (${minutes} min &gt; 10 min → SÍ):</strong> Com que falten més de 10 minuts, el camí va per la dreta: <em>Anar al metro → Pujar en sentit Sant Andreu → Baixar a la 2a parada → Sortir per les escales de la dreta → Caminar fins l'escola → JA HAS ARRIBAT!</em>`;
-        } else {
-            logBox.innerHTML = `🚌 <strong>Resultat de l'algorisme (${minutes} min ≤ 10 min → NO):</strong> Com que NO falten més de 10 minuts, el camí va per l'esquerra: <em>Esperar a l'autobús → Pujar a l'autobús → Baixar a la 3a parada → Caminar fins l'escola → JA HAS ARRIBAT!</em>`;
-        }
+    if (btn) {
+        btn.disabled = true;
+        btn.textContent = '⏳ Simulant recorregut...';
     }
+
+    steps.forEach((step, idx) => {
+        const timeout = setTimeout(() => {
+            const el = document.getElementById(step.id);
+            if (el) {
+                el.classList.add('sim-node-active');
+                try {
+                    el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                } catch (_) {}
+            }
+            if (logBox) logBox.innerHTML = step.text;
+            const routeBadge = document.getElementById('route-active-step-badge');
+            if (routeBadge) {
+                routeBadge.textContent = `Pas ${idx + 1} de ${steps.length}`;
+            }
+
+            if (idx === steps.length - 1) {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.textContent = '▶️ Tornar a Simular Pas a Pas';
+                }
+                if (routeBadge) {
+                    routeBadge.textContent = 'Arribat a l\'escola! 🎓';
+                }
+            }
+        }, idx * 450);
+        busStepTimeouts.push(timeout);
+    });
 }
 
 
@@ -1193,7 +1319,7 @@ function updateBirdSimUI() {
                 moodText.innerHTML = '✨ <strong>L\'ocellet veu el sol i canta feliç!</strong> 🎵';
             }
             if (logicExp) {
-                logicExp.innerHTML = '💡 <strong>Com pensa l\'algorisme:</strong> 1r Rombe: Plou? <strong>NO</strong> → 2n Rombe: Paraigües obert? <strong>NO</strong> → Acció: <em>Mantenir tancat</em> → L\'ocell gaudeix de la llum natural. Torna a vigilar contínuament ↺.';
+                logicExp.innerHTML = '🤖 <strong>Comportament del robot:</strong> Fa bon temps i el paraigües està tancat. L\'ocellet gaudeix de la llum natural i el robot continua observant el cel.';
             }
         } else {
             // Fa sol però el paraigües continua obert!
@@ -1203,7 +1329,7 @@ function updateBirdSimUI() {
                 moodText.innerHTML = '⚠️ <strong>Problema:</strong> Fa sol però el paraigües continua obert i li tapa la llum! L\'ocellet està a les fosques!';
             }
             if (logicExp) {
-                logicExp.innerHTML = '💡 <strong>Com pensa l\'algorisme:</strong> 1r Rombe: Plou? <strong>NO</strong> → 2n Rombe: Paraigües obert? <strong>SÍ</strong> → Acció necessària: <strong>Tancar el paraigües</strong> perquè l\'ocell pugui veure el sol! Prem «🤖 Què fa el robot?» per tancar-lo ↺.';
+                logicExp.innerHTML = '🤖 <strong>Comportament del robot:</strong> No plou però el paraigües estava obert. El robot l\'ha de tancar perquè entri la claror del sol. Prem «🤖 Què fa el robot?» per tancar-lo.';
             }
         }
     } else {
@@ -1215,7 +1341,7 @@ function updateBirdSimUI() {
                 moodText.innerHTML = '🌧️ <strong>L\'ocellet està sec i ben protegit de la pluja sota el paraigües!</strong>';
             }
             if (logicExp) {
-                logicExp.innerHTML = '💡 <strong>Com pensa l\'algorisme:</strong> 1r Rombe: Plou? <strong>SÍ</strong> → 2n Rombe: Paraigües obert? <strong>SÍ</strong> → Acció: <em>Mantenir obert</em> → L\'ocell no es mulla. Torna a vigilar contínuament ↺.';
+                logicExp.innerHTML = '🤖 <strong>Comportament del robot:</strong> Està plovent i el paraigües ja està obert. L\'ocell no es mulla i el robot continua atent al temps.';
             }
         } else {
             // Plou i el paraigües està tancat!
@@ -1225,7 +1351,7 @@ function updateBirdSimUI() {
                 moodText.innerHTML = '🚨 <strong>Perill:</strong> Està plovent i el paraigües està tancat! L\'ocellet s\'està mullant!';
             }
             if (logicExp) {
-                logicExp.innerHTML = '💡 <strong>Com pensa l\'algorisme:</strong> 1r Rombe: Plou? <strong>SÍ</strong> → 2n Rombe: Paraigües obert? <strong>NO</strong> → Acció necessària: <strong>Obrir el paraigües</strong> immediatament! Prem «🤖 Què fa el robot?» per protegir-lo ↺.';
+                logicExp.innerHTML = '🤖 <strong>Comportament del robot:</strong> Està plovent i el paraigües està tancat. El robot l\'ha d\'obrir immediatament per protegir-lo de l\'aigua. Prem «🤖 Què fa el robot?» per obrir-lo.';
             }
         }
     }
@@ -1340,7 +1466,7 @@ function simRoombaStep() {
         statusText.style.background = '#fef2f2';
         statusText.style.borderColor = '#fca5a5';
         statusText.style.color = '#991b1b';
-        statusText.innerHTML = `⚠️ <strong>Decisió 1 (Bateria &lt; 15%): SÍ</strong> → Accions: <em>Aturar la neteja</em> i <em>Tornar a la base de càrrega</em>. El robot entra a la base per salvar la bateria!`;
+        statusText.innerHTML = `⚠️ <strong>Estat del robot:</strong> La bateria és massa baixa (${simRoombaBattery}%). El robot atura la neteja i va directe a la base de càrrega.`;
     } else if (simRoombaObstacle) {
         robot.textContent = '🔄';
         robot.style.borderColor = '#f59e0b';
@@ -1348,7 +1474,7 @@ function simRoombaStep() {
         statusText.style.background = '#fffbeb';
         statusText.style.borderColor = '#fde68a';
         statusText.style.color = '#92400e';
-        statusText.innerHTML = `🧱 <strong>Decisió 1: Bateria OK (NO) → Decisió 2 (Obstacle davant?): SÍ</strong> → Acció: <em>Gira 90° a la dreta</em> per esquivar l'objecte. <strong>Retorn al bucle de neteja ↺</strong>`;
+        statusText.innerHTML = `🧱 <strong>Estat del robot:</strong> Ha detectat un obstacle davant. Gira a la dreta per esquivar-lo i continua la seva ruta.`;
         setTimeout(() => {
             if (robot) robot.style.transform = 'rotate(0deg)';
         }, 600);
@@ -1359,7 +1485,7 @@ function simRoombaStep() {
         statusText.style.background = '#f0fdf4';
         statusText.style.borderColor = '#bbf7d0';
         statusText.style.color = '#166534';
-        statusText.innerHTML = `✨ <strong>Decisió 1: Bateria OK (NO) → Decisió 2 (Obstacle davant?): NO</strong> → Acció: <em>Avança 50 cm i aspira la pols</em>. <strong>Retorn al bucle de neteja ↺</strong>`;
+        statusText.innerHTML = `✨ <strong>Estat del robot:</strong> Bateria correcta (${simRoombaBattery}%) i camí lliure. El robot avança netejant l'habitació.`;
         setTimeout(() => {
             if (robot) robot.style.transform = 'translateY(0)';
         }, 400);
@@ -2143,6 +2269,7 @@ window.addEventListener('resize', () => {
 
 window.addEventListener('DOMContentLoaded', () => {
     loadState();
+    updateBusSimSlider(6);
     
     // Configurar ResizeObserver per actualitzar les fletxes quan canvia el contingut dels taulers
     try {

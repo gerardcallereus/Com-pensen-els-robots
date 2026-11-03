@@ -197,43 +197,30 @@ header {
 .nav-stages {
     background: #ffffff;
     border-bottom: 1px solid var(--border);
-    padding: 0.5rem 1rem;
-    overflow-x: auto;
+    padding: 0.45rem 0.75rem;
     position: sticky;
     top: 55px;
     z-index: 50;
     box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-    scrollbar-width: thin;
-    scrollbar-color: #e2e8f0 transparent;
-}
-
-.nav-stages::-webkit-scrollbar {
-    height: 4px;
-}
-.nav-stages::-webkit-scrollbar-track {
-    background: transparent;
-}
-.nav-stages::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
-    border-radius: 4px;
 }
 
 .nav-stages-inner {
     max-width: 1260px;
     margin: 0 auto;
     display: flex;
-    gap: 0.45rem;
+    gap: 0.35rem;
     align-items: center;
-    min-width: max-content;
+    justify-content: center;
+    flex-wrap: wrap;
 }
 
 .stage-nav-btn {
     background: #f8fafc;
     border: 1px solid var(--border);
     color: var(--text-muted);
-    padding: 0.42rem 0.85rem;
+    padding: 0.32rem 0.7rem;
     border-radius: 999px;
-    font-size: 0.82rem;
+    font-size: 0.8rem;
     font-weight: 700;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -1008,6 +995,35 @@ header {
     flex-wrap: wrap;
     align-items: center;
     margin: 0.9rem 0;
+}
+
+/* ============================================================================
+   TRAÇABILITAT I ANIMACIÓ DE NODES AL DIAGRAMA (SIMULADOR FASE 1)
+   ============================================================================ */
+.sim-node-trace {
+    transition: all 0.25s ease;
+}
+
+.sim-node-active {
+    background: #fef08a !important;
+    border-color: #ca8a04 !important;
+    color: #713f12 !important;
+    font-weight: 800 !important;
+    box-shadow: 0 0 0 3px #facc15, 0 4px 14px rgba(234, 179, 8, 0.55) !important;
+    transform: scale(1.04);
+    z-index: 5;
+}
+
+.shape-decision-diamond-wrap.sim-node-active .shape-decision-diamond-svg polygon {
+    fill: #fef08a !important;
+    stroke: #ca8a04 !important;
+    stroke-width: 4px !important;
+    filter: drop-shadow(0 0 8px rgba(234, 179, 8, 0.7));
+}
+
+.shape-decision-diamond-wrap.sim-node-active .shape-decision-diamond-text {
+    color: #713f12 !important;
+    font-weight: 800 !important;
 }
 
 /* ============================================================================
