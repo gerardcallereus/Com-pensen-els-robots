@@ -2351,9 +2351,10 @@ function drawAct5Loop() {
     const svgG = document.getElementById('act5-loop-paths');
     const target = document.getElementById('act5-loop-target');
     const s2 = document.getElementById('slot-act5-2');
+    const s3 = document.getElementById('slot-act5-3');
     const s4 = document.getElementById('slot-act5-4');
     const s7 = document.getElementById('slot-act5-7');
-    if (!board || !svgEl || !svgG || !target || !s2 || !s4 || !s7) return;
+    if (!board || !svgEl || !svgG || !target || !s2 || !s3 || !s4 || !s7) return;
     if (board.offsetParent === null) return;
 
     const bRect = board.getBoundingClientRect();
@@ -2363,6 +2364,7 @@ function drawAct5Loop() {
 
     const tRect = target.getBoundingClientRect();
     const r2 = s2.getBoundingClientRect();
+    const r3 = s3.getBoundingClientRect();
     const r4 = s4.getBoundingClientRect();
     const r7 = s7.getBoundingClientRect();
 
@@ -2382,17 +2384,33 @@ function drawAct5Loop() {
     const rightBottomY = s7BotY + 26;
     const rightGutterX = bRect.width - 20;
 
+    // Bucle intern de seguretat: Després d'«Esperar 5 s» (s4), fletxa directa a «Han passat > 30 s de cotxes en verd?» (s3)
+    const s4MidX = r4.left - bRect.left + (r4.width / 2);
+    const s4BotY = r4.bottom - bRect.top;
+    const s3LeftX = r3.left - bRect.left;
+    const s3MidY = r3.top - bRect.top + (r3.height / 2);
+    const s4LoopBottomY = s4BotY + 16;
+    const s4LoopLeftX = (r4.left - bRect.left) - 16;
+
+    const s4ToS3LoopPath = `M ${s4MidX} ${s4BotY} L ${s4MidX} ${s4LoopBottomY} L ${s4LoopLeftX} ${s4LoopBottomY} L ${s4LoopLeftX} ${s3MidY} L ${s3LeftX} ${s3MidY}`;
+
     const leftBranchPaths = `M ${s2MidX} ${s2BotY} L ${s2MidX} ${leftBottomY} L ${leftGutterX} ${leftBottomY} L ${leftGutterX} ${targetY} L ${targetLeftX} ${targetY}`;
     const rightBranchPaths = `M ${s7MidX} ${s7BotY} L ${s7MidX} ${rightBottomY} L ${rightGutterX} ${rightBottomY} L ${rightGutterX} ${targetY} L ${targetRightX} ${targetY}`;
 
     const midYLeft = (leftBottomY + targetY) / 2;
     const midYRight = (rightBottomY + targetY) / 2;
+    const midYTimerLoop = (s4LoopBottomY + s3MidY) / 2;
 
     svgG.innerHTML = `
         <!-- Branca Esquerra Trànsit Fluid -->
         <path d="${leftBranchPaths}" fill="none" stroke="#64748b" stroke-width="3" stroke-dasharray="7,4" class="loop-active-path" marker-end="url(#marker-loop-blue-act5)"/>
         <rect x="${leftGutterX - 14}" y="${midYLeft - 80}" width="28" height="160" rx="6" fill="#ffffff" stroke="#64748b" stroke-width="2"/>
         <text x="${leftGutterX}" y="${midYLeft}" fill="#475569" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="800" text-anchor="middle" dominant-baseline="central" transform="rotate(-90 ${leftGutterX},${midYLeft})">TRÀNSIT CONTINU ↺</text>
+
+        <!-- Bucle de Seguretat de s4 (Esperar 5s) a s3 (Han passat > 30 s?) -->
+        <path d="${s4ToS3LoopPath}" fill="none" stroke="#d97706" stroke-width="3.2" stroke-dasharray="6,3" class="loop-active-path" marker-end="url(#marker-loop-amber-act5)"/>
+        <rect x="${s4LoopLeftX - 10}" y="${midYTimerLoop - 60}" width="20" height="120" rx="5" fill="#ffffff" stroke="#d97706" stroke-width="1.8"/>
+        <text x="${s4LoopLeftX}" y="${midYTimerLoop}" fill="#b45309" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="800" text-anchor="middle" dominant-baseline="central" transform="rotate(-90 ${s4LoopLeftX},${midYTimerLoop})">↺ RECOMPROVA TEMPS</text>
 
         <!-- Branca Dreta Retorn del Pas Escolar -->
         <path d="${rightBranchPaths}" fill="none" stroke="#2563eb" stroke-width="3" stroke-dasharray="7,4" class="loop-active-path" marker-end="url(#marker-loop-blue-act5)" filter="url(#glow-blue-act5)"/>
@@ -2712,38 +2730,11 @@ function resetTraceSim() {
 function selectTraceAnswer(qNum, answerVal) {
     traceUserAnswers[qNum] = answerVal;
 
-    // Actualitzar visualment tots els botons de la pregunta
-    if (qNum === 1) {
-        [0, 1, 2, 3].forEach(val => {
-            const btn = document.getElementById(`trace-q1-opt-${val}`);
-            if (btn) {
-                const isSel = (answerVal === val);
-                btn.classList.toggle('selected', isSel);
-                btn.innerHTML = `${val} ${val === 1 ? 'intent' : 'intents'} ${isSel ? ' (Seleccionat ✔️)' : ''}`;
-            }
-        });
-    } else if (qNum === 2) {
-        [120, 80, 40, 0].forEach(val => {
-            const btn = document.getElementById(`trace-q2-opt-${val}`);
-            if (btn) {
-                const isSel = (answerVal === val);
-                btn.classList.toggle('selected', isSel);
-                btn.innerHTML = `${val} € ${isSel ? ' (Seleccionat ✔️)' : ''}`;
-            }
-        });
-    } else if (qNum === 3) {
-        const labels = {
-            block: "SÍ a «Intents ≥ 3» ➔ Bloquejar targeta per seguretat",
-            retry: "NO a «Intents ≥ 3» ➔ Donar 5 intents més",
-            money: "Entregar els 40 € igualment"
-        };
-        ['block', 'retry', 'money'].forEach(key => {
-            const btn = document.getElementById(`trace-q3-opt-${key}`);
-            if (btn) {
-                const isSel = (answerVal === key);
-                btn.classList.toggle('selected', isSel);
-                btn.innerHTML = `${labels[key]} ${isSel ? ' (Seleccionat ✔️)' : ''}`;
-            }
+    const container = document.getElementById(`trace-q${qNum}-container`);
+    if (container) {
+        container.querySelectorAll('.trace-opt-btn').forEach(btn => {
+            const isSel = (btn.getAttribute('data-val') === answerVal);
+            btn.classList.toggle('selected', isSel);
         });
     }
 }
@@ -2752,17 +2743,34 @@ function checkTraceAnswers() {
     const fb = document.getElementById('trace-answers-feedback');
     const finishBtn = document.getElementById('btn-finish-stage-10');
 
-    const q1Ok = traceUserAnswers[1] === 2;
-    const q2Ok = traceUserAnswers[2] === 80;
-    const q3Ok = traceUserAnswers[3] === 'block';
+    const correctAnswers = {
+        1: '3_errors',
+        2: '70_euro',
+        3: 'cert_50',
+        4: 'fals_denegar',
+        5: 'intents2_saldo120',
+        6: 'bucle_infinit'
+    };
 
-    if (q1Ok && q2Ok && q3Ok) {
+    let correctCount = 0;
+    const totalQuestions = 6;
+    const wrongQuestions = [];
+
+    for (let q = 1; q <= totalQuestions; q++) {
+        if (traceUserAnswers[q] === correctAnswers[q]) {
+            correctCount++;
+        } else {
+            wrongQuestions.push(q);
+        }
+    }
+
+    if (correctCount === totalQuestions) {
         if (fb) {
             fb.style.display = 'block';
             fb.style.background = '#ecfdf5';
             fb.style.color = '#065f46';
             fb.style.border = '2px solid #10b981';
-            fb.innerHTML = `🎉 <strong>EXCEL·LENT! Has desxifrat la traça del diagrama a la perfecció!</strong><br>Has entès com un algorisme utilitza variables de memòria, condicions límit (Intents ≥ 3) i bucles ↺ per prendre decisions de seguretat.`;
+            fb.innerHTML = `🎉 <strong>EXCEL·LENT! 6 de 6 correctes (100%)!</strong><br>Has desxifrat la traça del diagrama a la perfecció. Domines com els robots utilitzen les variables de memòria RAM, les condicions de decisió límit (≤, ≥) i la prevenció de bucles infinits.`;
         }
         if (finishBtn) finishBtn.style.display = 'inline-block';
     } else {
@@ -2772,7 +2780,7 @@ function checkTraceAnswers() {
             fb.style.background = '#fef2f2';
             fb.style.color = '#991b1b';
             fb.style.border = '2px solid #ef4444';
-            fb.innerHTML = `❌ <strong>Alguna de les respostes no és correcta (-15 XP).</strong> Revisa la taula de traça i el diagrama per comprovar els valors de les variables a cada iteració.`;
+            fb.innerHTML = `❌ <strong>Tens ${correctCount} de ${totalQuestions} respostes correctes (-15 XP).</strong><br>Revisa les preguntes pendents: <strong>Pregunta ${wrongQuestions.join(', Pregunta ')}</strong>. Observa el diagrama de flux i la taula de traça pas a pas per deduir el funcionament de la memòria i les condicions!`;
         }
     }
 }

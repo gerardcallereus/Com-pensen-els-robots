@@ -1800,6 +1800,9 @@
                                     <marker id="marker-loop-blue-act5" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
                                         <polygon points="1 1.5, 7.5 4.5, 1 7.5" fill="#2563eb"/>
                                     </marker>
+                                    <marker id="marker-loop-amber-act5" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+                                        <polygon points="1 1.5, 7.5 4.5, 1 7.5" fill="#d97706"/>
+                                    </marker>
                                     <filter id="glow-blue-act5" x="-20%" y="-20%" width="140%" height="140%">
                                         <feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="#2563eb"/>
                                     </filter>
@@ -1868,21 +1871,11 @@
                                                 <span class="flow-branch-badge" style="background:#fef3c7; color:#92400e; border:1px solid #fde68a; margin-bottom:0.4rem; font-size:0.74rem;">⏳ Massa aviat</span>
                                                 <div class="flow-slot slot-action" id="slot-act5-4" data-act="act5" data-slot="s4" onclick="handleSlotClick('act5','s4')" style="width:100%; min-height:56px;"></div>
                                                 
-                                                <!-- Fletxa de retorn al temporitzador -->
+                                                <!-- Fletxa de retorn a: Han passat > 30 s de cotxes en verd? -->
                                                 <div style="width:100%; margin-top:0.45rem; display:flex; flex-direction:column; align-items:center;">
-                                                    <svg viewBox="0 0 160 55" style="width:100%; max-width:160px; height:auto; overflow:visible;">
-                                                        <defs>
-                                                            <marker id="arrow-act5-timer-loop" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
-                                                                <polygon points="0 1, 8 4, 0 7" fill="#d97706"/>
-                                                            </marker>
-                                                        </defs>
-                                                        <!-- Surt de la base de slot-act5-4, baixa a y=20, gira a l'esquerra fins x=14, puja a y=-40 i apunta cap al rombe de decisió -->
-                                                        <path d="M 80 0 L 80 20 L 14 20 L 14 -40 L 46 -40" fill="none" stroke="#d97706" stroke-width="2.6" stroke-dasharray="5,3" marker-end="url(#arrow-act5-timer-loop)"/>
-                                                        <rect x="22" y="10" width="116" height="20" rx="5" fill="#ffffff" stroke="#d97706" stroke-width="1.6"/>
-                                                        <text x="80" y="21" fill="#b45309" font-family="'JetBrains Mono', monospace" font-size="9.5" font-weight="800" text-anchor="middle" dominant-baseline="central">↺ Recomprova</text>
-                                                    </svg>
-                                                    <div style="margin-top:0.35rem; background:#fffbeb; border:1px solid #fde68a; color:#b45309; font-size:0.74rem; font-weight:800; padding:0.25rem 0.6rem; border-radius:6px; text-align:center;">
-                                                        ↺ Torna a comprovar el temps
+                                                    <div style="font-size:1.4rem; color:#d97706; line-height:1; font-weight:800;">↓</div>
+                                                    <div style="margin-top:0.25rem; background:#fffbeb; border:1.5px solid #f59e0b; color:#92400e; font-size:0.75rem; font-weight:800; padding:0.35rem 0.75rem; border-radius:8px; text-align:center; box-shadow:0 2px 6px rgba(245,158,11,0.12); line-height:1.35;">
+                                                        ↺ Fletxa de retorn a:<br><strong>«Han passat &gt; 30 s de cotxes en verd?»</strong>
                                                     </div>
                                                 </div>
                                             </div>
@@ -2654,40 +2647,146 @@
 
                 <div style="display:flex; flex-direction:column; gap:1.25rem;">
                     <!-- Pregunta 1 -->
-                    <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:1rem;">
-                        <strong style="color:#1e293b; font-size:0.92rem; display:block; margin-bottom:0.6rem;">
-                            1. Quin valor té la variable <code>Intents</code> exactament després de fallar el PIN per segona vegada?
+                    <div class="trace-question-card" id="trace-q1-container">
+                        <strong class="trace-q-title">
+                            1. Límit de seguretat del PIN:
                         </strong>
-                        <div style="display:flex; gap:0.6rem; flex-wrap:wrap;">
-                            <button type="button" class="trace-opt-btn" id="trace-q1-opt-0" onclick="selectTraceAnswer(1, 0)">0 intents</button>
-                            <button type="button" class="trace-opt-btn" id="trace-q1-opt-1" onclick="selectTraceAnswer(1, 1)">1 intent</button>
-                            <button type="button" class="trace-opt-btn" id="trace-q1-opt-2" onclick="selectTraceAnswer(1, 2)">2 intents</button>
-                            <button type="button" class="trace-opt-btn" id="trace-q1-opt-3" onclick="selectTraceAnswer(1, 3)">3 intents</button>
+                        <p class="trace-q-desc">
+                            Fixa't en la condició <code>Intents ≥ 3?</code>. Quants errors consecutius de PIN permet el caixer abans d'executar l'acció <code>🚨 Bloquejar Targeta</code>?
+                        </p>
+                        <div class="trace-q-opts">
+                            <button type="button" class="trace-opt-btn" data-val="2_errors" onclick="selectTraceAnswer(1, '2_errors')">
+                                Exactament 2 errors (al 3r intent bloqueja abans de deixar teclejar)
+                            </button>
+                            <button type="button" class="trace-opt-btn" data-val="3_errors" onclick="selectTraceAnswer(1, '3_errors')">
+                                Exactament 3 errors (a la 3a fallada, Intents arriba a 3 i la condició «3 ≥ 3» avalua CERT ➔ Bloqueig)
+                            </button>
+                            <button type="button" class="trace-opt-btn" data-val="4_errors" onclick="selectTraceAnswer(1, '4_errors')">
+                                4 errors, perquè el comptador s'inicia a 0
+                            </button>
+                            <button type="button" class="trace-opt-btn" data-val="infinit" onclick="selectTraceAnswer(1, 'infinit')">
+                                Intents il·limitats si s'espera 30 segons entre cada intent
+                            </button>
                         </div>
                     </div>
 
                     <!-- Pregunta 2 -->
-                    <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:1rem;">
-                        <strong style="color:#1e293b; font-size:0.92rem; display:block; margin-bottom:0.6rem;">
-                            2. Si el saldo inicial era de 120 € i retirem 40 €, quin serà el valor final de la variable <code>Saldo</code> en acabar el programa?
+                    <div class="trace-question-card" id="trace-q2-container">
+                        <strong class="trace-q-title">
+                            2. Modificació matemàtica de variables a la RAM:
                         </strong>
-                        <div style="display:flex; gap:0.6rem; flex-wrap:wrap;">
-                            <button type="button" class="trace-opt-btn" id="trace-q2-opt-120" onclick="selectTraceAnswer(2, 120)">120 €</button>
-                            <button type="button" class="trace-opt-btn" id="trace-q2-opt-80" onclick="selectTraceAnswer(2, 80)">80 €</button>
-                            <button type="button" class="trace-opt-btn" id="trace-q2-opt-40" onclick="selectTraceAnswer(2, 40)">40 €</button>
-                            <button type="button" class="trace-opt-btn" id="trace-q2-opt-0" onclick="selectTraceAnswer(2, 0)">0 €</button>
+                        <p class="trace-q-desc">
+                            Si el client té un <code>Saldo</code> inicial de 150 € i fa <strong>dues retirades consecutives de 40 €</strong> en la mateixa sessió (encertant el PIN), quin serà el valor final de <code>Saldo</code> i quina instrucció s'haurà executat 2 vegades?
+                        </p>
+                        <div class="trace-q-opts">
+                            <button type="button" class="trace-opt-btn" data-val="70_euro" onclick="selectTraceAnswer(2, '70_euro')">
+                                Saldo = 70 €, executant dues vegades l'assignació «Saldo = Saldo - 40 €» (150 - 40 - 40)
+                            </button>
+                            <button type="button" class="trace-opt-btn" data-val="110_euro" onclick="selectTraceAnswer(2, '110_euro')">
+                                Saldo = 110 €, perquè només es descompta la primera extracció
+                            </button>
+                            <button type="button" class="trace-opt-btn" data-val="40_euro" onclick="selectTraceAnswer(2, '40_euro')">
+                                Saldo = 40 €, perquè la variable agafa el valor de l'últim import retirat
+                            </button>
+                            <button type="button" class="trace-opt-btn" data-val="150_euro" onclick="selectTraceAnswer(2, '150_euro')">
+                                Saldo = 150 €, perquè el saldo només s'actualitza l'endemà
+                            </button>
                         </div>
                     </div>
 
                     <!-- Pregunta 3 -->
-                    <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:1rem;">
-                        <strong style="color:#1e293b; font-size:0.92rem; display:block; margin-bottom:0.6rem;">
-                            3. Si el client s'hagués equivocat també al 3r intent (en lloc d'encertar-lo), quin camí hauria pres el diagrama?
+                    <div class="trace-question-card" id="trace-q3-container">
+                        <strong class="trace-q-title">
+                            3. Avaluació del rombe de decisió «Import ≤ Saldo?»:
                         </strong>
-                        <div style="display:flex; gap:0.6rem; flex-wrap:wrap;">
-                            <button type="button" class="trace-opt-btn" id="trace-q3-opt-block" onclick="selectTraceAnswer(3, 'block')">SÍ a «Intents ≥ 3» ➔ Bloquejar targeta per seguretat</button>
-                            <button type="button" class="trace-opt-btn" id="trace-q3-opt-retry" onclick="selectTraceAnswer(3, 'retry')">NO a «Intents ≥ 3» ➔ Donar 5 intents més</button>
-                            <button type="button" class="trace-opt-btn" id="trace-q3-opt-money" onclick="selectTraceAnswer(3, 'money')">Entregar els 40 € igualment</button>
+                        <p class="trace-q-desc">
+                            Imagina que un usuari té <code>Saldo = 50 €</code> i demana retirar exactament <code>50 €</code>. Com avalua la condició <code>Import ≤ Saldo?</code> i quina acció realitza el caixer?
+                        </p>
+                        <div class="trace-q-opts">
+                            <button type="button" class="trace-opt-btn" data-val="cert_50" onclick="selectTraceAnswer(3, 'cert_50')">
+                                Avalua SÍ (CERT), perquè 50 € ≤ 50 €; dispensa els 50 € i el Saldo final queda a 0 €
+                            </button>
+                            <button type="button" class="trace-opt-btn" data-val="fals_50" onclick="selectTraceAnswer(3, 'fals_50')">
+                                Avalua NO (FALS), perquè cal que el saldo restant sigui com a mínim de 10 €
+                            </button>
+                            <button type="button" class="trace-opt-btn" data-val="bloqueig_50" onclick="selectTraceAnswer(3, 'bloqueig_50')">
+                                El caixer es bloqueja perquè 50 no és menor estricte (&lt;) que 50
+                            </button>
+                            <button type="button" class="trace-opt-btn" data-val="descobert_50" onclick="selectTraceAnswer(3, 'descobert_50')">
+                                El compte entra en descobert i cobra una comissió automàtica
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 4 -->
+                    <div class="trace-question-card" id="trace-q4-container">
+                        <strong class="trace-q-title">
+                            4. Cas de Saldo Insuficient:
+                        </strong>
+                        <p class="trace-q-desc">
+                            Què passaria en el diagrama si un client encerta el PIN però sol·licita retirar <code>200 €</code> tenint només <code>120 €</code> a la memòria?
+                        </p>
+                        <div class="trace-q-opts">
+                            <button type="button" class="trace-opt-btn" data-val="fals_denegar" onclick="selectTraceAnswer(4, 'fals_denegar')">
+                                La condició «200 ≤ 120?» avalua NO (FALS); es denega la retirada sense tocar el saldo
+                            </button>
+                            <button type="button" class="trace-opt-btn" data-val="parcial" onclick="selectTraceAnswer(4, 'parcial')">
+                                Lliura 120 € i deixa el compte a -80 €
+                            </button>
+                            <button type="button" class="trace-opt-btn" data-val="error_pin" onclick="selectTraceAnswer(4, 'error_pin')">
+                                Incrementa Intents = Intents + 1 com si fos un error de PIN
+                            </button>
+                            <button type="button" class="trace-opt-btn" data-val="bloqueig_targeta" onclick="selectTraceAnswer(4, 'bloqueig_targeta')">
+                                Bloqueja la targeta immediatament per sospita de frau
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 5 -->
+                    <div class="trace-question-card" id="trace-q5-container">
+                        <strong class="trace-q-title">
+                            5. Estat de la Memòria RAM durant l'execució:
+                        </strong>
+                        <p class="trace-q-desc">
+                            En l'escenari de la taula (falla 2 vegades i encerta a la 3a), quins valors exactes tenen <code>Intents</code> i <code>Saldo</code> just quan s'avalua el rombe <code>PIN correcte?</code> per 3a vegada?
+                        </p>
+                        <div class="trace-q-opts">
+                            <button type="button" class="trace-opt-btn" data-val="intents2_saldo120" onclick="selectTraceAnswer(5, 'intents2_saldo120')">
+                                Intents = 2 i Saldo = 120 € (ja ha acumulat 2 fallades i encara no ha retirat res)
+                            </button>
+                            <button type="button" class="trace-opt-btn" data-val="intents3_saldo80" onclick="selectTraceAnswer(5, 'intents3_saldo80')">
+                                Intents = 3 i Saldo = 80 €
+                            </button>
+                            <button type="button" class="trace-opt-btn" data-val="intents0_saldo120" onclick="selectTraceAnswer(5, 'intents0_saldo120')">
+                                Intents = 0 i Saldo = 120 € (perquè el comptador s'hauria reiniciat)
+                            </button>
+                            <button type="button" class="trace-opt-btn" data-val="intents1_saldo40" onclick="selectTraceAnswer(5, 'intents1_saldo40')">
+                                Intents = 1 i Saldo = 40 €
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 6 -->
+                    <div class="trace-question-card" id="trace-q6-container">
+                        <strong class="trace-q-title">
+                            6. Pensament Algorísmic Crític — El perill del Bucle Infinit:
+                        </strong>
+                        <p class="trace-q-desc">
+                            Si el programador hagués oblidat posar el bloc <code>Intents = Intents + 1</code> a la branca NO del PIN, quina fallada greu de seguretat patiria el caixer?
+                        </p>
+                        <div class="trace-q-opts">
+                            <button type="button" class="trace-opt-btn" data-val="bucle_infinit" onclick="selectTraceAnswer(6, 'bucle_infinit')">
+                                La variable Intents es quedaria sempre a 0, la condició «Intents ≥ 3» mai seria certa i es crearia un bucle infinit d'intents sense bloquejar mai la targeta
+                            </button>
+                            <button type="button" class="trace-opt-btn" data-val="bloqueig_immediat" onclick="selectTraceAnswer(6, 'bloqueig_immediat')">
+                                El caixer es bloquejaria automàticament al 1r error pel sensor de targeta
+                            </button>
+                            <button type="button" class="trace-opt-btn" data-val="resta_saldo" onclick="selectTraceAnswer(6, 'resta_saldo')">
+                                La variable Saldo es restaria per cada intent fallit
+                            </button>
+                            <button type="button" class="trace-opt-btn" data-val="cap_efecte" onclick="selectTraceAnswer(6, 'cap_efecte')">
+                                No passaria res, perquè el banc sap sempre els intents per satèl·lit
+                            </button>
                         </div>
                     </div>
                 </div>
