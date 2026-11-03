@@ -153,26 +153,133 @@ function updateHeader() {
     if (st) st.textContent = `${stageCode} / 12`;
 }
 
+function getModuleForStage(stageNum) {
+    if (stageNum <= 2) return 1;
+    if (stageNum <= 8) return 2;
+    if (stageNum <= 11) return 3;
+    return 4;
+}
+
+function switchModuleView(modNum) {
+    for (let m = 1; m <= 4; m++) {
+        const tab = document.getElementById(`mod-tab-${m}`);
+        const grp = document.getElementById(`subgroup-mod-${m}`);
+        if (tab) tab.classList.toggle('active', m === modNum);
+        if (grp) grp.classList.toggle('active', m === modNum);
+    }
+}
+
+function handleModuleClick(event, modNum) {
+    const item = event.currentTarget.closest('.nav-module-item');
+    const isArrow = event.target.classList.contains('mod-arrow');
+
+    if (isArrow) {
+        event.stopPropagation();
+        if (item) item.classList.toggle('open');
+        return;
+    }
+
+    const modFirstStage = { 1: 1, 2: 3, 3: 9, 4: 12 }[modNum];
+    const isModUnlocked = (modFirstStage <= appState.unlockedStage) || (modNum === 4 && appState.completedStages.includes(11));
+
+    if (!isModUnlocked) {
+        const reqNames = { 2: "el Mòdul 1 (Fonaments)", 3: "el Mòdul 2 (Construcció)", 4: "tots els mòduls anteriors" };
+        alert(`⚠️ Aquest mòdul està bloquejat. Completa primer ${reqNames[modNum]} per accedir-hi!`);
+        return;
+    }
+
+    switchModuleView(modNum);
+
+    const curMod = getModuleForStage(appState.currentStage || 1);
+    if (curMod !== modNum) {
+        const modRanges = { 1: [1, 2], 2: [3, 8], 3: [9, 11], 4: [12, 12] };
+        const [start, end] = modRanges[modNum];
+        let target = start;
+        for (let s = start; s <= end; s++) {
+            if (s <= appState.unlockedStage) target = s;
+        }
+        goToStage(target);
+    }
+}
+
 function updateNavigationLocks() {
+    const curStage = appState.currentStage || 1;
+    const curMod = getModuleForStage(curStage);
+
+    // 1. Actualitza botons de fases al submenú i als desplegables
     for (let i = 1; i <= 12; i++) {
         const btn = document.getElementById(`tab-btn-${i}`);
         const lbl = document.getElementById(`nav-label-stage-${i}`);
-        if (!btn) continue;
+        const dropBtn = document.getElementById(`drop-btn-${i}`);
+        const dropStatus = document.getElementById(`drop-status-${i}`);
 
         const isUnlocked = (i <= appState.unlockedStage) || (i === 12 && appState.completedStages.includes(11));
         const isCompleted = appState.completedStages.includes(i);
+        const isActive = (i === curStage);
 
-        btn.classList.toggle('locked', !isUnlocked);
-        btn.classList.toggle('completed', isCompleted);
+        if (btn) {
+            btn.classList.toggle('locked', !isUnlocked);
+            btn.classList.toggle('completed', isCompleted);
+            btn.classList.toggle('active', isActive);
+        }
 
         if (lbl) {
             const prefix = isCompleted ? '✅ ' : (!isUnlocked ? '🔒 ' : '');
             lbl.textContent = `${prefix}${STAGE_TITLES[i]}`;
         }
+
+        if (dropBtn) {
+            dropBtn.classList.toggle('locked', !isUnlocked);
+            dropBtn.classList.toggle('active', isActive);
+        }
+
+        if (dropStatus) {
+            dropStatus.textContent = isCompleted ? '✅' : (!isUnlocked ? '🔒' : (isActive ? '👉' : '🔓'));
+        }
+    }
+
+    // 2. Actualitza pestanyes de mòduls principals i comptadors de progrés
+    const modRanges = {
+        1: [1, 2],
+        2: [3, 8],
+        3: [9, 11],
+        4: [12, 12]
+    };
+
+    for (let m = 1; m <= 4; m++) {
+        const [start, end] = modRanges[m];
+        const total = end - start + 1;
+        let completed = 0;
+        let hasUnlocked = false;
+
+        for (let s = start; s <= end; s++) {
+            if (appState.completedStages.includes(s)) completed++;
+            if (s <= appState.unlockedStage || (s === 12 && appState.completedStages.includes(11))) hasUnlocked = true;
+        }
+
+        const tab = document.getElementById(`mod-tab-${m}`);
+        const badge = document.getElementById(`mod-badge-${m}`);
+        const grp = document.getElementById(`subgroup-mod-${m}`);
+
+        if (tab) {
+            tab.classList.toggle('active', m === curMod);
+            tab.classList.toggle('completed', completed === total);
+            tab.classList.toggle('locked', !hasUnlocked);
+        }
+
+        if (grp) {
+            grp.classList.toggle('active', m === curMod);
+        }
+
+        if (badge) {
+            if (m === 4) {
+                badge.textContent = completed === 1 ? '✅ Rebut' : (hasUnlocked ? '🔓 Obert' : '🔒 Bloquejat');
+            } else {
+                badge.textContent = completed === total ? `${total}/${total} ✅` : `${completed}/${total}`;
+            }
+        }
     }
 }
-
-
 
 function goToStage(stageNum) {
     const isUnlocked = (stageNum <= appState.unlockedStage) || (stageNum === 12 && appState.completedStages.includes(11));
@@ -181,6 +288,9 @@ function goToStage(stageNum) {
         return;
     }
 
+    // Tanca els desplegables mòbils si n'hi ha algun d'obert
+    document.querySelectorAll('.nav-module-item.open').forEach(el => el.classList.remove('open'));
+
     appState.currentStage = stageNum;
     saveState();
 
@@ -188,9 +298,11 @@ function goToStage(stageNum) {
     const target = document.getElementById(`stage-view-${stageNum}`);
     if (target) target.classList.add('active');
 
-    document.querySelectorAll('.stage-nav-btn').forEach((b, idx) => {
-        b.classList.toggle('active', idx + 1 === stageNum);
-    });
+    const mod = getModuleForStage(stageNum);
+    switchModuleView(mod);
+
+    updateNavigationLocks();
+    updateHeader();
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
@@ -209,6 +321,13 @@ function goToStage(stageNum) {
 
     setTimeout(() => { requestAnimationFrame(drawAllLoopArrows); }, 60);
 }
+
+// Tanca els desplegables en fer clic a fora
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('.nav-module-item')) {
+        document.querySelectorAll('.nav-module-item.open').forEach(el => el.classList.remove('open'));
+    }
+});
 
 // ============================================================================
 // MODAL DE PERFIL (NOM, COGNOMS, CURS, NIVELL, AVATAR)

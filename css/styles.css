@@ -192,39 +192,241 @@ header {
 }
 
 /* ============================================================================
-   NAVEGACIÓ PER FASES (PILL TABS)
+   NAVEGACIÓ EN DOS NIVELLS: MENÚ PRINCIPAL I SUBMENÚS
    ============================================================================ */
 .nav-stages {
     background: #ffffff;
     border-bottom: 1px solid var(--border);
-    padding: 0.45rem 0.75rem;
     position: sticky;
     top: 55px;
     z-index: 50;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+    padding: 0;
 }
 
-.nav-stages-inner {
+/* NIVELL 1: MENÚ PRINCIPAL DE MÒDULS */
+.nav-modules-bar {
+    background: #ffffff;
+    padding: 0.38rem 0.75rem;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.nav-modules-inner {
     max-width: 1260px;
     margin: 0 auto;
     display: flex;
-    gap: 0.35rem;
+    gap: 0.5rem;
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
 }
 
-.stage-nav-btn {
+.nav-module-item {
+    position: relative;
+}
+
+.module-tab-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
     background: #f8fafc;
     border: 1px solid var(--border);
-    color: var(--text-muted);
-    padding: 0.32rem 0.7rem;
+    color: var(--text-sub);
+    padding: 0.38rem 0.85rem;
     border-radius: 999px;
-    font-size: 0.8rem;
+    font-size: 0.83rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+    font-family: inherit;
+}
+
+.module-tab-btn:hover:not(.locked) {
+    background: #eff6ff;
+    color: var(--primary);
+    border-color: var(--primary-border);
+}
+
+.module-tab-btn.active {
+    background: linear-gradient(135deg, #1e40af, #2563eb);
+    color: #ffffff;
+    border-color: #1d4ed8;
+    box-shadow: 0 3px 10px rgba(37, 99, 235, 0.28);
+}
+
+.module-tab-btn.completed:not(.active) {
+    background: #ecfdf5;
+    color: var(--success-dark);
+    border-color: var(--success-border);
+}
+
+.module-tab-btn.locked {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: #f1f5f9;
+}
+
+.mod-icon {
+    font-size: 0.95rem;
+}
+
+.mod-badge {
+    background: rgba(15, 23, 42, 0.06);
+    color: inherit;
+    font-size: 0.72rem;
+    padding: 0.12rem 0.45rem;
+    border-radius: 999px;
+    font-weight: 800;
+}
+
+.module-tab-btn.active .mod-badge {
+    background: rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+}
+
+.module-tab-btn.completed:not(.active) .mod-badge {
+    background: rgba(5, 150, 105, 0.12);
+    color: var(--success-dark);
+}
+
+.mod-arrow {
+    font-size: 0.68rem;
+    opacity: 0.7;
+    transition: transform 0.2s ease;
+    display: inline-block;
+}
+
+.nav-module-item:hover .mod-arrow,
+.nav-module-item.open .mod-arrow {
+    transform: rotate(180deg);
+}
+
+/* DROPDOWN SUBMENU AMB INFORMACIÓ DIDÀCTICA */
+.module-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: 0 12px 30px -4px rgba(15, 23, 42, 0.16), 0 4px 12px -2px rgba(15, 23, 42, 0.08);
+    min-width: 270px;
+    z-index: 100;
+    padding: 0.4rem;
+    animation: fadeInDropdown 0.18s ease;
+}
+
+@keyframes fadeInDropdown {
+    from { opacity: 0; transform: translate(-50%, -6px); }
+    to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+.nav-module-item:hover .module-dropdown,
+.nav-module-item.open .module-dropdown {
+    display: block;
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    width: 100%;
+    padding: 0.45rem 0.65rem;
+    border: none;
+    background: transparent;
+    border-radius: var(--radius-sm);
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.15s ease;
+    font-family: inherit;
+}
+
+.dropdown-item:hover:not(.locked) {
+    background: #eff6ff;
+}
+
+.dropdown-item.active {
+    background: #dbeafe;
+}
+
+.dropdown-item.locked {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.drop-status {
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.drop-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.drop-text strong {
+    font-size: 0.82rem;
+    color: var(--text-main);
+    line-height: 1.25;
+}
+
+.drop-text small {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+}
+
+/* NIVELL 2: SUBMENÚ HORITZONTAL DE LES ACTIVITATS */
+.nav-submenu-bar {
+    background: #f8fafc;
+    border-top: 1px solid #edf2f7;
+    padding: 0.32rem 0.75rem;
+}
+
+.nav-submenu-inner {
+    max-width: 1260px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.submenu-group {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.submenu-group.active {
+    display: flex;
+}
+
+.submenu-group-label {
+    font-size: 0.76rem;
+    font-weight: 800;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-right: 0.35rem;
+}
+
+.stage-nav-btn {
+    background: #ffffff;
+    border: 1px solid var(--border);
+    color: var(--text-sub);
+    padding: 0.28rem 0.68rem;
+    border-radius: 999px;
+    font-size: 0.79rem;
     font-weight: 700;
     cursor: pointer;
     transition: all 0.2s ease;
     white-space: nowrap;
+    font-family: inherit;
 }
 
 .stage-nav-btn:hover:not(.locked) {
@@ -237,7 +439,7 @@ header {
     background: linear-gradient(135deg, #2563eb, #3b82f6);
     color: #ffffff;
     border-color: #2563eb;
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+    box-shadow: 0 3px 8px rgba(37, 99, 235, 0.22);
 }
 
 .stage-nav-btn.completed:not(.active) {
@@ -250,6 +452,21 @@ header {
     opacity: 0.55;
     cursor: not-allowed;
     background: #f1f5f9;
+}
+
+@media (max-width: 768px) {
+    .module-tab-btn {
+        padding: 0.3rem 0.65rem;
+        font-size: 0.76rem;
+    }
+    .submenu-group-label {
+        display: none;
+    }
+    .module-dropdown {
+        left: 0;
+        transform: none;
+        min-width: 230px;
+    }
 }
 
 /* ============================================================================

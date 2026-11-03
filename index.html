@@ -42,45 +42,203 @@
         </div>
     </header>
 
-    <!-- NAVEGACIÓ PER FASES -->
-    <nav class="nav-stages">
-        <div class="nav-stages-inner">
-            <button class="stage-nav-btn active" id="tab-btn-1" onclick="goToStage(1)">
-                <span id="nav-label-stage-1">1.1 Algorismes</span>
-            </button>
-            <button class="stage-nav-btn locked" id="tab-btn-2" onclick="goToStage(2)">
-                <span id="nav-label-stage-2">🔒 1.2 Blocs</span>
-            </button>
-            <button class="stage-nav-btn locked" id="tab-btn-3" onclick="goToStage(3)">
-                <span id="nav-label-stage-3">🔒 2.1 Despertador</span>
-            </button>
-            <button class="stage-nav-btn locked" id="tab-btn-4" onclick="goToStage(4)">
-                <span id="nav-label-stage-4">🔒 2.2 Ocellet</span>
-            </button>
-            <button class="stage-nav-btn locked" id="tab-btn-5" onclick="goToStage(5)">
-                <span id="nav-label-stage-5">🔒 2.3 Làmpada</span>
-            </button>
-            <button class="stage-nav-btn locked" id="tab-btn-6" onclick="goToStage(6)">
-                <span id="nav-label-stage-6">🔒 2.4 Aspirador</span>
-            </button>
-            <button class="stage-nav-btn locked" id="tab-btn-7" onclick="goToStage(7)">
-                <span id="nav-label-stage-7">🔒 2.5 Semàfor</span>
-            </button>
-            <button class="stage-nav-btn locked" id="tab-btn-8" onclick="goToStage(8)">
-                <span id="nav-label-stage-8">🔒 2.6 Barrera</span>
-            </button>
-            <button class="stage-nav-btn locked" id="tab-btn-9" onclick="goToStage(9)">
-                <span id="nav-label-stage-9">🔒 3.1 Bugs 🐛</span>
-            </button>
-            <button class="stage-nav-btn locked" id="tab-btn-10" onclick="goToStage(10)">
-                <span id="nav-label-stage-10">🔒 3.2 Traça 📊</span>
-            </button>
-            <button class="stage-nav-btn locked" id="tab-btn-11" onclick="goToStage(11)">
-                <span id="nav-label-stage-11">🔒 3.3 Caixa Negra 📦</span>
-            </button>
-            <button class="stage-nav-btn locked" id="tab-btn-12" onclick="goToStage(12)">
-                <span id="nav-label-stage-12">🔒 4.1 Diploma 🎓</span>
-            </button>
+    <!-- NAVEGACIÓ EN DOS NIVELLS: MENÚ PRINCIPAL I SUBMENÚS -->
+    <nav class="nav-stages" id="main-nav">
+        <!-- NIVELL 1: MENÚ PRINCIPAL DE MÒDULS AMB DROPDOWNS -->
+        <div class="nav-modules-bar">
+            <div class="nav-modules-inner">
+                <!-- MÒDUL 1: FONAMENTS -->
+                <div class="nav-module-item" data-module="1">
+                    <button class="module-tab-btn active" id="mod-tab-1" onclick="handleModuleClick(event, 1)">
+                        <span class="mod-icon">📘</span>
+                        <span class="mod-title">Mòdul 1: Fonaments</span>
+                        <span class="mod-badge" id="mod-badge-1">2 fases</span>
+                        <span class="mod-arrow">▾</span>
+                    </button>
+                    <div class="module-dropdown" id="dropdown-mod-1">
+                        <button class="dropdown-item" id="drop-btn-1" onclick="goToStage(1)">
+                            <span class="drop-status" id="drop-status-1">👉</span>
+                            <div class="drop-text">
+                                <strong>1.1 Algorismes</strong>
+                                <small>Llenguatge natural vs algorísmic</small>
+                            </div>
+                        </button>
+                        <button class="dropdown-item locked" id="drop-btn-2" onclick="goToStage(2)">
+                            <span class="drop-status" id="drop-status-2">🔒</span>
+                            <div class="drop-text">
+                                <strong>1.2 Tipus de Blocs</strong>
+                                <small>Terminador, acció, decisió i fletxes</small>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- MÒDUL 2: CONSTRUCCIÓ -->
+                <div class="nav-module-item" data-module="2">
+                    <button class="module-tab-btn" id="mod-tab-2" onclick="handleModuleClick(event, 2)">
+                        <span class="mod-icon">🧩</span>
+                        <span class="mod-title">Mòdul 2: Construcció</span>
+                        <span class="mod-badge" id="mod-badge-2">6 reptes</span>
+                        <span class="mod-arrow">▾</span>
+                    </button>
+                    <div class="module-dropdown" id="dropdown-mod-2">
+                        <button class="dropdown-item locked" id="drop-btn-3" onclick="goToStage(3)">
+                            <span class="drop-status" id="drop-status-3">🔒</span>
+                            <div class="drop-text">
+                                <strong>2.1 Despertador</strong>
+                                <small>Bucle simple de repetició</small>
+                            </div>
+                        </button>
+                        <button class="dropdown-item locked" id="drop-btn-4" onclick="goToStage(4)">
+                            <span class="drop-status" id="drop-status-4">🔒</span>
+                            <div class="drop-text">
+                                <strong>2.2 Ocellet</strong>
+                                <small>Sensor de pluja i protecció</small>
+                            </div>
+                        </button>
+                        <button class="dropdown-item locked" id="drop-btn-5" onclick="goToStage(5)">
+                            <span class="drop-status" id="drop-status-5">🔒</span>
+                            <div class="drop-text">
+                                <strong>2.3 Làmpada</strong>
+                                <small>Sensor de llum i presència</small>
+                            </div>
+                        </button>
+                        <button class="dropdown-item locked" id="drop-btn-6" onclick="goToStage(6)">
+                            <span class="drop-status" id="drop-status-6">🔒</span>
+                            <div class="drop-text">
+                                <strong>2.4 Aspirador</strong>
+                                <small>Decisions niades i bateria</small>
+                            </div>
+                        </button>
+                        <button class="dropdown-item locked" id="drop-btn-7" onclick="goToStage(7)">
+                            <span class="drop-status" id="drop-status-7">🔒</span>
+                            <div class="drop-text">
+                                <strong>2.5 Semàfor</strong>
+                                <small>Temporitzadors i vianants</small>
+                            </div>
+                        </button>
+                        <button class="dropdown-item locked" id="drop-btn-8" onclick="goToStage(8)">
+                            <span class="drop-status" id="drop-status-8">🔒</span>
+                            <div class="drop-text">
+                                <strong>2.6 Barrera</strong>
+                                <small>Control d'aforament i places</small>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- MÒDUL 3: AVANÇAT -->
+                <div class="nav-module-item" data-module="3">
+                    <button class="module-tab-btn" id="mod-tab-3" onclick="handleModuleClick(event, 3)">
+                        <span class="mod-icon">🔬</span>
+                        <span class="mod-title">Mòdul 3: Avançat</span>
+                        <span class="mod-badge" id="mod-badge-3">3 reptes</span>
+                        <span class="mod-arrow">▾</span>
+                    </button>
+                    <div class="module-dropdown" id="dropdown-mod-3">
+                        <button class="dropdown-item locked" id="drop-btn-9" onclick="goToStage(9)">
+                            <span class="drop-status" id="drop-status-9">🔒</span>
+                            <div class="drop-text">
+                                <strong>3.1 Bugs 🐛</strong>
+                                <small>Hivernacle i bucle continu</small>
+                            </div>
+                        </button>
+                        <button class="dropdown-item locked" id="drop-btn-10" onclick="goToStage(10)">
+                            <span class="drop-status" id="drop-status-10">🔒</span>
+                            <div class="drop-text">
+                                <strong>3.2 Traça 📊</strong>
+                                <small>Caixer automàtic i RAM</small>
+                            </div>
+                        </button>
+                        <button class="dropdown-item locked" id="drop-btn-11" onclick="goToStage(11)">
+                            <span class="drop-status" id="drop-status-11">🔒</span>
+                            <div class="drop-text">
+                                <strong>3.3 Caixa Negra 📦</strong>
+                                <small>Enginyeria inversa d'ascensor</small>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- MÒDUL 4: CERTIFICACIÓ -->
+                <div class="nav-module-item" data-module="4">
+                    <button class="module-tab-btn" id="mod-tab-4" onclick="handleModuleClick(event, 4)">
+                        <span class="mod-icon">🎓</span>
+                        <span class="mod-title">Mòdul 4: Diploma</span>
+                        <span class="mod-badge" id="mod-badge-4">Certificat</span>
+                    </button>
+                    <div class="module-dropdown" id="dropdown-mod-4">
+                        <button class="dropdown-item locked" id="drop-btn-12" onclick="goToStage(12)">
+                            <span class="drop-status" id="drop-status-12">🔒</span>
+                            <div class="drop-text">
+                                <strong>4.1 Diploma Final 🎓</strong>
+                                <small>Acreditació d'Aprofitament</small>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- NIVELL 2: SUBMENÚ HORITZONTAL DE LES ACTIVITATS DEL MÒDUL ACTIU -->
+        <div class="nav-submenu-bar">
+            <div class="nav-submenu-inner">
+                <!-- GRUP SUBMENÚ 1: FONAMENTS -->
+                <div class="submenu-group active" id="subgroup-mod-1">
+                    <span class="submenu-group-label">📘 Fonaments:</span>
+                    <button class="stage-nav-btn active" id="tab-btn-1" onclick="goToStage(1)">
+                        <span id="nav-label-stage-1">1.1 Algorismes</span>
+                    </button>
+                    <button class="stage-nav-btn locked" id="tab-btn-2" onclick="goToStage(2)">
+                        <span id="nav-label-stage-2">🔒 1.2 Blocs</span>
+                    </button>
+                </div>
+
+                <!-- GRUP SUBMENÚ 2: CONSTRUCCIÓ -->
+                <div class="submenu-group" id="subgroup-mod-2">
+                    <span class="submenu-group-label">🧩 Construcció:</span>
+                    <button class="stage-nav-btn locked" id="tab-btn-3" onclick="goToStage(3)">
+                        <span id="nav-label-stage-3">🔒 2.1 Despertador</span>
+                    </button>
+                    <button class="stage-nav-btn locked" id="tab-btn-4" onclick="goToStage(4)">
+                        <span id="nav-label-stage-4">🔒 2.2 Ocellet</span>
+                    </button>
+                    <button class="stage-nav-btn locked" id="tab-btn-5" onclick="goToStage(5)">
+                        <span id="nav-label-stage-5">🔒 2.3 Làmpada</span>
+                    </button>
+                    <button class="stage-nav-btn locked" id="tab-btn-6" onclick="goToStage(6)">
+                        <span id="nav-label-stage-6">🔒 2.4 Aspirador</span>
+                    </button>
+                    <button class="stage-nav-btn locked" id="tab-btn-7" onclick="goToStage(7)">
+                        <span id="nav-label-stage-7">🔒 2.5 Semàfor</span>
+                    </button>
+                    <button class="stage-nav-btn locked" id="tab-btn-8" onclick="goToStage(8)">
+                        <span id="nav-label-stage-8">🔒 2.6 Barrera</span>
+                    </button>
+                </div>
+
+                <!-- GRUP SUBMENÚ 3: AVANÇAT -->
+                <div class="submenu-group" id="subgroup-mod-3">
+                    <span class="submenu-group-label">🔬 Laboratori:</span>
+                    <button class="stage-nav-btn locked" id="tab-btn-9" onclick="goToStage(9)">
+                        <span id="nav-label-stage-9">🔒 3.1 Bugs 🐛</span>
+                    </button>
+                    <button class="stage-nav-btn locked" id="tab-btn-10" onclick="goToStage(10)">
+                        <span id="nav-label-stage-10">🔒 3.2 Traça 📊</span>
+                    </button>
+                    <button class="stage-nav-btn locked" id="tab-btn-11" onclick="goToStage(11)">
+                        <span id="nav-label-stage-11">🔒 3.3 Caixa Negra 📦</span>
+                    </button>
+                </div>
+
+                <!-- GRUP SUBMENÚ 4: CERTIFICACIÓ -->
+                <div class="submenu-group" id="subgroup-mod-4">
+                    <span class="submenu-group-label">🎓 Certificació:</span>
+                    <button class="stage-nav-btn locked" id="tab-btn-12" onclick="goToStage(12)">
+                        <span id="nav-label-stage-12">🔒 4.1 Diploma Final 🎓</span>
+                    </button>
+                </div>
+            </div>
         </div>
     </nav>
 
