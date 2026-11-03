@@ -7,80 +7,119 @@
     <meta name="description" content="Càpsula didàctica interactiva d'Àmbit Tecnològic (Gerard Calle Reus): Llenguatge natural vs algorísmic, blocs d'acció i decisió, diagrames oberts i tancats, reptes d'arrossegar capses autocorregibles i simuladors en viu.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,600;0,700;1,700&family=JetBrains+Mono:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/styles.css?v=20261101_cyborg">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Chakra+Petch:ital,wght@0,400;0,600;0,700;0,800;1,700&family=JetBrains+Mono:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css?v=20261103_megaman_snes">
 </head>
-<body>
+<body class="megaman-theme">
 
-    <!-- CAPÇALERA PRINCIPAL (ESTIL QUÈ ÉS LA TECNOLOGIA?) -->
-    <header>
+    <!-- CAPÇALERA PRINCIPAL (ESTIL MEGAMAN SNES HUD) -->
+    <header class="megaman-header">
         <div class="header-inner">
             <div class="brand-box" onclick="goToStage(appState.currentStage || 1)">
-                <span class="brand-tag">Àmbit Tecnològic</span>
-                <span class="brand-title">🤖 Com pensen els robots?</span>
+                <span class="brand-tag">HUNTER BASE OS // SNES 16-BIT</span>
+                <span class="brand-title">⚡ COM PENSEN ELS ROBOTS?</span>
             </div>
 
             <div class="user-stats">
-                <div class="stat-pill clickable" onclick="openProfileModal()" title="Editar nom, cognoms o curs">
-                    <span id="header-avatar">🤖</span>
+                <div class="stat-pill clickable" onclick="openProfileModal()" title="Editar perfil de pilot">
+                    <span id="header-avatar" class="avatar-hud">🤖</span>
                     <strong id="header-name">Alumne/a</strong>
-                    <span style="color:var(--text-muted);" id="header-group">(ESO)</span>
-                    <span style="font-size:0.75rem; opacity:0.65;">✏️</span>
+                    <span style="color:#67e8f9; font-size:0.78rem;" id="header-group">(ESO)</span>
+                    <span style="font-size:0.75rem; opacity:0.75;">✏️</span>
                 </div>
-                <div class="stat-pill">
-                    <span>⭐ Punts XP:</span>
-                    <strong id="header-xp">1500</strong>
+                
+                <!-- BARRA D'ENERGIA MEGAMAN (XP GAUGE) -->
+                <div class="stat-pill megaman-energy-pill" title="Barra d'Energia Total">
+                    <div class="energy-label-box">
+                        <span class="energy-icon">⚡</span>
+                        <span class="energy-text">ENERGY:</span>
+                    </div>
+                    <div class="energy-gauge-container">
+                        <div class="energy-gauge-fill" id="energy-gauge-fill" style="width:100%;"></div>
+                    </div>
+                    <strong id="header-xp" class="xp-display">1500</strong>
+                    <span style="font-size:0.7rem; color:#facc15; font-weight:800;">XP</span>
                 </div>
-                <div class="stat-pill">
-                    <span>🔓 Fase:</span>
-                    <strong id="header-unlocked-stage">1 / 12</strong>
+
+                <div class="stat-pill stage-indicator-pill">
+                    <span class="stage-dot-pulse"></span>
+                    <span>STAGE:</span>
+                    <strong id="header-unlocked-stage">1.1 / 12</strong>
                 </div>
-                <button class="btn-header btn-header-exit" onclick="confirmExitGame()" title="Reiniciar la càpsula per a un nou alumne/a">
-                    🚪 Sortir / Reiniciar
+
+                <button class="btn-header btn-header-exit" onclick="confirmExitGame()" title="Reiniciar missió">
+                    ↺ REINICI
                 </button>
             </div>
         </div>
     </header>
 
-    <!-- NAVEGACIÓ PER FASES -->
-    <nav class="nav-stages">
+    <!-- NAVEGACIÓ PER FASES (STAGE SELECT EN 4 MÒDULS I SUB-APARTATS) -->
+    <nav class="nav-stages megaman-stage-select">
         <div class="nav-stages-inner">
-            <button class="stage-nav-btn active" id="tab-btn-1" onclick="goToStage(1)">
-                <span id="nav-label-stage-1">1. Algorismes</span>
-            </button>
-            <button class="stage-nav-btn locked" id="tab-btn-2" onclick="goToStage(2)">
-                <span id="nav-label-stage-2">🔒 2. Tipus de Blocs</span>
-            </button>
-            <button class="stage-nav-btn locked" id="tab-btn-3" onclick="goToStage(3)">
-                <span id="nav-label-stage-3">🔒 3. Despertador</span>
-            </button>
-            <button class="stage-nav-btn locked" id="tab-btn-4" onclick="goToStage(4)">
-                <span id="nav-label-stage-4">🔒 4. L'Ocellet</span>
-            </button>
-            <button class="stage-nav-btn locked" id="tab-btn-5" onclick="goToStage(5)">
-                <span id="nav-label-stage-5">🔒 5. La Làmpada</span>
-            </button>
-            <button class="stage-nav-btn locked" id="tab-btn-6" onclick="goToStage(6)">
-                <span id="nav-label-stage-6">🔒 6. L'Aspirador</span>
-            </button>
-            <button class="stage-nav-btn locked" id="tab-btn-7" onclick="goToStage(7)">
-                <span id="nav-label-stage-7">🔒 7. El Semàfor</span>
-            </button>
-            <button class="stage-nav-btn locked" id="tab-btn-8" onclick="goToStage(8)">
-                <span id="nav-label-stage-8">🔒 8. La Barrera</span>
-            </button>
-            <button class="stage-nav-btn locked" id="tab-btn-9" onclick="goToStage(9)">
-                <span id="nav-label-stage-9">🔒 9. Caçador de Bugs 🐛</span>
-            </button>
-            <button class="stage-nav-btn locked" id="tab-btn-10" onclick="goToStage(10)">
-                <span id="nav-label-stage-10">🔒 10. Taula de Traça 📊</span>
-            </button>
-            <button class="stage-nav-btn locked" id="tab-btn-11" onclick="goToStage(11)">
-                <span id="nav-label-stage-11">🔒 11. Caixa Negra 📦</span>
-            </button>
-            <button class="stage-nav-btn locked" id="tab-btn-12" onclick="goToStage(12)">
-                <span id="nav-label-stage-12">🔒 12. Diploma 🎓</span>
-            </button>
+            <!-- MÒDUL 1: TEORIA I FONAMENTS -->
+            <div class="stage-nav-group">
+                <span class="stage-nav-group-tag">MOD. 1 · TEORIA</span>
+                <div class="stage-nav-group-btns">
+                    <button class="stage-nav-btn active" id="tab-btn-1" onclick="goToStage(1)">
+                        <span id="nav-label-stage-1">1.1 Algorismes</span>
+                    </button>
+                    <button class="stage-nav-btn locked" id="tab-btn-2" onclick="goToStage(2)">
+                        <span id="nav-label-stage-2">🔒 1.2 Blocs</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- MÒDUL 2: TALLER DE CONSTRUCCIÓ (ACTIVITATS 1 A 6) -->
+            <div class="stage-nav-group">
+                <span class="stage-nav-group-tag">MOD. 2 · CONSTRUCCIÓ</span>
+                <div class="stage-nav-group-btns">
+                    <button class="stage-nav-btn locked" id="tab-btn-3" onclick="goToStage(3)">
+                        <span id="nav-label-stage-3">🔒 2.1 Despertador</span>
+                    </button>
+                    <button class="stage-nav-btn locked" id="tab-btn-4" onclick="goToStage(4)">
+                        <span id="nav-label-stage-4">🔒 2.2 Ocellet</span>
+                    </button>
+                    <button class="stage-nav-btn locked" id="tab-btn-5" onclick="goToStage(5)">
+                        <span id="nav-label-stage-5">🔒 2.3 Làmpada</span>
+                    </button>
+                    <button class="stage-nav-btn locked" id="tab-btn-6" onclick="goToStage(6)">
+                        <span id="nav-label-stage-6">🔒 2.4 Aspirador</span>
+                    </button>
+                    <button class="stage-nav-btn locked" id="tab-btn-7" onclick="goToStage(7)">
+                        <span id="nav-label-stage-7">🔒 2.5 Semàfor</span>
+                    </button>
+                    <button class="stage-nav-btn locked" id="tab-btn-8" onclick="goToStage(8)">
+                        <span id="nav-label-stage-8">🔒 2.6 Barrera</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- MÒDUL 3: LABORATORI AVANÇAT (ACTIVITATS 7 A 9) -->
+            <div class="stage-nav-group">
+                <span class="stage-nav-group-tag">MOD. 3 · AVANÇAT</span>
+                <div class="stage-nav-group-btns">
+                    <button class="stage-nav-btn locked" id="tab-btn-9" onclick="goToStage(9)">
+                        <span id="nav-label-stage-9">🔒 3.1 Bugs 🐛</span>
+                    </button>
+                    <button class="stage-nav-btn locked" id="tab-btn-10" onclick="goToStage(10)">
+                        <span id="nav-label-stage-10">🔒 3.2 Traça 📊</span>
+                    </button>
+                    <button class="stage-nav-btn locked" id="tab-btn-11" onclick="goToStage(11)">
+                        <span id="nav-label-stage-11">🔒 3.3 Caixa Negra 📦</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- MÒDUL 4: CERTIFICACIÓ FINAL -->
+            <div class="stage-nav-group">
+                <span class="stage-nav-group-tag">MOD. 4 · FINAL</span>
+                <div class="stage-nav-group-btns">
+                    <button class="stage-nav-btn locked" id="tab-btn-12" onclick="goToStage(12)">
+                        <span id="nav-label-stage-12">🔒 4.1 Diploma 🎓</span>
+                    </button>
+                </div>
+            </div>
         </div>
     </nav>
 
@@ -92,8 +131,8 @@
         <section class="section-view active" id="stage-view-1">
             <div class="hero-banner">
                 <div class="hero-banner-content">
-                    <div class="phase-tag">Fase 1 de 8 · Descoberta i Pensament Algorísmic</div>
-                    <h2>1. Com pensen els robots? Llenguatge natural i algorísmic</h2>
+                    <div class="phase-tag">MÒDUL 1.1 · TEORIA I FONAMENTS</div>
+                    <h2>1.1 Com pensen els robots? Llenguatge natural i algorísmic</h2>
                     <p>
                         Tot i que a vegades pugui semblar que els robots pensen per ells mateixos, en realitat <strong>només segueixen ordres</strong>. Els humans els donem aquestes ordres mitjançant programes informàtics, i ells les segueixen pas a pas. En aquesta activitat aprendreu com representar aquestes ordres amb <strong>diagrames de flux</strong>, uns dibuixos molt útils per organitzar idees i accions pas a pas!
                     </p>
@@ -400,8 +439,8 @@
         <section class="section-view" id="stage-view-2">
             <div class="hero-banner">
                 <div class="hero-banner-content">
-                    <div class="phase-tag">Fase 2 de 6 · Geometria Lògica i Estructures</div>
-                    <h2>2. Què és un diagrama de flux? Tipus de blocs i bucles</h2>
+                    <div class="phase-tag">MÒDUL 1.2 · TEORIA I FONAMENTS</div>
+                    <h2>1.2 Què és un diagrama de flux? Tipus de blocs i bucles</h2>
                     <p>
                         Un <strong>diagrama de flux</strong> és un dibuix que representa els passos que cal seguir per fer una tasca. S'utilitza per organitzar les idees de manera ordenada i lògica, mostrant què s'ha de fer i en quin ordre. Cada pas s'escriu dins d'una <strong>forma geomètrica</strong> (com rectangles o rombes), i les <strong>fletxes</strong> indiquen per on s'ha de continuar.
                     </p>
@@ -624,8 +663,8 @@
         <section class="section-view" id="stage-view-3">
             <div class="hero-banner">
                 <div class="hero-banner-content">
-                    <div class="phase-tag" style="background:#fef3c7; color:#92400e; border-color:#fde68a;">Activitat 1 · Diagrama amb Bucle de Repetició</div>
-                    <h2>⏰ Activitat 1: El despertador</h2>
+                    <div class="phase-tag" style="background:#fef3c7; color:#92400e; border-color:#fde68a;">MÒDUL 2.1 · REPTES DE CONSTRUCCIÓ (ACTIVITAT 1)</div>
+                    <h2>⏰ 2.1 Activitat 1: El despertador intel·ligent</h2>
                     <p>
                         Anem a crear el nostre primer diagrama de flux! Imagina que cada matí sona el teu despertador. Quan sona, pots fer dues coses:
                     </p>
@@ -802,8 +841,8 @@
         <section class="section-view" id="stage-view-4">
             <div class="hero-banner">
                 <div class="hero-banner-content">
-                    <div class="phase-tag" style="background:#e0e7ff; color:#3730a3; border-color:#c7d2fe;">Activitat 2 Oficial · Depuració i Millora d'un Robot</div>
-                    <h2>🐦 Activitat 2: L'ocellet en la gàbia (Laboratori de Robòtica)</h2>
+                    <div class="phase-tag" style="background:#e0e7ff; color:#3730a3; border-color:#c7d2fe;">MÒDUL 2.2 · REPTES DE CONSTRUCCIÓ (ACTIVITAT 2)</div>
+                    <h2>🐦 2.2 Activitat 2: L'ocellet meteorològic</h2>
                     <p>
                         L'<strong>equip de robòtica</strong> ha decidit construir un petit robot amb una funció molt concreta i útil: <strong>protegir un ocellet de la pluja</strong>. L'ocellet viu dins una gàbia situada a l'exterior, i el robot romandrà sempre al seu costat amb un paraigües a la mà que pot obrir o tancar segons les condicions meteorològiques.
                     </p>
@@ -1125,8 +1164,8 @@
         <section class="section-view" id="stage-view-5">
             <div class="hero-banner">
                 <div class="hero-banner-content">
-                    <div class="phase-tag" style="background:#dcfce7; color:#166534; border-color:#86efac;">Activitat 3 Oficial del Dossier · Estalvi Energètic i Doble Sensor</div>
-                    <h2>💡 Activitat 3: La làmpada automàtica</h2>
+                    <div class="phase-tag" style="background:#dcfce7; color:#166534; border-color:#86efac;">MÒDUL 2.3 · REPTES DE CONSTRUCCIÓ (ACTIVITAT 3)</div>
+                    <h2>💡 2.3 Activitat 3: La làmpada automàtica</h2>
                     <p>
                         Imagina que has de programar un petit robot que controla una làmpada en una habitació o aula. La seva funció és molt senzilla però important: <strong>encendre la làmpada quan no hi ha llum natural i apagar-la quan n'hi ha</strong>. Així estalviem energia i sempre tenim la llum adequada per estudiar o treballar. A més a més, el robot també comprova <strong>si hi ha persones a l'habitació (amb un sensor de moviment)</strong> i només encén la llum si <strong>NO hi ha llum natural I hi ha algú present</strong>!
                     </p>
@@ -1322,8 +1361,8 @@
         <section class="section-view" id="stage-view-6">
             <div class="hero-banner">
                 <div class="hero-banner-content">
-                    <div class="phase-tag" style="background:#ede9fe; color:#6d28d9; border-color:#ddd6fe;">Activitat 4 · Robòtica Avançada: Decisions Niades i Gestió de Bateria</div>
-                    <h2>🤖 Activitat 4: El Robot Aspirador Intel·ligent (Roomba)</h2>
+                    <div class="phase-tag" style="background:#ede9fe; color:#6d28d9; border-color:#ddd6fe;">MÒDUL 2.4 · REPTES DE CONSTRUCCIÓ (ACTIVITAT 4)</div>
+                    <h2>🤖 2.4 Activitat 4: El Robot Aspirador Intel·ligent (Roomba)</h2>
                     <p>
                         Els robots aspiradors que tenim a casa prenen decisions constantment. Per no quedar-se aturats al mig del menjador, han de verificar primer si els queda prou energia (<strong>bateria &lt; 15%</strong>). Si la bateria és correcta, activen el <strong>sensor d'obstacles d'infrarojos</strong>: si detecten un moble o paret giren per esquivar-lo, i si el camí és lliure avancen aspirant la pols!
                     </p>
@@ -1534,8 +1573,8 @@
         <section class="section-view" id="stage-view-7">
             <div class="hero-banner">
                 <div class="hero-banner-content">
-                    <div class="phase-tag" style="background:#dbeafe; color:#1e40af; border-color:#bfdbfe;">Activitat 5 · Smart City: Sistemes de Control de Trànsit i Seguretat</div>
-                    <h2>🚦 Activitat 5: El Semàfor Intel·ligent amb Pas de Vianants</h2>
+                    <div class="phase-tag" style="background:#dbeafe; color:#1e40af; border-color:#bfdbfe;">MÒDUL 2.5 · REPTES DE CONSTRUCCIÓ (ACTIVITAT 5)</div>
+                    <h2>🚦 2.5 Activitat 5: El Semàfor Intel·ligent amb Pas de Vianants</h2>
                     <p>
                         A les ciutats intel·ligents (Smart Cities), els semàfors escolars no canvien a cegues, sinó que responen als <strong>vianants que premen el polsador de demanda</strong>. Per evitar crear un embús de cotxes, el sistema només autoritza el canvi si <strong>han passat més de 30 segons des de l'última vegada que els cotxes es van posar en verd</strong>. Després, avisa els vehicles amb l'<strong>ambre</strong> abans d'obrir el pas segur amb senyal acústic!
                     </p>
@@ -1765,8 +1804,8 @@
         <section class="section-view" id="stage-view-8">
             <div class="hero-banner">
                 <div class="hero-banner-content">
-                    <div class="phase-tag" style="background:#dbeafe; color:#1e40af; border-color:#bfdbfe;">Activitat 6 · Sistemes de Control d'Accés i Aforament</div>
-                    <h2>🚗 Activitat 6: La Barrera Automàtica d'un Pàrquing Intel·ligent</h2>
+                    <div class="phase-tag" style="background:#dbeafe; color:#1e40af; border-color:#bfdbfe;">MÒDUL 2.6 · REPTES DE CONSTRUCCIÓ (ACTIVITAT 6)</div>
+                    <h2>🚗 2.6 Activitat 6: La Barrera Automàtica del Pàrquing</h2>
                     <p>
                         Als aparcaments moderns, una barrera automàtica regula l'entrada de vehicles mitjançant <strong>sensors d'ultrasons</strong> (presència del vehicle), un <strong>comptador d'aforament</strong> (places lliures) i una <strong>fotocèl·lula de seguretat</strong> (per no abaixar la barrera fins que el vehicle hagi passat del tot). Si el pàrquing és ple, el sistema mostra «COMPLET» i no permet l'entrada!
                     </p>
@@ -2056,8 +2095,8 @@
         <section class="section-view" id="stage-view-9">
             <div class="hero-banner">
                 <div class="hero-banner-content">
-                    <div class="phase-tag" style="background:#fee2e2; color:#991b1b; border-color:#fca5a5;">Repte Avançat 7 · Depuració i Bucle Continu</div>
-                    <h2>🐛 Activitat 7: Caçador de Bugs a l'Hivernacle Tecnològic</h2>
+                    <div class="phase-tag">MÒDUL 3.1 · REPTES AVANÇATS (ACTIVITAT 7)</div>
+                    <h2>🐛 3.1 Activitat 7: Caçador de Bugs a l'Hivernacle Tecnològic</h2>
                     <p>
                         A la vida real, els algorismes de climatització no acaben mai: funcionen en un <strong>bucle continu</strong> que llegeix sensors a intervals regulars (cada 15 minuts). En aquest hivernacle intel·ligent, el sistema mesura la <strong>temperatura de l'aire</strong> i la <strong>humitat del sòl</strong> per regular la calor, el fred i el reg. Però hi ha <strong>errors de programació (bugs)</strong> que estan posant en perill les tomaqueres!
                     </p>
@@ -2324,8 +2363,8 @@
         <section class="section-view" id="stage-view-10">
             <div class="hero-banner">
                 <div class="hero-banner-content">
-                    <div class="phase-tag" style="background:#ede9fe; color:#6d28d9; border-color:#ddd6fe;">Repte Avançat 8 · Variables, Memòria i Comptadors</div>
-                    <h2>📊 Activitat 8: Taula de Traça del Caixer Automàtic</h2>
+                    <div class="phase-tag">MÒDUL 3.2 · REPTES AVANÇATS (ACTIVITAT 8)</div>
+                    <h2>📊 3.2 Activitat 8: Taula de Traça del Caixer Automàtic</h2>
                     <p>
                         En programació real, un algorisme no només pren camins: també <strong>modifica variables a la memòria</strong> (comptadors d'errors, saldos de diners, voltes de bucle). Per comprovar com funciona per dins un programa, els enginyers utilitzen una <strong>taula de traça</strong> combinada amb el diagrama de flux.
                     </p>
@@ -2557,8 +2596,8 @@
         <section class="section-view" id="stage-view-11">
             <div class="hero-banner">
                 <div class="hero-banner-content">
-                    <div class="phase-tag" style="background:#dbeafe; color:#1e40af; border-color:#bfdbfe;">Repte Avançat 9 · Enginyeria Inversa i Caixa Negra</div>
-                    <h2>📦 Activitat 9: La Caixa Negra de l'Ascensor Secret</h2>
+                    <div class="phase-tag">MÒDUL 3.3 · REPTES AVANÇATS (ACTIVITAT 9)</div>
+                    <h2>📦 3.3 Activitat 9: La Caixa Negra de l'Ascensor Secret</h2>
                     <p>
                         A la indústria tecnològica sovint ens trobem amb dispositius o xips dels quals <strong>no tenim el diagrama original</strong>. Mitjançant l'<strong>enginyeria inversa</strong>, injectem estímuls (entrades de sensors) i analitzem la resposta per deduir el diagrama de flux exacte que hi ha a dins!
                     </p>
@@ -2771,14 +2810,14 @@
         ========================================================================= -->
         <section class="section-view" id="stage-view-12">
             <div class="no-print" style="text-align:center; margin-bottom:1.25rem;">
-                <span class="phase-tag" style="background:#dcfce7; color:#166534; border-color:#86efac;">
-                    🎉 Càpsula d'Àmbit Tecnològic Completada amb Èxit
+                <span class="phase-tag">
+                    MÒDUL 4.1 · CERTIFICACIÓ FINAL // STAGE CLEAR! 🏆
                 </span>
             </div>
 
             <div class="diploma-frame" id="printable-diploma">
                 <div style="font-size:3.2rem; margin-bottom:0.35rem;">🏆</div>
-                <h1 style="color:#1e3a8a; font-size:2rem; margin-bottom:0.35rem;">DIPLOMA D'APROFITAMENT TECNOLÒGIC</h1>
+                <h1 style="color:#00f0ff; font-size:2rem; margin-bottom:0.35rem; font-family:'Press Start 2P', cursive; font-size:1.4rem; line-height:1.4;">4.1 DIPLOMA D'APROFITAMENT TECNOLÒGIC</h1>
                 <p style="font-size:0.92rem; color:#475569; letter-spacing:0.04em; margin-bottom:1.35rem; font-weight:700;">
                     ÀMBIT TECNOLÒGIC · DOCENT REFERENT: GERARD CALLE REUS
                 </p>

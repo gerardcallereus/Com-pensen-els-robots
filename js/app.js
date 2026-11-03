@@ -51,18 +51,18 @@ let appState = {
 };
 
 const STAGE_TITLES = {
-    1: "1. Algorismes",
-    2: "2. Tipus de Blocs",
-    3: "3. Despertador",
-    4: "4. L'Ocellet",
-    5: "5. La Làmpada",
-    6: "6. L'Aspirador",
-    7: "7. El Semàfor",
-    8: "8. La Barrera",
-    9: "9. Caçador de Bugs 🐛",
-    10: "10. Taula de Traça 📊",
-    11: "11. Caixa Negra 📦",
-    12: "12. Diploma 🎓"
+    1: "1.1 Algorismes",
+    2: "1.2 Blocs",
+    3: "2.1 Despertador",
+    4: "2.2 Ocellet",
+    5: "2.3 Làmpada",
+    6: "2.4 Aspirador",
+    7: "2.5 Semàfor",
+    8: "2.6 Barrera",
+    9: "3.1 Bugs 🐛",
+    10: "3.2 Traça 📊",
+    11: "3.3 Caixa Negra 📦",
+    12: "4.1 Diploma 🎓"
 };
 
 // ============================================================================
@@ -142,12 +142,21 @@ function updateHeader() {
     const gr = document.getElementById('header-group');
     const xp = document.getElementById('header-xp');
     const st = document.getElementById('header-unlocked-stage');
+    const gaugeFill = document.getElementById('energy-gauge-fill');
 
     if (av) av.textContent = appState.avatar || '🤖';
     if (nm) nm.textContent = appState.studentName || 'Alumne/a';
     if (gr) gr.textContent = `(${appState.studentGroup || 'ESO'})`;
     if (xp) xp.textContent = appState.totalXP;
-    if (st) st.textContent = `${Math.min(12, appState.unlockedStage)} / 12`;
+
+    const unlStage = Math.min(12, appState.unlockedStage || 1);
+    const stageCode = STAGE_TITLES[unlStage] ? STAGE_TITLES[unlStage].split(' ')[0] : `${unlStage}/12`;
+    if (st) st.textContent = `${stageCode} (Fase ${unlStage}/12)`;
+
+    if (gaugeFill) {
+        const pct = Math.max(0, Math.min(100, (appState.totalXP / 1500) * 100));
+        gaugeFill.style.width = `${pct}%`;
+    }
 }
 
 function updateNavigationLocks() {
