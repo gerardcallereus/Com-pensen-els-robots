@@ -16,7 +16,7 @@ let appState = {
     currentStage: 1,
     unlockedStage: 1,
     completedStages: [],
-    totalXP: 1000,
+    totalXP: 1500,
     penalties: {
         stage1: 0,
         stage2: 0,
@@ -25,7 +25,10 @@ let appState = {
         stage5: 0,
         stage6: 0,
         stage7: 0,
-        stage8: 0
+        stage8: 0,
+        stage9: 0,
+        stage10: 0,
+        stage11: 0
     },
     stage1Cases: {},
     stage2Sorted: {}, // itemId -> 'action' | 'decision'
@@ -56,7 +59,10 @@ const STAGE_TITLES = {
     6: "6. L'Aspirador",
     7: "7. El Semàfor",
     8: "8. La Barrera",
-    9: "9. Diploma 🎓"
+    9: "9. Caçador de Bugs 🐛",
+    10: "10. Taula de Traça 📊",
+    11: "11. Caixa Negra 📦",
+    12: "12. Diploma 🎓"
 };
 
 // ============================================================================
@@ -102,7 +108,7 @@ function loadState() {
 
 function recalculateXP() {
     const totalDeductions = Object.values(appState.penalties || {}).reduce((acc, v) => acc + (v || 0), 0);
-    appState.totalXP = Math.max(0, 1000 - totalDeductions);
+    appState.totalXP = Math.max(0, 1500 - totalDeductions);
 }
 
 function saveState() {
@@ -141,16 +147,16 @@ function updateHeader() {
     if (nm) nm.textContent = appState.studentName || 'Alumne/a';
     if (gr) gr.textContent = `(${appState.studentGroup || 'ESO'})`;
     if (xp) xp.textContent = appState.totalXP;
-    if (st) st.textContent = `${Math.min(9, appState.unlockedStage)} / 9`;
+    if (st) st.textContent = `${Math.min(12, appState.unlockedStage)} / 12`;
 }
 
 function updateNavigationLocks() {
-    for (let i = 1; i <= 9; i++) {
+    for (let i = 1; i <= 12; i++) {
         const btn = document.getElementById(`tab-btn-${i}`);
         const lbl = document.getElementById(`nav-label-stage-${i}`);
         if (!btn) continue;
 
-        const isUnlocked = (i <= appState.unlockedStage) || (i === 9 && appState.completedStages.includes(8));
+        const isUnlocked = (i <= appState.unlockedStage) || (i === 12 && appState.completedStages.includes(11));
         const isCompleted = appState.completedStages.includes(i);
 
         btn.classList.toggle('locked', !isUnlocked);
@@ -166,7 +172,7 @@ function updateNavigationLocks() {
 
 
 function goToStage(stageNum) {
-    const isUnlocked = (stageNum <= appState.unlockedStage) || (stageNum === 9 && appState.completedStages.includes(8));
+    const isUnlocked = (stageNum <= appState.unlockedStage) || (stageNum === 12 && appState.completedStages.includes(11));
     if (!isUnlocked) {
         alert(`⚠️ La Fase ${stageNum} està bloquejada. Completa primer la fase actual per desbloquejar-la!`);
         return;
@@ -193,7 +199,10 @@ function goToStage(stageNum) {
     if (stageNum === 6) renderFlowchartActivity('act4');
     if (stageNum === 7) renderFlowchartActivity('act5');
     if (stageNum === 8) renderFlowchartActivity('act6');
-    if (stageNum === 9) renderDiploma();
+    if (stageNum === 9) setBugSimTemp(32);
+    if (stageNum === 10) renderTraceTable();
+    if (stageNum === 11) runBlackboxTest();
+    if (stageNum === 12) renderDiploma();
 
     setTimeout(() => { requestAnimationFrame(drawAllLoopArrows); }, 60);
 }
@@ -269,9 +278,9 @@ function showVictory(stageNum, title, desc) {
 
     const vicXp = document.getElementById('vic-xp');
     if (penalty > 0) {
-        vicXp.innerHTML = `<span style="color:#059669;">${appState.totalXP} / 1000 XP</span> <small style="display:block; color:#dc2626;">(Penalització en aquesta fase: -${penalty} XP)</small>`;
+        vicXp.innerHTML = `<span style="color:#059669;">${appState.totalXP} / 1500 XP</span> <small style="display:block; color:#dc2626;">(Penalització en aquesta fase: -${penalty} XP)</small>`;
     } else {
-        vicXp.innerHTML = `<span style="color:#059669;">${appState.totalXP} / 1000 XP</span> <small style="display:block; color:#059669;">(Fase impecable sense errors! 🎯)</small>`;
+        vicXp.innerHTML = `<span style="color:#059669;">${appState.totalXP} / 1500 XP</span> <small style="display:block; color:#059669;">(Fase impecable sense errors! 🎯)</small>`;
     }
 
     if (!appState.completedStages.includes(stageNum)) {
@@ -280,7 +289,7 @@ function showVictory(stageNum, title, desc) {
     if (appState.unlockedStage <= stageNum) {
         appState.unlockedStage = stageNum + 1;
     }
-    pendingNextStage = Math.min(9, stageNum + 1);
+    pendingNextStage = Math.min(12, stageNum + 1);
     saveState();
     document.getElementById('victory-modal').classList.add('active');
 }
@@ -1161,7 +1170,19 @@ function finishStage7() {
 }
 
 function finishStage8() {
-    showVictory(8, "Activitat 6 Superada: La Barrera del Pàrquing!", "Has programat amb èxit el sistema de control d'accés amb sensor de presència, aforament i fotocèl·lula de seguretat! Ja pots accedir al teu diploma oficial!");
+    showVictory(8, "Activitat 6 Superada: La Barrera del Pàrquing!", "Has programat amb èxit el sistema de control d'accés complet! Ara passem als reptes avançats: comencem amb el Caçador de Bugs!");
+}
+
+function finishStage9() {
+    showVictory(9, "Repte 7 Superat: Caçador de Bugs!", "Has localitzat i resolt el bug de l'hivernacle amb èxit com un autèntic enginyer/a de programari!");
+}
+
+function finishStage10() {
+    showVictory(10, "Repte 8 Superat: Taula de Traça i Memòria!", "Has dominat el seguiment de variables i el flux intern de la memòria del caixer automàtic!");
+}
+
+function finishStage11() {
+    showVictory(11, "Repte 9 Superat: Enginyeria Inversa de la Caixa Negra!", "Has deduït amb precisió científica l'algorisme secret de l'ascensor! El teu Diploma Oficial t'espera!");
 }
 
 // ============================================================================
@@ -1875,13 +1896,13 @@ function renderDiploma() {
 
     if (nameEl) nameEl.textContent = appState.studentName || 'Nom i Cognoms';
     if (groupEl) groupEl.textContent = appState.studentGroup || 'ESO';
-    if (xpEl) xpEl.textContent = `${appState.totalXP} / 1000 XP`;
-    if (diagEl) diagEl.textContent = '6 de 6 (100%)';
-    if (stagesEl) stagesEl.textContent = '8 de 8';
+    if (xpEl) xpEl.textContent = `${appState.totalXP} / 1500 XP`;
+    if (diagEl) diagEl.textContent = '9 de 9 (100%)';
+    if (stagesEl) stagesEl.textContent = '11 de 11';
 
     const badge = document.getElementById('dip-level-badge');
     if (badge) {
-        badge.textContent = 'Itinerari: 🔵 Pensament Algorísmic i Diagrames de Flux';
+        badge.textContent = 'Itinerari: 🔵 Pensament Algorísmic, Depuració i Enginyeria Inversa';
         badge.style.background = '#dbeafe';
         badge.style.color = '#1d4ed8';
         badge.style.borderColor = '#93c5fd';
@@ -1890,13 +1911,13 @@ function renderDiploma() {
     const xp = appState.totalXP;
     const qualEl = document.getElementById('dip-qualification');
     if (qualEl) {
-        if (xp >= 900) {
+        if (xp >= 1350) {
             qualEl.textContent = 'Assoliment Excel·lent 🏆';
             qualEl.style.color = '#16a34a';
-        } else if (xp >= 750) {
+        } else if (xp >= 1150) {
             qualEl.textContent = 'Assoliment Notable 🎖️';
             qualEl.style.color = '#2563eb';
-        } else if (xp >= 600) {
+        } else if (xp >= 900) {
             qualEl.textContent = 'Assoliment Satisfactori 🥉';
             qualEl.style.color = '#d97706';
         } else {
@@ -2277,6 +2298,386 @@ function drawAllLoopArrows() {
     drawAct4Loop();
     drawAct5Loop();
     drawAct6Loop();
+}
+
+// ============================================================================
+// REPTES AVANÇATS (STAGES 9, 10 I 11): BUGS, TRAÇA I CAIXA NEGRA
+// ============================================================================
+
+// --- STAGE 9: REPTE 7 — CAÇADOR DE BUGS (DEPURACIÓ HIVERNACLE) ---
+let bugState = {
+    temp: 32,
+    bugFixed: false,
+    selectedOption: null
+};
+
+function setBugSimTemp(temp) {
+    bugState.temp = parseInt(temp, 10);
+    const valEl = document.getElementById('bug-temp-val');
+    const badge = document.getElementById('bug-temp-badge');
+    const slider = document.getElementById('bug-temp-slider');
+    if (valEl) valEl.textContent = `${bugState.temp} °C`;
+    if (slider) slider.value = bugState.temp;
+
+    if (badge) {
+        if (bugState.temp < 18) {
+            badge.textContent = `❄️ Fred (${bugState.temp} °C)`;
+            badge.style.background = '#e0f2fe';
+            badge.style.color = '#0369a1';
+        } else if (bugState.temp > 26) {
+            badge.textContent = `🔥 Calor (${bugState.temp} °C)`;
+            badge.style.background = '#fee2e2';
+            badge.style.color = '#b91c1c';
+        } else {
+            badge.textContent = `🌱 Òptim (${bugState.temp} °C)`;
+            badge.style.background = '#dcfce7';
+            badge.style.color = '#15803d';
+        }
+    }
+}
+
+function runBugDiagnosis() {
+    const logBox = document.getElementById('bug-diag-log');
+    const errorCard = document.getElementById('bug-fix-section');
+    const flawedNode = document.getElementById('bug-node-calefaccio-calor');
+    const t = bugState.temp;
+
+    if (!bugState.bugFixed) {
+        if (t > 26) {
+            if (flawedNode) flawedNode.classList.add('bug-node-flawed');
+            if (logBox) {
+                logBox.style.background = '#450a0a';
+                logBox.style.color = '#fecaca';
+                logBox.style.borderColor = '#ef4444';
+                logBox.innerHTML = `🚨 <strong>BUG DETECTAT!</strong> A <strong>${t} °C</strong> (fa molta calor), l'algorisme ha seguit la fletxa SÍ cap a: <em>«Activar Calefacció 🔥»</em>! Això farà cremar les tomaqueres! Hauria d'haver activat la <strong>Ventilació ❄️</strong>!`;
+            }
+            if (errorCard) errorCard.style.display = 'block';
+        } else if (t < 18) {
+            if (logBox) {
+                logBox.style.background = '#0f172a';
+                logBox.style.color = '#38bdf8';
+                logBox.style.borderColor = '#334155';
+                logBox.innerHTML = `❄️ <strong>Comprovació correcta (${t} °C):</strong> La temperatura és baixa (&lt; 18 °C). L'algorisme activa la calefacció com toca. Però prova de posar la temperatura a <strong>32 °C</strong> per veure l'error!`;
+            }
+        } else {
+            if (logBox) {
+                logBox.style.background = '#0f172a';
+                logBox.style.color = '#4ade80';
+                logBox.style.borderColor = '#334155';
+                logBox.innerHTML = `🌱 <strong>Comprovació correcta (${t} °C):</strong> Temperatura ideal. Tot apagat. Prova ara de posar la temperatura a <strong>32 °C</strong> per forçar l'error!`;
+            }
+        }
+    } else {
+        if (logBox) {
+            logBox.style.background = '#064e3b';
+            logBox.style.color = '#a7f3d0';
+            logBox.style.borderColor = '#10b981';
+            if (t > 26) {
+                logBox.innerHTML = `✅ <strong>Comportament correcte (${t} °C):</strong> Temperatura alta (&gt; 26 °C) ➔ S'activen els <strong>Ventiladors ❄️</strong>! Les tomaqueres estan salvades!`;
+            } else if (t < 18) {
+                logBox.innerHTML = `✅ <strong>Comportament correcte (${t} °C):</strong> Temperatura baixa (&lt; 18 °C) ➔ S'activa la <strong>Calefacció 🔥</strong> per protegir del fred!`;
+            } else {
+                logBox.innerHTML = `✅ <strong>Comportament correcte (${t} °C):</strong> Temperatura suau (18-26 °C) ➔ Tot apagat, estalvi d'energia 🌱.`;
+            }
+        }
+    }
+}
+
+function selectBugFixOption(optIndex) {
+    bugState.selectedOption = optIndex;
+    for (let i = 1; i <= 3; i++) {
+        const el = document.getElementById(`bug-opt-${i}`);
+        if (el) el.classList.toggle('selected', i === optIndex);
+    }
+}
+
+function applyBugFix() {
+    const fb = document.getElementById('bug-fix-feedback');
+    const finishBtn = document.getElementById('btn-finish-stage-9');
+    const flawedNode = document.getElementById('bug-node-calefaccio-calor');
+
+    if (bugState.selectedOption === 1) { // Opció 1: Canviar l'acció a "Activar Ventiladors d'aire fred ❄️"
+        bugState.bugFixed = true;
+        if (flawedNode) {
+            flawedNode.classList.remove('bug-node-flawed');
+            flawedNode.classList.add('bug-node-fixed');
+            flawedNode.innerHTML = `Activar Ventiladors d'aire fred ❄️`;
+        }
+        if (fb) {
+            fb.style.display = 'block';
+            fb.style.background = '#ecfdf5';
+            fb.style.color = '#065f46';
+            fb.style.border = '2px solid #10b981';
+            fb.innerHTML = `🎉 <strong>MOLT BÉ! Has eliminat el bug!</strong><br>Ara quan la temperatura supera els 26 °C, el sistema engega la ventilació correctament. L'hivernacle funciona a la perfecció!`;
+        }
+        if (finishBtn) finishBtn.style.display = 'inline-block';
+        runBugDiagnosis();
+    } else {
+        applyXpPenalty('stage9', 15);
+        if (fb) {
+            fb.style.display = 'block';
+            fb.style.background = '#fef2f2';
+            fb.style.color = '#991b1b';
+            fb.style.border = '2px solid #ef4444';
+            fb.innerHTML = `❌ <strong>Aquesta opció no resol el problema (-15 XP).</strong> Revisa quina acció és lògica fer quan fa massa calor (> 26 °C).`;
+        }
+    }
+}
+
+// --- STAGE 10: REPTE 8 — TAULA DE TRAÇA I VARIABLES (CAIXER AUTOMÀTIC) ---
+const TRACE_STEPS_DATA = [
+    {
+        pas: "Inici",
+        accio: "Inserció de targeta",
+        intents: 0,
+        saldo: "120 €",
+        estat: "Client introdueix targeta",
+        explicacio: "Valors inicials a la memòria: Intents = 0, Saldo = 120 €."
+    },
+    {
+        pas: "Pas 1",
+        accio: "PIN '9999' (Incorrecte)",
+        intents: 1,
+        saldo: "120 €",
+        estat: "1r error (Intents passa a 1)",
+        explicacio: "PIN incorrecte: la variable Intents s'incrementa en 1 (0 + 1 = 1). Com que 1 < 3, permet reintentar."
+    },
+    {
+        pas: "Pas 2",
+        accio: "PIN '1111' (Incorrecte)",
+        intents: 2,
+        saldo: "120 €",
+        estat: "2n error (Intents passa a 2)",
+        explicacio: "Torna a fallar: Intents s'incrementa de nou (1 + 1 = 2). Com que 2 < 3, permet un últim intent."
+    },
+    {
+        pas: "Pas 3",
+        accio: "PIN '1234' (Correcte!)",
+        intents: 2,
+        saldo: "120 €",
+        estat: "PIN validat amb èxit",
+        explicacio: "PIN correcte! El caixer surt del bucle d'errors i sol·licita l'import a retirar (40 €)."
+    },
+    {
+        pas: "Pas 4",
+        accio: "Comprovació: 40 € ≤ 120 €? (SÍ)",
+        intents: 2,
+        saldo: "80 €",
+        estat: "Saldo restant: 120 - 40 = 80 €",
+        explicacio: "Com que hi ha prou saldo, s'executa l'operació matemàtica: Saldo = Saldo - 40 € = 80 €."
+    },
+    {
+        pas: "Pas 5",
+        accio: "Dispensar 40 € i rebut",
+        intents: 2,
+        saldo: "80 €",
+        estat: "Operació finalitzada amb èxit 💵",
+        explicacio: "S'entreguen els bitllets i la sessió es tanca amb èxit."
+    }
+];
+
+let traceCurrentStep = 0;
+let traceUserAnswers = {};
+
+function renderTraceTable() {
+    const tbody = document.getElementById('trace-table-body');
+    const chipIntents = document.getElementById('trace-chip-intents');
+    const chipSaldo = document.getElementById('trace-chip-saldo');
+    const chipEstat = document.getElementById('trace-chip-estat');
+    const logEl = document.getElementById('trace-step-log');
+    if (!tbody) return;
+
+    tbody.innerHTML = '';
+    for (let i = 0; i <= traceCurrentStep; i++) {
+        const item = TRACE_STEPS_DATA[i];
+        const tr = document.createElement('tr');
+        if (i === traceCurrentStep) tr.className = 'active-row';
+        tr.innerHTML = `
+            <td><strong>${item.pas}</strong></td>
+            <td>${item.accio}</td>
+            <td style="color:#d97706; font-weight:800;">${item.intents}</td>
+            <td style="color:#059669; font-weight:800;">${item.saldo}</td>
+            <td>${item.estat}</td>
+        `;
+        tbody.appendChild(tr);
+    }
+
+    const curr = TRACE_STEPS_DATA[traceCurrentStep];
+    if (chipIntents) chipIntents.textContent = `${curr.intents} / 3`;
+    if (chipSaldo) chipSaldo.textContent = curr.saldo;
+    if (chipEstat) chipEstat.textContent = curr.estat;
+    if (logEl) logEl.innerHTML = `📍 <strong>${curr.pas}:</strong> ${curr.explicacio}`;
+}
+
+function runTraceNextStep() {
+    if (traceCurrentStep < TRACE_STEPS_DATA.length - 1) {
+        traceCurrentStep++;
+        renderTraceTable();
+    }
+}
+
+function resetTraceSim() {
+    traceCurrentStep = 0;
+    renderTraceTable();
+}
+
+function selectTraceAnswer(qNum, answerVal) {
+    traceUserAnswers[qNum] = answerVal;
+    for (let i = 1; i <= 4; i++) {
+        const el = document.getElementById(`trace-q${qNum}-opt-${i}`);
+        if (el) el.classList.toggle('selected', el.getAttribute('data-val') === String(answerVal));
+    }
+}
+
+function checkTraceAnswers() {
+    const fb = document.getElementById('trace-answers-feedback');
+    const finishBtn = document.getElementById('btn-finish-stage-10');
+
+    const q1Ok = traceUserAnswers[1] === 2;
+    const q2Ok = traceUserAnswers[2] === 80;
+    const q3Ok = traceUserAnswers[3] === 1;
+
+    if (q1Ok && q2Ok && q3Ok) {
+        if (fb) {
+            fb.style.display = 'block';
+            fb.style.background = '#ecfdf5';
+            fb.style.color = '#065f46';
+            fb.style.border = '2px solid #10b981';
+            fb.innerHTML = `🎉 <strong>EXCEL·LENT! Has desxifrat la traça a la perfecció!</strong><br>Has entès com un algorisme utilitza variables i operacions matemàtiques a la memòria per prendre decisions.`;
+        }
+        if (finishBtn) finishBtn.style.display = 'inline-block';
+    } else {
+        applyXpPenalty('stage10', 15);
+        if (fb) {
+            fb.style.display = 'block';
+            fb.style.background = '#fef2f2';
+            fb.style.color = '#991b1b';
+            fb.style.border = '2px solid #ef4444';
+            fb.innerHTML = `❌ <strong>Alguna de les respostes no és correcta (-15 XP).</strong> Revisa la taula de traça de dalt per comprovar els valors de les variables a cada pas.`;
+        }
+    }
+}
+
+// --- STAGE 11: REPTE 9 — LA CAIXA NEGRA (ENGINYERIA INVERSA D'UN ASCENSOR) ---
+let blackboxState = {
+    currentFloor: 0,
+    requestedFloor: 0,
+    overload: false,
+    hasKey: false,
+    selectedCandidate: null,
+    testLogs: []
+};
+
+function setBlackboxFloor(f) {
+    blackboxState.requestedFloor = parseInt(f, 10);
+    [-2, -1, 0].forEach(n => {
+        const b = document.getElementById(`bb-floor-btn-${n}`);
+        if (b) b.classList.toggle('btn-primary', n === blackboxState.requestedFloor);
+        if (b) b.classList.toggle('btn-outline', n !== blackboxState.requestedFloor);
+    });
+}
+
+function toggleBlackboxOverload() {
+    blackboxState.overload = !blackboxState.overload;
+    const btn = document.getElementById('btn-bb-overload');
+    if (btn) {
+        btn.innerHTML = blackboxState.overload ? '⚖️ Pes: SOBRECÀRREGA (550 kg)' : '⚖️ Pes: Normal (220 kg)';
+        btn.style.background = blackboxState.overload ? '#ef4444' : '#1e293b';
+        btn.style.borderColor = blackboxState.overload ? '#dc2626' : '#475569';
+        btn.style.color = '#ffffff';
+    }
+}
+
+function toggleBlackboxKey() {
+    blackboxState.hasKey = !blackboxState.hasKey;
+    const btn = document.getElementById('btn-bb-key');
+    if (btn) {
+        btn.innerHTML = blackboxState.hasKey ? '🔑 Clau Seguretat: INTRODUÏDA' : '🔑 Clau Seguretat: NO';
+        btn.style.background = blackboxState.hasKey ? '#f59e0b' : '#1e293b';
+        btn.style.borderColor = blackboxState.hasKey ? '#d97706' : '#475569';
+        btn.style.color = '#ffffff';
+    }
+}
+
+function runBlackboxTest() {
+    const cabin = document.getElementById('bb-elevator-cabin');
+    const logBox = document.getElementById('bb-log-status');
+    const listEl = document.getElementById('bb-test-history-list');
+    const req = blackboxState.requestedFloor;
+    let resultOutcome = '';
+
+    if (blackboxState.overload) {
+        resultOutcome = "🚨 ALARMA DE SOBRECÀRREGA! L'ascensor no es mou per seguretat.";
+        if (logBox) {
+            logBox.style.background = '#450a0a';
+            logBox.style.color = '#fca5a5';
+            logBox.innerHTML = `⚠️ <strong>Entrada:</strong> Sobrecàrrega detectada ➔ <strong>Reacció:</strong> Bloqueig de motors i senyal d'alarma.`;
+        }
+    } else if (req === -2 && !blackboxState.hasKey) {
+        resultOutcome = "🔒 ACCÉS DENEGAT a Planta -2! Es requereix la clau especial.";
+        if (logBox) {
+            logBox.style.background = '#78350f';
+            logBox.style.color = '#fde68a';
+            logBox.innerHTML = `🔒 <strong>Entrada:</strong> Sol·licitada Planta -2 sense clau ➔ <strong>Reacció:</strong> Accés denegat, l'ascensor no es mou.`;
+        }
+    } else {
+        blackboxState.currentFloor = req;
+        resultOutcome = `✨ L'ascensor es mou i arriba a la Planta ${req}.`;
+        if (cabin) {
+            const topMap = { 0: '10px', '-1': '88px', '-2': '166px' };
+            cabin.style.top = topMap[req];
+            cabin.innerHTML = `<span>Planta ${req}</span><small style="font-size:0.68rem;">${req === -2 ? '🔬 Lab' : (req === -1 ? '📦 Mag' : '🏢 Ent')}</small>`;
+        }
+        if (logBox) {
+            logBox.style.background = '#064e3b';
+            logBox.style.color = '#a7f3d0';
+            logBox.innerHTML = `✅ <strong>Comanda executada:</strong> Desplaçament correcte a la Planta ${req}.`;
+        }
+    }
+
+    const testNum = blackboxState.testLogs.length + 1;
+    const testEntry = `Prova #${testNum}: Destí Planta ${req} | Sobrecàrrega: ${blackboxState.overload ? 'SÍ' : 'NO'} | Clau: ${blackboxState.hasKey ? 'SÍ' : 'NO'} ➔ <strong>${resultOutcome}</strong>`;
+    blackboxState.testLogs.push(testEntry);
+
+    if (listEl) {
+        const li = document.createElement('li');
+        li.style.marginBottom = '0.35rem';
+        li.innerHTML = testEntry;
+        listEl.appendChild(li);
+    }
+}
+
+function selectCandidateDiagram(candId) {
+    blackboxState.selectedCandidate = candId;
+    ['A', 'B', 'C'].forEach(id => {
+        const el = document.getElementById(`candidate-diag-${id}`);
+        if (el) el.classList.toggle('selected', id === candId);
+    });
+}
+
+function verifyBlackboxCandidate() {
+    const fb = document.getElementById('bb-candidate-feedback');
+    const finishBtn = document.getElementById('btn-finish-stage-11');
+
+    if (blackboxState.selectedCandidate === 'B') {
+        if (fb) {
+            fb.style.display = 'block';
+            fb.style.background = '#ecfdf5';
+            fb.style.color = '#065f46';
+            fb.style.border = '2px solid #10b981';
+            fb.innerHTML = `🎉 <strong>ENGINYERIA INVERSA COMPLETADA AMB ÈXIT!</strong><br>El <strong>Diagrama B</strong> és exactament el codi intern de la Caixa Negra: primer prioritza la seguretat del sensor de pes, i després protegeix la planta secreta -2 comprovant la clau d'accés. Has superat tots els reptes!`;
+        }
+        if (finishBtn) finishBtn.style.display = 'inline-block';
+    } else {
+        applyXpPenalty('stage11', 15);
+        if (fb) {
+            fb.style.display = 'block';
+            fb.style.background = '#fef2f2';
+            fb.style.color = '#991b1b';
+            fb.style.border = '2px solid #ef4444';
+            fb.innerHTML = `❌ <strong>Aquest diagrama no coincideix amb els experiments realitzats (-15 XP).</strong> Revisa les proves del teu quadern: fixat què passa amb la sobrecàrrega a qualsevol pis i quan s'exigeix la clau.`;
+        }
+    }
 }
 
 window.addEventListener('resize', () => {
