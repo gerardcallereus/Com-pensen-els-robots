@@ -142,7 +142,6 @@ function updateHeader() {
     const gr = document.getElementById('header-group');
     const xp = document.getElementById('header-xp');
     const st = document.getElementById('header-unlocked-stage');
-    const gaugeFill = document.getElementById('energy-gauge-fill');
 
     if (av) av.textContent = appState.avatar || '🤖';
     if (nm) nm.textContent = appState.studentName || 'Alumne/a';
@@ -150,13 +149,8 @@ function updateHeader() {
     if (xp) xp.textContent = appState.totalXP;
 
     const unlStage = Math.min(12, appState.unlockedStage || 1);
-    const stageCode = STAGE_TITLES[unlStage] ? STAGE_TITLES[unlStage].split(' ')[0] : `${unlStage}/12`;
-    if (st) st.textContent = `${stageCode} (Fase ${unlStage}/12)`;
-
-    if (gaugeFill) {
-        const pct = Math.max(0, Math.min(100, (appState.totalXP / 1500) * 100));
-        gaugeFill.style.width = `${pct}%`;
-    }
+    const stageCode = STAGE_TITLES[unlStage] ? STAGE_TITLES[unlStage].split(' ')[0] : `${unlStage}`;
+    if (st) st.textContent = `${stageCode} / 12`;
 }
 
 function updateNavigationLocks() {
