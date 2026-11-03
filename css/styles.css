@@ -1419,6 +1419,116 @@ header {
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3);
 }
 
+/* Botons de resposta a la Taula de Traça */
+.trace-opt-btn {
+    background: #ffffff;
+    border: 2px solid #cbd5e1;
+    color: #334155;
+    font-weight: 700;
+    border-radius: 8px;
+    padding: 0.5rem 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.88rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+.trace-opt-btn:hover {
+    border-color: #8b5cf6;
+    background: #f5f3ff;
+    color: #6d28d9;
+}
+.trace-opt-btn.selected,
+.btn.trace-btn-opt.selected,
+.btn-outline.selected {
+    background: #7c3aed !important;
+    border-color: #6d28d9 !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.35) !important;
+    font-weight: 800 !important;
+    transform: scale(1.03);
+}
+
+/* Node actiu al diagrama de flux del Caixer */
+.atm-flow-node {
+    transition: all 0.3s ease;
+    position: relative;
+}
+.atm-flow-node.active-node {
+    transform: scale(1.07);
+    box-shadow: 0 0 18px rgba(124, 58, 237, 0.85) !important;
+    border-color: #7c3aed !important;
+    border-width: 3px !important;
+    background: #f3e8ff !important;
+    z-index: 10;
+    animation: atmPulse 1.2s infinite alternate;
+}
+@keyframes atmPulse {
+    0% { box-shadow: 0 0 10px rgba(124, 58, 237, 0.5); }
+    100% { box-shadow: 0 0 22px rgba(124, 58, 237, 0.95); }
+}
+
+/* Estils dels mini-diagrames per a la Caixa Negra */
+.mini-flowchart {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 0.85rem 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.76rem;
+    margin-top: 0.75rem;
+}
+.mini-node-oval {
+    background: #e2e8f0;
+    border: 1.5px solid #64748b;
+    border-radius: 999px;
+    padding: 0.2rem 0.6rem;
+    font-weight: 700;
+    color: #334155;
+}
+.mini-node-diamond {
+    background: #fef3c7;
+    border: 1.5px solid #d97706;
+    padding: 0.3rem 0.6rem;
+    font-weight: 700;
+    color: #92400e;
+    text-align: center;
+    border-radius: 4px;
+    clip-path: polygon(10% 0%, 90% 0%, 100% 50%, 90% 100%, 10% 100%, 0% 50%);
+    width: 90%;
+}
+.mini-node-rect {
+    background: #ffffff;
+    border: 1.5px solid #94a3b8;
+    border-radius: 6px;
+    padding: 0.3rem 0.5rem;
+    text-align: center;
+    color: #1e293b;
+    font-weight: 600;
+    width: 88%;
+}
+.mini-arrow {
+    color: #64748b;
+    font-weight: 800;
+    font-size: 0.8rem;
+    line-height: 1;
+}
+
+/* Bucle continu de l'Hivernacle */
+.greenhouse-loop-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 5;
+}
+
 .no-print {
     /* visible en pantalla normal */
 }

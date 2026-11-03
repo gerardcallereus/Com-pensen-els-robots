@@ -2056,159 +2056,253 @@
         <section class="section-view" id="stage-view-9">
             <div class="hero-banner">
                 <div class="hero-banner-content">
-                    <div class="phase-tag" style="background:#fee2e2; color:#991b1b; border-color:#fca5a5;">Repte Avançat 7 · Depuració i Detecció d'Errors</div>
-                    <h2>🐛 Activitat 7: Caçador de Bugs a l'Hivernacle</h2>
+                    <div class="phase-tag" style="background:#fee2e2; color:#991b1b; border-color:#fca5a5;">Repte Avançat 7 · Depuració i Bucle Continu</div>
+                    <h2>🐛 Activitat 7: Caçador de Bugs a l'Hivernacle Tecnològic</h2>
                     <p>
-                        Els programadors reals dediquen gran part del seu temps a <strong>depurar</strong> (trobar i solucionar fallades de lògica o «bugs»). L'equip de jardineria ha instal·lat un climatitzador automàtic per protegir les tomaqueres ecològiques: si fa fred (&lt; 18 °C) s'activa la calefacció; si fa temperatura suau (18-26 °C) es manté tot apagat; i si fa massa calor (&gt; 26 °C) s'ha d'activar la ventilació. Però hi ha un error greu i les plantes s'estan cremant!
+                        A la vida real, els algorismes de climatització no acaben mai: funcionen en un <strong>bucle continu</strong> que llegeix sensors a intervals regulars (cada 15 minuts). En aquest hivernacle intel·ligent, el sistema mesura la <strong>temperatura de l'aire</strong> i la <strong>humitat del sòl</strong> per regular la calor, el fred i el reg. Però hi ha <strong>errors de programació (bugs)</strong> que estan posant en perill les tomaqueres!
                     </p>
                 </div>
             </div>
 
-            <!-- BANC DE PROVES DE TEMPERATURA -->
+            <!-- BANC DE PROVES DE MULTI-SENSOR -->
             <div class="sim-panel" style="margin-top:0; margin-bottom:1.5rem; border:2px solid #ef4444; background:#fef2f2;">
                 <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.75rem;">
                     <div>
-                        <span class="phase-tag" style="background:#fee2e2; color:#991b1b; border-color:#fca5a5; margin-bottom:0.25rem;">Banc de Proves</span>
-                        <h4 style="color:#991b1b; margin:0.2rem 0;">🌡️ Experimenta amb la Temperatura per Descobrir el Bug</h4>
+                        <span class="phase-tag" style="background:#fee2e2; color:#991b1b; border-color:#fca5a5; margin-bottom:0.25rem;">Banc de Proves Multi-Sensor</span>
+                        <h4 style="color:#991b1b; margin:0.2rem 0;">🌡️ Experimenta amb la Temperatura i la Humitat</h4>
                         <p style="font-size:0.88rem; color:#7f1d1d;">
-                            Canvia la temperatura i prem «▶️ Executar Diagnòstic» per observar què fa l'algorisme en cada situació:
+                            Ajusta els sensors de l'hivernacle i prem «▶️ Executar Diagnòstic» per detectar on falla l'algorisme:
                         </p>
                     </div>
-                    <span id="bug-temp-badge" style="font-family:'JetBrains Mono',monospace; font-size:1.1rem; font-weight:800; background:#ffffff; color:#b91c1c; padding:0.35rem 0.9rem; border-radius:8px; border:1px solid #fca5a5;">
-                        🔥 Calor (32 °C)
-                    </span>
+                    <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                        <span id="bug-temp-badge" style="font-family:'JetBrains Mono',monospace; font-size:1rem; font-weight:800; background:#ffffff; color:#b91c1c; padding:0.35rem 0.8rem; border-radius:8px; border:1px solid #fca5a5;">
+                            🔥 34 °C (Calor)
+                        </span>
+                        <span id="bug-hum-badge" style="font-family:'JetBrains Mono',monospace; font-size:1rem; font-weight:800; background:#ffffff; color:#0369a1; padding:0.35rem 0.8rem; border-radius:8px; border:1px solid #bae6fd;">
+                            💧 20% (Sòl Sec)
+                        </span>
+                    </div>
                 </div>
 
-                <div class="sim-controls-bar">
-                    <button class="btn btn-sm btn-outline" style="background:#ffffff; color:#0369a1; border-color:#0284c7; font-weight:700;" onclick="setBugSimTemp(12)">
-                        ❄️ Fred (12 °C)
-                    </button>
-                    <button class="btn btn-sm btn-outline" style="background:#ffffff; color:#15803d; border-color:#16a34a; font-weight:700;" onclick="setBugSimTemp(21)">
-                        🌱 Òptim (21 °C)
-                    </button>
-                    <button class="btn btn-sm" style="background:#ef4444; color:#ffffff; font-weight:700;" onclick="setBugSimTemp(32)">
-                        🔥 Molta calor (32 °C)
-                    </button>
-                    <div style="flex:1; min-width:180px; display:flex; align-items:center; gap:0.5rem; margin-left:0.5rem;">
-                        <input type="range" id="bug-temp-slider" min="5" max="40" value="32" style="width:100%; accent-color:#ef4444; cursor:pointer;" oninput="setBugSimTemp(this.value)">
-                        <strong id="bug-temp-val" style="font-family:'JetBrains Mono',monospace; color:#991b1b; min-width:55px;">32 °C</strong>
+                <!-- CONTROLS DELS SENSORS -->
+                <div style="background:#ffffff; border:1px solid #fecaca; border-radius:10px; padding:1rem; margin-bottom:0.85rem;">
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem;">
+                        <!-- Sensor Temperatura -->
+                        <div>
+                            <div style="display:flex; justify-content:space-between; font-size:0.85rem; font-weight:700; color:#991b1b; margin-bottom:0.3rem;">
+                                <span>🌡️ Sensor Temperatura de l'Aire:</span>
+                                <strong id="bug-temp-val">34 °C</strong>
+                            </div>
+                            <input type="range" id="bug-temp-slider" min="8" max="40" value="34" style="width:100%; accent-color:#ef4444; cursor:pointer;" oninput="setBugSimSensors(this.value, null)">
+                        </div>
+
+                        <!-- Sensor Humitat -->
+                        <div>
+                            <div style="display:flex; justify-content:space-between; font-size:0.85rem; font-weight:700; color:#0369a1; margin-bottom:0.3rem;">
+                                <span>💧 Sensor Humitat del Sòl:</span>
+                                <strong id="bug-hum-val">20%</strong>
+                            </div>
+                            <input type="range" id="bug-hum-slider" min="10" max="90" value="20" style="width:100%; accent-color:#0284c7; cursor:pointer;" oninput="setBugSimSensors(null, this.value)">
+                        </div>
                     </div>
-                    <button class="btn btn-sm" style="background:#0f172a; color:#ffffff; font-weight:800;" onclick="runBugDiagnosis()">
-                        ▶️ Executar Diagnòstic
-                    </button>
+
+                    <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:0.85rem; padding-top:0.75rem; border-top:1px dashed #fecaca;">
+                        <span style="font-size:0.78rem; color:#64748b; font-weight:700; align-self:center;">Proves ràpides:</span>
+                        <button class="btn btn-sm btn-outline" style="background:#ffffff; color:#b91c1c; border-color:#f87171; font-weight:700; font-size:0.8rem;" onclick="setBugSimSensors(34, 20)">
+                            ☀️ Canícula Seca (34 °C, 20%)
+                        </button>
+                        <button class="btn btn-sm btn-outline" style="background:#ffffff; color:#0369a1; border-color:#38bdf8; font-weight:700; font-size:0.8rem;" onclick="setBugSimSensors(12, 22)">
+                            ❄️ Matinada Freda i Seca (12 °C, 22%)
+                        </button>
+                        <button class="btn btn-sm btn-outline" style="background:#ffffff; color:#15803d; border-color:#4ade80; font-weight:700; font-size:0.8rem;" onclick="setBugSimSensors(22, 55)">
+                            🌱 Condicions Òptimes (22 °C, 55%)
+                        </button>
+                        <button class="btn btn-sm" style="background:#0f172a; color:#ffffff; font-weight:800; margin-left:auto;" onclick="runBugDiagnosis()">
+                            ▶️ Executar Diagnòstic de l'Algorisme
+                        </button>
+                    </div>
                 </div>
 
                 <div id="bug-diag-log" style="background:#0f172a; border:1px solid #334155; border-radius:8px; padding:0.85rem 1.25rem; font-size:0.88rem; color:#fde047; line-height:1.45;">
-                    👉 Posa la temperatura a <strong>32 °C</strong> i prem «▶️ Executar Diagnòstic» per veure com reacciona el climatitzador!
+                    👉 Tria «☀️ Canícula Seca» o «❄️ Matinada Freda» i prem «▶️ Executar Diagnòstic» per veure com reacciona l'algorisme en el seu bucle continu!
                 </div>
             </div>
 
-            <!-- DIAGRAMA AMB EL BUG PER INSPECCIONAR -->
+            <!-- DIAGRAMA AMB BUCLE CONTINU I ELS BUGS -->
             <div class="card" style="border: 2px solid #ef4444;">
                 <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:1.25rem;">
                     <div>
-                        <h3 style="color:#991b1b;">🔍 Diagrama de Flux del Climatitzador (Inspecció de Codi)</h3>
+                        <h3 style="color:#991b1b;">🔍 Diagrama de Flux Continu amb Bucle de Regulació</h3>
                         <p style="font-size:0.88rem; color:var(--text-muted);">
-                            Revisa el camí que segueix l'algorisme quan fa calor (> 26 °C) per localitzar el bloc defectuós:
+                            Segueix el traçat complet del bucle (les fletxes que retornen a l'inici) i localitza on estan els dos errors lògics:
                         </p>
                     </div>
                 </div>
 
-                <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:1.5rem; max-width:680px; margin:0 auto; text-align:center;">
-                    <div style="display:flex; flex-direction:column; align-items:center; gap:0.25rem;">
-                        <div class="shape-action-rect" style="min-width:180px; padding:0.5rem 1rem;">Mesurar temperatura actual</div>
+                <div id="greenhouse-board-wrap" style="position:relative; background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:12px; padding:1.5rem 1rem 1.5rem 4.5rem; max-width:740px; margin:0 auto; overflow:hidden;">
+                    <!-- Fletxa SVG de Bucle Continu a l'Esquerra -->
+                    <div style="position:absolute; left:0.8rem; top:2.5rem; bottom:2.5rem; width:45px; display:flex; flex-direction:column; align-items:center; justify-content:center; border-left:3px dashed #ef4444; border-top:3px dashed #ef4444; border-bottom:3px dashed #ef4444; border-radius:10px 0 0 10px; padding:0.5rem 0;" id="greenhouse-loop-indicator">
+                        <span style="writing-mode:vertical-rl; transform:rotate(180deg); font-size:0.74rem; font-weight:800; font-family:'JetBrains Mono',monospace; color:#dc2626; letter-spacing:0.06em;">
+                            BUCLE CONTINU DE REGULACIÓ (CADA 15 MIN) ↺
+                        </span>
+                        <div style="font-size:1.2rem; color:#dc2626; margin-top:0.3rem;">▲</div>
+                    </div>
+
+                    <div style="display:flex; flex-direction:column; align-items:center; gap:0.35rem; width:100%;">
+                        <!-- Bloc Inici / Mesura -->
+                        <div class="shape-action-rect" style="background:#0f172a; color:#ffffff; border-color:#334155; font-weight:800; font-size:0.88rem; min-width:260px;">
+                            🔄 Llegir Sensors (Temperatura i Humitat)
+                        </div>
                         <div class="flow-arrow-down">↓</div>
                         
-                        <!-- 1a Decisió: Fred -->
-                        <div class="shape-decision-diamond-wrap" style="width:230px; height:100px;">
-                            <svg class="shape-decision-diamond-svg" viewBox="0 0 230 100">
-                                <polygon points="115,4 226,50 115,96 4,50" fill="#ffffff" stroke="#1e293b" stroke-width="2.5"/>
+                        <!-- 1a Decisió: Calor -->
+                        <div class="shape-decision-diamond-wrap" style="width:230px; height:95px;">
+                            <svg class="shape-decision-diamond-svg" viewBox="0 0 230 95">
+                                <polygon points="115,4 226,47.5 115,91 4,47.5" fill="#ffffff" stroke="#1e293b" stroke-width="2.5"/>
                             </svg>
-                            <div class="shape-decision-diamond-text">Temperatura &lt; 18 °C?</div>
+                            <div class="shape-decision-diamond-text">Temperatura &gt; 28 °C?</div>
                         </div>
 
-                        <!-- Fletxes Fred -->
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; width:100%; margin-top:0.2rem;">
-                            <!-- SÍ Fred -->
+                        <!-- Branques Calor -->
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; width:100%; margin-top:0.2rem;">
+                            <!-- SÍ Calor (BUG #1) -->
                             <div style="display:flex; flex-direction:column; align-items:center;">
-                                <span class="flow-branch-badge branch-yes" style="font-size:0.75rem;">SÍ (&lt; 18 °C)</span>
+                                <span class="flow-branch-badge branch-yes" style="font-size:0.74rem;">SÍ (&gt; 28 °C)</span>
                                 <div class="flow-arrow-down" style="color:#16a34a;">↓</div>
-                                <div class="shape-action-rect" style="background:#eff6ff; border-color:#3b82f6; color:#1e40af; font-size:0.82rem; padding:0.45rem;">
-                                    Activar Calefacció 🔥
+                                <div id="bug-node-calor" class="shape-action-rect bug-node-interactive bug-node-flawed" style="font-size:0.8rem; padding:0.5rem; width:95%;">
+                                    Activar Calefacció Tèrmica 🔥
                                 </div>
                             </div>
 
-                            <!-- NO Fred -->
+                            <!-- NO Calor -->
                             <div style="display:flex; flex-direction:column; align-items:center;">
-                                <span class="flow-branch-badge branch-no" style="font-size:0.75rem;">NO (≥ 18 °C)</span>
+                                <span class="flow-branch-badge branch-no" style="font-size:0.74rem;">NO (≤ 28 °C)</span>
                                 <div class="flow-arrow-down" style="color:#ef4444;">↓</div>
                                 
-                                <!-- 2a Decisió: Calor -->
-                                <div class="shape-decision-diamond-wrap" style="width:220px; height:95px;">
-                                    <svg class="shape-decision-diamond-svg" viewBox="0 0 220 95">
-                                        <polygon points="110,4 216,47.5 110,91 4,47.5" fill="#ffffff" stroke="#1e293b" stroke-width="2.5"/>
+                                <!-- Decisió Fred -->
+                                <div class="shape-decision-diamond-wrap" style="width:215px; height:90px;">
+                                    <svg class="shape-decision-diamond-svg" viewBox="0 0 215 90">
+                                        <polygon points="107,4 211,45 107,86 4,45" fill="#ffffff" stroke="#1e293b" stroke-width="2.5"/>
                                     </svg>
-                                    <div class="shape-decision-diamond-text">Temperatura &gt; 26 °C?</div>
+                                    <div class="shape-decision-diamond-text">Temperatura &lt; 16 °C?</div>
                                 </div>
 
-                                <!-- Sub-branques Calor -->
-                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.6rem; width:100%; margin-top:0.2rem;">
-                                    <!-- SÍ Calor (ON ESTÀ EL BUG!) -->
+                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.4rem; width:100%; margin-top:0.2rem;">
+                                    <!-- SÍ Fred (BUG #2: Desviament erroni de flux) -->
                                     <div style="display:flex; flex-direction:column; align-items:center;">
-                                        <span class="flow-branch-badge branch-yes" style="font-size:0.72rem;">SÍ (&gt; 26 °C)</span>
+                                        <span class="flow-branch-badge branch-yes" style="font-size:0.7rem;">SÍ (&lt; 16 °C)</span>
                                         <div class="flow-arrow-down" style="color:#16a34a;">↓</div>
-                                        <div id="bug-node-calefaccio-calor" class="shape-action-rect bug-node-interactive bug-node-flawed" style="font-size:0.8rem; padding:0.45rem;">
-                                            Activar Calefacció 🔥
+                                        <div id="bug-node-fred" class="shape-action-rect" style="background:#eff6ff; border-color:#3b82f6; color:#1e40af; font-size:0.76rem; padding:0.4rem; width:95%;">
+                                            Activar Calefactor 🔥
+                                        </div>
+                                        <div id="bug-arrow-fred-bypass" style="font-size:0.72rem; color:#dc2626; font-weight:800; margin-top:0.2rem; background:#fee2e2; border:1px solid #f87171; border-radius:4px; padding:0.2rem 0.4rem;">
+                                            🚨 Fletxa trenca el flux directament al bucle (omet reg)
                                         </div>
                                     </div>
 
-                                    <!-- NO Calor -->
+                                    <!-- NO Fred -->
                                     <div style="display:flex; flex-direction:column; align-items:center;">
-                                        <span class="flow-branch-badge branch-no" style="font-size:0.72rem;">NO (18-26 °C)</span>
+                                        <span class="flow-branch-badge branch-no" style="font-size:0.7rem;">NO (16-28 °C)</span>
                                         <div class="flow-arrow-down" style="color:#ef4444;">↓</div>
-                                        <div class="shape-action-rect" style="background:#f8fafc; border-color:#cbd5e1; color:#475569; font-size:0.8rem; padding:0.45rem;">
-                                            Mantenir tot apagat 🌱
+                                        <div class="shape-action-rect" style="background:#f8fafc; border-color:#cbd5e1; color:#475569; font-size:0.76rem; padding:0.4rem; width:95%;">
+                                            Climatització Repòs 🌱
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                        </div>
+
+                        <!-- Connexió cap al mòdul de reg -->
+                        <div class="flow-arrow-down" style="margin-top:0.6rem; font-weight:800;">↓ Continua cap al Sistema de Reg ↓</div>
+
+                        <!-- 2a Decisió: Humitat del sòl -->
+                        <div class="shape-decision-diamond-wrap" style="width:230px; height:95px;">
+                            <svg class="shape-decision-diamond-svg" viewBox="0 0 230 95">
+                                <polygon points="115,4 226,47.5 115,91 4,47.5" fill="#ffffff" stroke="#0284c7" stroke-width="2.5"/>
+                            </svg>
+                            <div class="shape-decision-diamond-text">Humitat Sòl &lt; 35%?</div>
+                        </div>
+
+                        <!-- Branques Reg -->
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; width:100%; margin-top:0.2rem;">
+                            <div style="display:flex; flex-direction:column; align-items:center;">
+                                <span class="flow-branch-badge branch-yes" style="font-size:0.74rem;">SÍ (&lt; 35% Sec)</span>
+                                <div class="flow-arrow-down" style="color:#16a34a;">↓</div>
+                                <div class="shape-action-rect" style="background:#e0f2fe; border-color:#0284c7; color:#0369a1; font-size:0.8rem; padding:0.45rem; width:90%;">
+                                    Obrir Reg per Degoteig 💧
+                                </div>
+                            </div>
+
+                            <div style="display:flex; flex-direction:column; align-items:center;">
+                                <span class="flow-branch-badge branch-no" style="font-size:0.74rem;">NO (≥ 35% Humit)</span>
+                                <div class="flow-arrow-down" style="color:#ef4444;">↓</div>
+                                <div class="shape-action-rect" style="background:#f8fafc; border-color:#cbd5e1; color:#475569; font-size:0.8rem; padding:0.45rem; width:90%;">
+                                    Tancar Vàlvula de Reg 🛑
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flow-arrow-down" style="margin-top:0.5rem;">↓</div>
+
+                        <!-- Pausa del Bucle -->
+                        <div class="shape-action-rect" style="background:#f1f5f9; border-color:#94a3b8; color:#334155; font-size:0.84rem; padding:0.5rem 1rem;">
+                            ⏱️ Esperar 15 minuts de cicle
+                        </div>
+
+                        <div style="font-size:0.8rem; color:#dc2626; font-weight:800; margin-top:0.3rem;">
+                            ↺ Fletxa de Bucle: Retorn a «Llegir Sensors» per a la propera mesura
                         </div>
                     </div>
                 </div>
 
-                <!-- SECCIÓ DE REPARACIÓ DEL BUG -->
+                <!-- TALLER DE REPARACIÓ DELS 2 BUGS -->
                 <div id="bug-fix-section" style="margin-top:1.5rem; background:#fffbeb; border:2px solid #f59e0b; border-radius:12px; padding:1.25rem;">
                     <h4 style="color:#92400e; margin-bottom:0.5rem; display:flex; align-items:center; gap:0.4rem;">
-                        <span>🔧</span> Taller de Reparació: Com arreglem aquest bug?
+                        <span>🔧</span> Taller de Depuració: Soluciona els 2 errors del bucle
                     </h4>
                     <p style="font-size:0.88rem; color:#78350f; margin-bottom:1rem;">
-                        Selecciona quina modificació ha d'aplicar l'equip tècnic al bloc defectuós per salvar la collita:
+                        Perquè l'hivernacle funcioni de forma totalment autònoma i sense risc per a la collita, has de resoldre ambdós problemes:
                     </p>
 
-                    <div style="display:flex; flex-direction:column; gap:0.65rem;">
-                        <div id="bug-opt-1" class="candidate-card" onclick="selectBugFixOption(1)">
-                            <strong style="color:#1e40af;">Opció A (Recomanada):</strong>
-                            <p style="font-size:0.85rem; color:#475569; margin:0.2rem 0 0;">
-                                Substituir l'acció errònia per: <strong>«Activar Ventiladors d'aire fred ❄️»</strong> quan la condició <em>Temperatura &gt; 26 °C</em> és SÍ.
-                            </p>
+                    <div style="display:flex; flex-direction:column; gap:1rem;">
+                        <!-- Pregunta Bug 1 -->
+                        <div style="background:#ffffff; border:1px solid #fde68a; border-radius:8px; padding:0.9rem;">
+                            <strong style="color:#92400e; font-size:0.9rem; display:block; margin-bottom:0.4rem;">
+                                1. Com corregim l'acció defectuosa a la branca de molta calor (&gt; 28 °C)?
+                            </strong>
+                            <div style="display:flex; flex-direction:column; gap:0.4rem;">
+                                <label style="display:flex; align-items:center; gap:0.5rem; font-size:0.85rem; color:#334155; cursor:pointer;">
+                                    <input type="radio" name="bug-fix-1" value="fans" style="accent-color:#d97706;">
+                                    Substituir per: <strong>«Activar Ventiladors i Extractors d'Aire Fred ❄️»</strong>
+                                </label>
+                                <label style="display:flex; align-items:center; gap:0.5rem; font-size:0.85rem; color:#334155; cursor:pointer;">
+                                    <input type="radio" name="bug-fix-1" value="off" style="accent-color:#d97706;">
+                                    Apagar el sensor per estalviar electricitat
+                                </label>
+                            </div>
                         </div>
-                        <div id="bug-opt-2" class="candidate-card" onclick="selectBugFixOption(2)">
-                            <strong style="color:#1e40af;">Opció B:</strong>
-                            <p style="font-size:0.85rem; color:#475569; margin:0.2rem 0 0;">
-                                Canviar la pregunta a <em>«Temperatura &lt; 5 °C?»</em> per evitar que mai es compleixi la condició.
-                            </p>
-                        </div>
-                        <div id="bug-opt-3" class="candidate-card" onclick="selectBugFixOption(3)">
-                            <strong style="color:#1e40af;">Opció C:</strong>
-                            <p style="font-size:0.85rem; color:#475569; margin:0.2rem 0 0;">
-                                Eliminar el sensor de temperatura i deixar l'hivernacle sense cap sistema de climatització.
-                            </p>
+
+                        <!-- Pregunta Bug 2 -->
+                        <div style="background:#ffffff; border:1px solid #fde68a; border-radius:8px; padding:0.9rem;">
+                            <strong style="color:#92400e; font-size:0.9rem; display:block; margin-bottom:0.4rem;">
+                                2. Com corregim el bucle trencat que omet el reg en nits fredes (&lt; 16 °C)?
+                            </strong>
+                            <div style="display:flex; flex-direction:column; gap:0.4rem;">
+                                <label style="display:flex; align-items:center; gap:0.5rem; font-size:0.85rem; color:#334155; cursor:pointer;">
+                                    <input type="radio" name="bug-fix-2" value="reconnect" style="accent-color:#d97706;">
+                                    <strong>Reconnectar la fletxa</strong> de la calefacció perquè s'incorpori a la comprovació d'Humitat del sòl abans d'iniciar el bucle de 15 minuts.
+                                </label>
+                                <label style="display:flex; align-items:center; gap:0.5rem; font-size:0.85rem; color:#334155; cursor:pointer;">
+                                    <input type="radio" name="bug-fix-2" value="delete" style="accent-color:#d97706;">
+                                    Eliminar el sistema de reg per degoteig de l'algorisme.
+                                </label>
+                            </div>
                         </div>
                     </div>
 
-                    <div style="margin-top:1rem; text-align:center;">
-                        <button class="btn btn-primary btn-sm" onclick="applyBugFix()">
-                            🛠️ Aplicar Correcció al Codi
+                    <div style="margin-top:1.1rem; text-align:center;">
+                        <button class="btn btn-primary btn-sm" onclick="applyGreenhouseBugFixes()">
+                            🛠️ Aplicar Correccions al Codi i Reconnectar el Bucle
                         </button>
                     </div>
 
@@ -2217,7 +2311,7 @@
 
                 <div style="text-align:center; margin-top:1.5rem;">
                     <button class="btn btn-success" id="btn-finish-stage-9" style="display:none;" onclick="finishStage9()">
-                        🎉 Repte 7 Superat! Passar al Repte 8: Taula de Traça ➔
+                        🎉 Repte 7 Superat! Passar a l'Activitat 8: Taula de Traça ➔
                     </button>
                 </div>
             </div>
@@ -2233,8 +2327,118 @@
                     <div class="phase-tag" style="background:#ede9fe; color:#6d28d9; border-color:#ddd6fe;">Repte Avançat 8 · Variables, Memòria i Comptadors</div>
                     <h2>📊 Activitat 8: Taula de Traça del Caixer Automàtic</h2>
                     <p>
-                        En programació real, un algorisme no només pren camins: també <strong>modifica variables a la memòria</strong> (comptadors d'errors, saldos de diners, voltes de bucle). Per comprovar com funciona per dins un programa, els enginyers utilitzen una <strong>taula de traça</strong> (o seguiment pas a pas).
+                        En programació real, un algorisme no només pren camins: també <strong>modifica variables a la memòria</strong> (comptadors d'errors, saldos de diners, voltes de bucle). Per comprovar com funciona per dins un programa, els enginyers utilitzen una <strong>taula de traça</strong> combinada amb el diagrama de flux.
                     </p>
+                </div>
+            </div>
+
+            <!-- DIAGRAMA DE FLUX VISUAL DEL CAIXER AUTOMÀTIC -->
+            <div class="card" style="border:2px solid #8b5cf6; margin-bottom:1.5rem;">
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:1rem;">
+                    <div>
+                        <h3 style="color:#6d28d9;">🏧 Diagrama de Flux del Caixer (Seguiment en Temps Real)</h3>
+                        <p style="font-size:0.88rem; color:var(--text-muted);">
+                            A mesura que prems «▶️ Pas Següent» al simulador inferior, s'il·luminarà el bloc exacte que la CPU està executant:
+                        </p>
+                    </div>
+                    <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                        <div style="background:#ffffff; border:1.5px solid #d8b4fe; border-radius:8px; padding:0.35rem 0.75rem; text-align:center;">
+                            <span style="font-size:0.7rem; color:#6b21a8; font-weight:700; display:block;">VARIABLE SALDO:</span>
+                            <strong id="trace-chip-saldo" style="color:#059669; font-size:1.15rem; font-family:'JetBrains Mono',monospace;">120 €</strong>
+                        </div>
+                        <div style="background:#ffffff; border:1.5px solid #d8b4fe; border-radius:8px; padding:0.35rem 0.75rem; text-align:center;">
+                            <span style="font-size:0.7rem; color:#6b21a8; font-weight:700; display:block;">VARIABLE INTENTS:</span>
+                            <strong id="trace-chip-intents" style="color:#d97706; font-size:1.15rem; font-family:'JetBrains Mono',monospace;">0 / 3</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DIAGRAMA VISUAL ESTRUCTURAT -->
+                <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:1.25rem; max-width:720px; margin:0 auto;">
+                    <div style="display:flex; flex-direction:column; align-items:center; gap:0.25rem;">
+                        <!-- Node 0: Inserir Targeta -->
+                        <div id="atm-node-0" class="shape-action-rect atm-flow-node active-node" style="min-width:240px; font-weight:700;">
+                            💳 Inserir Targeta i Introduir PIN
+                        </div>
+                        <div class="flow-arrow-down">↓</div>
+
+                        <!-- Node 1: Decisió PIN -->
+                        <div id="atm-node-1" class="shape-decision-diamond-wrap atm-flow-node" style="width:230px; height:95px;">
+                            <svg class="shape-decision-diamond-svg" viewBox="0 0 230 95">
+                                <polygon points="115,4 226,47.5 115,91 4,47.5" fill="#ffffff" stroke="#1e293b" stroke-width="2.5"/>
+                            </svg>
+                            <div class="shape-decision-diamond-text">PIN és correcte?</div>
+                        </div>
+
+                        <!-- Branques SÍ / NO del PIN -->
+                        <div style="display:grid; grid-template-columns:1.2fr 1fr; gap:1.25rem; width:100%; margin-top:0.3rem;">
+                            <!-- BRANCA SÍ: Extracció de diners -->
+                            <div style="display:flex; flex-direction:column; align-items:center;">
+                                <span class="flow-branch-badge branch-yes" style="font-size:0.75rem;">SÍ (PIN vàlid)</span>
+                                <div class="flow-arrow-down" style="color:#16a34a;">↓</div>
+                                <div id="atm-node-2" class="shape-action-rect atm-flow-node" style="font-size:0.8rem; padding:0.45rem; width:92%;">
+                                    Demanar import a retirar (40 €)
+                                </div>
+                                <div class="flow-arrow-down">↓</div>
+
+                                <!-- Decisió Saldo -->
+                                <div id="atm-node-3" class="shape-decision-diamond-wrap atm-flow-node" style="width:200px; height:85px;">
+                                    <svg class="shape-decision-diamond-svg" viewBox="0 0 200 85">
+                                        <polygon points="100,4 196,42.5 100,81 4,42.5" fill="#ffffff" stroke="#059669" stroke-width="2"/>
+                                    </svg>
+                                    <div class="shape-decision-diamond-text" style="font-size:0.8rem;">Import ≤ Saldo?</div>
+                                </div>
+                                <div class="flow-arrow-down" style="color:#16a34a;">↓ SÍ (Prou saldo)</div>
+
+                                <div id="atm-node-4" class="shape-action-rect atm-flow-node" style="background:#ecfdf5; border-color:#10b981; color:#065f46; font-size:0.78rem; padding:0.45rem; width:95%;">
+                                    Saldo = Saldo - 40 €<br>Dispensar 40 € i Rebut 💵
+                                </div>
+                                <div class="flow-arrow-down">↓</div>
+                                <div id="atm-node-5" class="shape-terminator atm-flow-node" style="font-size:0.78rem; padding:0.35rem 0.8rem;">
+                                    🟢 Fi de sessió (Correcte)
+                                </div>
+                            </div>
+
+                            <!-- BRANCA NO: Error de PIN i Bucle -->
+                            <div style="display:flex; flex-direction:column; align-items:center;">
+                                <span class="flow-branch-badge branch-no" style="font-size:0.75rem;">NO (PIN erroni)</span>
+                                <div class="flow-arrow-down" style="color:#ef4444;">↓</div>
+                                <div id="atm-node-6" class="shape-action-rect atm-flow-node" style="background:#fffbeb; border-color:#f59e0b; color:#92400e; font-size:0.8rem; padding:0.45rem; width:92%;">
+                                    Intents = Intents + 1
+                                </div>
+                                <div class="flow-arrow-down">↓</div>
+
+                                <!-- Decisió Bloqueig -->
+                                <div id="atm-node-7" class="shape-decision-diamond-wrap atm-flow-node" style="width:190px; height:85px;">
+                                    <svg class="shape-decision-diamond-svg" viewBox="0 0 190 85">
+                                        <polygon points="95,4 186,42.5 95,81 4,42.5" fill="#ffffff" stroke="#dc2626" stroke-width="2"/>
+                                    </svg>
+                                    <div class="shape-decision-diamond-text" style="font-size:0.78rem;">Intents ≥ 3?</div>
+                                </div>
+
+                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.4rem; width:100%; margin-top:0.2rem;">
+                                    <!-- SÍ Bloqueig -->
+                                    <div style="display:flex; flex-direction:column; align-items:center;">
+                                        <span class="flow-branch-badge branch-yes" style="font-size:0.68rem;">SÍ (≥ 3)</span>
+                                        <div class="flow-arrow-down" style="color:#dc2626;">↓</div>
+                                        <div id="atm-node-8" class="shape-action-rect atm-flow-node" style="background:#fee2e2; border-color:#ef4444; color:#991b1b; font-size:0.72rem; padding:0.4rem; width:95%;">
+                                            🚨 Bloquejar Targeta
+                                        </div>
+                                    </div>
+
+                                    <!-- NO Bloqueig (Reintenta Bucle) -->
+                                    <div style="display:flex; flex-direction:column; align-items:center;">
+                                        <span class="flow-branch-badge branch-no" style="font-size:0.68rem;">NO (&lt; 3)</span>
+                                        <div class="flow-arrow-down" style="color:#16a34a;">↓</div>
+                                        <div id="atm-node-9" class="shape-action-rect atm-flow-node" style="background:#f1f5f9; border-color:#94a3b8; color:#334155; font-size:0.72rem; padding:0.4rem; width:95%;">
+                                            Avisar PIN erroni<br>
+                                            <strong style="color:#7c3aed; font-size:0.75rem;">↺ Reintenta (Bucle)</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -2245,20 +2449,8 @@
                         <span class="phase-tag" style="background:#ede9fe; color:#6d28d9; border-color:#ddd6fe; margin-bottom:0.25rem;">Depurador Pas a Pas</span>
                         <h4 style="color:#5b21b6; margin:0.2rem 0;">🏧 Execució Pas a Pas de la Memòria RAM del Caixer</h4>
                         <p style="font-size:0.88rem; color:#4c1d95;">
-                            Escenari: El client s'equivoca de PIN 2 vegades, l'encerta a la 3a i retira 40 €. Prem «▶️ Pas Següent» per veure com canvia la memòria:
+                            Escenari: El client s'equivoca de PIN 2 vegades, l'encerta a la 3a i retira 40 €. Prem «▶️ Pas Següent» per avançar:
                         </p>
-                    </div>
-
-                    <!-- XIPS DE MEMÒRIA EN TEMPS REAL -->
-                    <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-                        <div style="background:#ffffff; border:1.5px solid #d8b4fe; border-radius:8px; padding:0.35rem 0.75rem; text-align:center;">
-                            <span style="font-size:0.7rem; color:#6b21a8; font-weight:700; display:block;">VARIABLE SALDO:</span>
-                            <strong id="trace-chip-saldo" style="color:#059669; font-size:1.1rem; font-family:'JetBrains Mono',monospace;">120 €</strong>
-                        </div>
-                        <div style="background:#ffffff; border:1.5px solid #d8b4fe; border-radius:8px; padding:0.35rem 0.75rem; text-align:center;">
-                            <span style="font-size:0.7rem; color:#6b21a8; font-weight:700; display:block;">VARIABLE INTENTS:</span>
-                            <strong id="trace-chip-intents" style="color:#d97706; font-size:1.1rem; font-family:'JetBrains Mono',monospace;">0 / 3</strong>
-                        </div>
                     </div>
                 </div>
 
@@ -2277,9 +2469,10 @@
                         <thead>
                             <tr>
                                 <th>PAS</th>
-                                <th>INSTRUCCIÓ / ACCIÓ EXECUTADA</th>
-                                <th>INTENTS (Comptador)</th>
-                                <th>SALDO (Variable)</th>
+                                <th>BLOC DEL DIAGRAMA</th>
+                                <th>INSTRUCCIÓ / ACCIÓ</th>
+                                <th>INTENTS</th>
+                                <th>SALDO</th>
                                 <th>ESTAT DEL SISTEMA</th>
                             </tr>
                         </thead>
@@ -2290,7 +2483,7 @@
                 </div>
 
                 <div id="trace-step-log" style="background:#0f172a; border:1px solid #334155; border-radius:8px; padding:0.85rem 1.25rem; font-size:0.86rem; color:#a7f3d0; margin-top:0.85rem; line-height:1.45;">
-                    📍 <strong>Inici:</strong> Prem «▶️ Pas Següent» per iniciar la sessió del caixer i veure com canvien les variables a la taula!
+                    📍 <strong>Inici:</strong> Prem «▶️ Pas Següent» per iniciar la sessió del caixer i veure com s'il·lumina el diagrama de flux!
                 </div>
             </div>
 
@@ -2298,45 +2491,45 @@
             <div class="card" style="border: 2px solid #8b5cf6;">
                 <h3 style="color:#6d28d9; margin-bottom:0.5rem;">🧠 Comprova la teva comprensió de la traça:</h3>
                 <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:1.25rem;">
-                    Analitza les dades de la taula de dalt i respon correctament a les 3 qüestions:
+                    Analitza el diagrama de flux i les dades de la taula de traça per respondre correctament:
                 </p>
 
                 <div style="display:flex; flex-direction:column; gap:1.25rem;">
                     <!-- Pregunta 1 -->
                     <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:1rem;">
-                        <strong style="color:#1e293b; font-size:0.92rem; display:block; margin-bottom:0.5rem;">
+                        <strong style="color:#1e293b; font-size:0.92rem; display:block; margin-bottom:0.6rem;">
                             1. Quin valor té la variable <code>Intents</code> exactament després de fallar el PIN per segona vegada?
                         </strong>
-                        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-                            <button class="btn btn-sm btn-outline" id="trace-q1-opt-1" data-val="0" onclick="selectTraceAnswer(1, 0)">0</button>
-                            <button class="btn btn-sm btn-outline" id="trace-q1-opt-2" data-val="1" onclick="selectTraceAnswer(1, 1)">1</button>
-                            <button class="btn btn-sm btn-outline" id="trace-q1-opt-3" data-val="2" onclick="selectTraceAnswer(1, 2)">2</button>
-                            <button class="btn btn-sm btn-outline" id="trace-q1-opt-4" data-val="3" onclick="selectTraceAnswer(1, 3)">3</button>
+                        <div style="display:flex; gap:0.6rem; flex-wrap:wrap;">
+                            <button type="button" class="trace-opt-btn" id="trace-q1-opt-0" onclick="selectTraceAnswer(1, 0)">0 intents</button>
+                            <button type="button" class="trace-opt-btn" id="trace-q1-opt-1" onclick="selectTraceAnswer(1, 1)">1 intent</button>
+                            <button type="button" class="trace-opt-btn" id="trace-q1-opt-2" onclick="selectTraceAnswer(1, 2)">2 intents</button>
+                            <button type="button" class="trace-opt-btn" id="trace-q1-opt-3" onclick="selectTraceAnswer(1, 3)">3 intents</button>
                         </div>
                     </div>
 
                     <!-- Pregunta 2 -->
                     <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:1rem;">
-                        <strong style="color:#1e293b; font-size:0.92rem; display:block; margin-bottom:0.5rem;">
-                            2. Si el saldo inicial era de 120 € i retirem 40 €, quin serà el valor final de la variable <code>Saldo</code> quan acabi el programa?
+                        <strong style="color:#1e293b; font-size:0.92rem; display:block; margin-bottom:0.6rem;">
+                            2. Si el saldo inicial era de 120 € i retirem 40 €, quin serà el valor final de la variable <code>Saldo</code> en acabar el programa?
                         </strong>
-                        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-                            <button class="btn btn-sm btn-outline" id="trace-q2-opt-1" data-val="120" onclick="selectTraceAnswer(2, 120)">120 €</button>
-                            <button class="btn btn-sm btn-outline" id="trace-q2-opt-2" data-val="80" onclick="selectTraceAnswer(2, 80)">80 €</button>
-                            <button class="btn btn-sm btn-outline" id="trace-q2-opt-3" data-val="40" onclick="selectTraceAnswer(2, 40)">40 €</button>
-                            <button class="btn btn-sm btn-outline" id="trace-q2-opt-4" data-val="0" onclick="selectTraceAnswer(2, 0)">0 €</button>
+                        <div style="display:flex; gap:0.6rem; flex-wrap:wrap;">
+                            <button type="button" class="trace-opt-btn" id="trace-q2-opt-120" onclick="selectTraceAnswer(2, 120)">120 €</button>
+                            <button type="button" class="trace-opt-btn" id="trace-q2-opt-80" onclick="selectTraceAnswer(2, 80)">80 €</button>
+                            <button type="button" class="trace-opt-btn" id="trace-q2-opt-40" onclick="selectTraceAnswer(2, 40)">40 €</button>
+                            <button type="button" class="trace-opt-btn" id="trace-q2-opt-0" onclick="selectTraceAnswer(2, 0)">0 €</button>
                         </div>
                     </div>
 
                     <!-- Pregunta 3 -->
                     <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:1rem;">
-                        <strong style="color:#1e293b; font-size:0.92rem; display:block; margin-bottom:0.5rem;">
-                            3. Si el client s'hagués equivocat també al 3r intent (en lloc d'encertar-lo), quants errors més li haurien quedat abans del bloqueig?
+                        <strong style="color:#1e293b; font-size:0.92rem; display:block; margin-bottom:0.6rem;">
+                            3. Si el client s'hagués equivocat també al 3r intent (en lloc d'encertar-lo), quin camí hauria pres el diagrama?
                         </strong>
-                        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-                            <button class="btn btn-sm btn-outline" id="trace-q3-opt-1" data-val="1" onclick="selectTraceAnswer(3, 1)">Cap més (hauria arribat a 3 i s'hauria bloquejat)</button>
-                            <button class="btn btn-sm btn-outline" id="trace-q3-opt-2" data-val="2" onclick="selectTraceAnswer(3, 2)">Encara li haurien quedat 2 intents</button>
-                            <button class="btn btn-sm btn-outline" id="trace-q3-opt-3" data-val="5" onclick="selectTraceAnswer(3, 5)">El caixer no bloqueja mai</button>
+                        <div style="display:flex; gap:0.6rem; flex-wrap:wrap;">
+                            <button type="button" class="trace-opt-btn" id="trace-q3-opt-block" onclick="selectTraceAnswer(3, 'block')">SÍ a «Intents ≥ 3» ➔ Bloquejar targeta per seguretat</button>
+                            <button type="button" class="trace-opt-btn" id="trace-q3-opt-retry" onclick="selectTraceAnswer(3, 'retry')">NO a «Intents ≥ 3» ➔ Donar 5 intents més</button>
+                            <button type="button" class="trace-opt-btn" id="trace-q3-opt-money" onclick="selectTraceAnswer(3, 'money')">Entregar els 40 € igualment</button>
                         </div>
                     </div>
                 </div>
@@ -2454,31 +2647,105 @@
                 <div class="grid-3" style="gap:1rem;">
                     <!-- Candidat A -->
                     <div id="candidate-diag-A" class="candidate-card" onclick="selectCandidateDiagram('A')">
-                        <strong style="color:#1e40af; display:block; margin-bottom:0.4rem;">Diagrama A</strong>
-                        <div style="font-size:0.82rem; color:#475569; line-height:1.45;">
-                            Comprova primer la clau d'accés. Si no hi ha clau no permet viatjar a cap planta (ni tan sols a la Planta 0 o -1).
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+                            <strong style="color:#1e40af; font-size:0.95rem;">📋 Diagrama Candidat A</strong>
+                            <span class="cand-badge" style="font-size:0.72rem; background:#e0e7ff; color:#3730a3; padding:0.2rem 0.5rem; border-radius:4px; font-weight:700;">Tria A</span>
                         </div>
-                        <span style="display:inline-block; margin-top:0.6rem; font-size:0.74rem; background:#f1f5f9; color:#64748b; padding:0.2rem 0.5rem; border-radius:4px; font-weight:700;">Seleccionar esquema A</span>
+                        <div class="mini-flowchart">
+                            <div class="mini-node-oval">Premut botó de planta</div>
+                            <div class="mini-arrow">↓</div>
+                            <div class="mini-node-diamond">Té Clau de Seguretat?</div>
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.35rem; width:100%; margin-top:0.2rem;">
+                                <div style="display:flex; flex-direction:column; align-items:center;">
+                                    <span style="color:#16a34a; font-weight:800; font-size:0.68rem;">SÍ</span>
+                                    <div class="mini-arrow">↓</div>
+                                    <div class="mini-node-diamond" style="font-size:0.68rem; padding:0.2rem 0.3rem;">Pes &gt; 400 kg?</div>
+                                    <div style="font-size:0.65rem; color:#dc2626; margin-top:2px;">SÍ ➔ 🚨 Alarma</div>
+                                    <div style="font-size:0.65rem; color:#16a34a;">NO ➔ 🛗 Mou cabina</div>
+                                </div>
+                                <div style="display:flex; flex-direction:column; align-items:center;">
+                                    <span style="color:#dc2626; font-weight:800; font-size:0.68rem;">NO</span>
+                                    <div class="mini-arrow">↓</div>
+                                    <div class="mini-node-rect" style="background:#fee2e2; border-color:#ef4444; color:#991b1b; font-size:0.68rem;">
+                                        🔒 Bloquejar tots els pisos (0, -1, -2)
+                                    </div>
+                                    <div class="mini-arrow">↓</div>
+                                    <div class="mini-node-oval" style="font-size:0.65rem;">Fi</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Candidat B (CORRECTE) -->
                     <div id="candidate-diag-B" class="candidate-card" onclick="selectCandidateDiagram('B')">
-                        <strong style="color:#1e40af; display:block; margin-bottom:0.4rem;">Diagrama B</strong>
-                        <div style="font-size:0.82rem; color:#475569; line-height:1.45;">
-                            1r: Si hi ha sobrecàrrega (&gt;400 kg) ➔ bloqueja i alarma.<br>
-                            2n: Si el destí és Planta -2 ➔ comprova la clau (SÍ: mou / NO: denega).<br>
-                            3r: En la resta de plantes amb pes normal ➔ mou l'ascensor.
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+                            <strong style="color:#1e40af; font-size:0.95rem;">📋 Diagrama Candidat B</strong>
+                            <span class="cand-badge" style="font-size:0.72rem; background:#dcfce7; color:#166534; padding:0.2rem 0.5rem; border-radius:4px; font-weight:700;">Tria B</span>
                         </div>
-                        <span style="display:inline-block; margin-top:0.6rem; font-size:0.74rem; background:#f1f5f9; color:#64748b; padding:0.2rem 0.5rem; border-radius:4px; font-weight:700;">Seleccionar esquema B</span>
+                        <div class="mini-flowchart">
+                            <div class="mini-node-oval">Premut botó de planta</div>
+                            <div class="mini-arrow">↓</div>
+                            <div class="mini-node-diamond" style="background:#fee2e2; border-color:#ef4444; color:#991b1b;">Pes &gt; 400 kg (Sobrecàrrega)?</div>
+                            <div style="display:grid; grid-template-columns:1fr 1.35fr; gap:0.35rem; width:100%; margin-top:0.2rem;">
+                                <div style="display:flex; flex-direction:column; align-items:center;">
+                                    <span style="color:#dc2626; font-weight:800; font-size:0.68rem;">SÍ</span>
+                                    <div class="mini-arrow">↓</div>
+                                    <div class="mini-node-rect" style="background:#fee2e2; border-color:#ef4444; color:#991b1b; font-size:0.68rem;">
+                                        🚨 Bloqueig de motor i alarma
+                                    </div>
+                                    <div class="mini-arrow">↓</div>
+                                    <div class="mini-node-oval" style="font-size:0.65rem;">Fi</div>
+                                </div>
+                                <div style="display:flex; flex-direction:column; align-items:center;">
+                                    <span style="color:#16a34a; font-weight:800; font-size:0.68rem;">NO</span>
+                                    <div class="mini-arrow">↓</div>
+                                    <div class="mini-node-diamond" style="font-size:0.68rem; padding:0.2rem 0.3rem;">Destí = Planta -2?</div>
+                                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.2rem; width:100%; margin-top:2px;">
+                                        <div style="text-align:center;">
+                                            <span style="color:#16a34a; font-size:0.65rem; font-weight:800;">SÍ</span>
+                                            <div class="mini-node-diamond" style="font-size:0.62rem; padding:0.15rem;">Té clau?</div>
+                                            <div style="font-size:0.62rem; color:#16a34a;">SÍ: 🔬 Lab</div>
+                                            <div style="font-size:0.62rem; color:#dc2626;">NO: 🔒 Denega</div>
+                                        </div>
+                                        <div style="text-align:center;">
+                                            <span style="color:#dc2626; font-size:0.65rem; font-weight:800;">NO</span>
+                                            <div class="mini-node-rect" style="background:#ecfdf5; border-color:#10b981; color:#065f46; font-size:0.65rem;">
+                                                🛗 Mou a 0 / -1
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Candidat C -->
                     <div id="candidate-diag-C" class="candidate-card" onclick="selectCandidateDiagram('C')">
-                        <strong style="color:#1e40af; display:block; margin-bottom:0.4rem;">Diagrama C</strong>
-                        <div style="font-size:0.82rem; color:#475569; line-height:1.45;">
-                            No comprova mai el sensor de sobrecàrrega i permet viatjar amb qualsevol pes a qualsevol pis.
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+                            <strong style="color:#1e40af; font-size:0.95rem;">📋 Diagrama Candidat C</strong>
+                            <span class="cand-badge" style="font-size:0.72rem; background:#e0e7ff; color:#3730a3; padding:0.2rem 0.5rem; border-radius:4px; font-weight:700;">Tria C</span>
                         </div>
-                        <span style="display:inline-block; margin-top:0.6rem; font-size:0.74rem; background:#f1f5f9; color:#64748b; padding:0.2rem 0.5rem; border-radius:4px; font-weight:700;">Seleccionar esquema C</span>
+                        <div class="mini-flowchart">
+                            <div class="mini-node-oval">Premut botó de planta</div>
+                            <div class="mini-arrow">↓</div>
+                            <div class="mini-node-diamond">Destí = Planta -2 (Lab)?</div>
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.35rem; width:100%; margin-top:0.2rem;">
+                                <div style="display:flex; flex-direction:column; align-items:center;">
+                                    <span style="color:#16a34a; font-weight:800; font-size:0.68rem;">SÍ</span>
+                                    <div class="mini-arrow">↓</div>
+                                    <div class="mini-node-rect" style="background:#ecfdf5; border-color:#10b981; color:#065f46; font-size:0.68rem;">
+                                        🛗 Viatjar directe a -2 (Sense comprovar clau ni pes)
+                                    </div>
+                                </div>
+                                <div style="display:flex; flex-direction:column; align-items:center;">
+                                    <span style="color:#dc2626; font-weight:800; font-size:0.68rem;">NO</span>
+                                    <div class="mini-arrow">↓</div>
+                                    <div class="mini-node-diamond" style="font-size:0.68rem; padding:0.2rem 0.3rem;">Pes &gt; 400 kg?</div>
+                                    <div style="font-size:0.65rem; color:#dc2626; margin-top:2px;">SÍ ➔ 🚨 Alarma</div>
+                                    <div style="font-size:0.65rem; color:#16a34a;">NO ➔ 🛗 Mou a 0 / -1</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

@@ -199,7 +199,7 @@ function goToStage(stageNum) {
     if (stageNum === 6) renderFlowchartActivity('act4');
     if (stageNum === 7) renderFlowchartActivity('act5');
     if (stageNum === 8) renderFlowchartActivity('act6');
-    if (stageNum === 9) setBugSimTemp(32);
+    if (stageNum === 9) setBugSimSensors(34, 20);
     if (stageNum === 10) renderTraceTable();
     if (stageNum === 11) runBlackboxTest();
     if (stageNum === 12) renderDiploma();
@@ -1171,18 +1171,6 @@ function finishStage7() {
 
 function finishStage8() {
     showVictory(8, "Activitat 6 Superada: La Barrera del Pàrquing!", "Has programat amb èxit el sistema de control d'accés complet! Ara passem als reptes avançats: comencem amb el Caçador de Bugs!");
-}
-
-function finishStage9() {
-    showVictory(9, "Repte 7 Superat: Caçador de Bugs!", "Has localitzat i resolt el bug de l'hivernacle amb èxit com un autèntic enginyer/a de programari!");
-}
-
-function finishStage10() {
-    showVictory(10, "Repte 8 Superat: Taula de Traça i Memòria!", "Has dominat el seguiment de variables i el flux intern de la memòria del caixer automàtic!");
-}
-
-function finishStage11() {
-    showVictory(11, "Repte 9 Superat: Enginyeria Inversa de la Caixa Negra!", "Has deduït amb precisió científica l'algorisme secret de l'ascensor! El teu Diploma Oficial t'espera!");
 }
 
 // ============================================================================
@@ -2304,34 +2292,60 @@ function drawAllLoopArrows() {
 // REPTES AVANÇATS (STAGES 9, 10 I 11): BUGS, TRAÇA I CAIXA NEGRA
 // ============================================================================
 
-// --- STAGE 9: REPTE 7 — CAÇADOR DE BUGS (DEPURACIÓ HIVERNACLE) ---
+// --- STAGE 9: REPTE 7 — CAÇADOR DE BUGS (DEPURACIÓ HIVERNACLE MULTI-SENSOR I BUCLE CONTINU) ---
 let bugState = {
-    temp: 32,
-    bugFixed: false,
-    selectedOption: null
+    temp: 34,
+    hum: 20,
+    fixedBug1: false,
+    fixedBug2: false
 };
 
-function setBugSimTemp(temp) {
-    bugState.temp = parseInt(temp, 10);
-    const valEl = document.getElementById('bug-temp-val');
-    const badge = document.getElementById('bug-temp-badge');
-    const slider = document.getElementById('bug-temp-slider');
-    if (valEl) valEl.textContent = `${bugState.temp} °C`;
-    if (slider) slider.value = bugState.temp;
+function setBugSimSensors(temp, hum) {
+    if (temp !== null && temp !== undefined) bugState.temp = parseInt(temp, 10);
+    if (hum !== null && hum !== undefined) bugState.hum = parseInt(hum, 10);
 
-    if (badge) {
-        if (bugState.temp < 18) {
-            badge.textContent = `❄️ Fred (${bugState.temp} °C)`;
-            badge.style.background = '#e0f2fe';
-            badge.style.color = '#0369a1';
-        } else if (bugState.temp > 26) {
-            badge.textContent = `🔥 Calor (${bugState.temp} °C)`;
-            badge.style.background = '#fee2e2';
-            badge.style.color = '#b91c1c';
+    const tempValEl = document.getElementById('bug-temp-val');
+    const humValEl = document.getElementById('bug-hum-val');
+    const tempSlider = document.getElementById('bug-temp-slider');
+    const humSlider = document.getElementById('bug-hum-slider');
+    const tempBadge = document.getElementById('bug-temp-badge');
+    const humBadge = document.getElementById('bug-hum-badge');
+
+    if (tempValEl) tempValEl.textContent = `${bugState.temp} °C`;
+    if (tempSlider) tempSlider.value = bugState.temp;
+    if (humValEl) humValEl.textContent = `${bugState.hum}%`;
+    if (humSlider) humSlider.value = bugState.hum;
+
+    if (tempBadge) {
+        if (bugState.temp > 28) {
+            tempBadge.textContent = `🔥 ${bugState.temp} °C (Calor)`;
+            tempBadge.style.background = '#fee2e2';
+            tempBadge.style.color = '#b91c1c';
+            tempBadge.style.borderColor = '#fca5a5';
+        } else if (bugState.temp < 16) {
+            tempBadge.textContent = `❄️ ${bugState.temp} °C (Fred)`;
+            tempBadge.style.background = '#e0f2fe';
+            tempBadge.style.color = '#0369a1';
+            tempBadge.style.borderColor = '#7dd3fc';
         } else {
-            badge.textContent = `🌱 Òptim (${bugState.temp} °C)`;
-            badge.style.background = '#dcfce7';
-            badge.style.color = '#15803d';
+            tempBadge.textContent = `🌱 ${bugState.temp} °C (Òptim)`;
+            tempBadge.style.background = '#dcfce7';
+            tempBadge.style.color = '#15803d';
+            tempBadge.style.borderColor = '#86efac';
+        }
+    }
+
+    if (humBadge) {
+        if (bugState.hum < 35) {
+            humBadge.textContent = `💧 ${bugState.hum}% (Sòl Sec)`;
+            humBadge.style.background = '#fef3c7';
+            humBadge.style.color = '#92400e';
+            humBadge.style.borderColor = '#fcd34d';
+        } else {
+            humBadge.textContent = `💧 ${bugState.hum}% (Sòl Humit)`;
+            humBadge.style.background = '#e0f2fe';
+            humBadge.style.color = '#0284c7';
+            humBadge.style.borderColor = '#bae6fd';
         }
     }
 }
@@ -2339,77 +2353,103 @@ function setBugSimTemp(temp) {
 function runBugDiagnosis() {
     const logBox = document.getElementById('bug-diag-log');
     const errorCard = document.getElementById('bug-fix-section');
-    const flawedNode = document.getElementById('bug-node-calefaccio-calor');
+    const flawedCalor = document.getElementById('bug-node-calor');
     const t = bugState.temp;
+    const h = bugState.hum;
 
-    if (!bugState.bugFixed) {
-        if (t > 26) {
-            if (flawedNode) flawedNode.classList.add('bug-node-flawed');
+    if (!bugState.fixedBug1 || !bugState.fixedBug2) {
+        if (!bugState.fixedBug1 && t > 28) {
+            if (flawedCalor) flawedCalor.classList.add('bug-node-flawed');
             if (logBox) {
                 logBox.style.background = '#450a0a';
                 logBox.style.color = '#fecaca';
                 logBox.style.borderColor = '#ef4444';
-                logBox.innerHTML = `🚨 <strong>BUG DETECTAT!</strong> A <strong>${t} °C</strong> (fa molta calor), l'algorisme ha seguit la fletxa SÍ cap a: <em>«Activar Calefacció 🔥»</em>! Això farà cremar les tomaqueres! Hauria d'haver activat la <strong>Ventilació ❄️</strong>!`;
+                logBox.innerHTML = `🚨 <strong>BUG 1 DETECTAT!</strong> A <strong>${t} °C</strong> (fa molta calor), l'algorisme pren la branca SÍ cap a: <em>«Activar Calefacció Tèrmica 🔥»</em>! Això farà cremar les tomaqueres! Hauria d'activar els <strong>Ventiladors ❄️</strong>!`;
             }
             if (errorCard) errorCard.style.display = 'block';
-        } else if (t < 18) {
+            return;
+        }
+
+        if (!bugState.fixedBug2 && t < 16) {
             if (logBox) {
-                logBox.style.background = '#0f172a';
-                logBox.style.color = '#38bdf8';
-                logBox.style.borderColor = '#334155';
-                logBox.innerHTML = `❄️ <strong>Comprovació correcta (${t} °C):</strong> La temperatura és baixa (&lt; 18 °C). L'algorisme activa la calefacció com toca. Però prova de posar la temperatura a <strong>32 °C</strong> per veure l'error!`;
+                logBox.style.background = '#78350f';
+                logBox.style.color = '#fef3c7';
+                logBox.style.borderColor = '#f59e0b';
+                logBox.innerHTML = `🚨 <strong>BUG 2 DETECTAT (BUCLE TRENCAT)!</strong> A <strong>${t} °C</strong> amb <strong>${h}% d'humitat</strong> (terra seca), s'activa el calefactor però la fletxa fa un salt directe al bucle de 15 minuts <strong>sense passar mai pel mòdul de reg</strong>! Les plantes s'estan morint de set en nits fredes!`;
             }
-        } else {
-            if (logBox) {
-                logBox.style.background = '#0f172a';
-                logBox.style.color = '#4ade80';
-                logBox.style.borderColor = '#334155';
-                logBox.innerHTML = `🌱 <strong>Comprovació correcta (${t} °C):</strong> Temperatura ideal. Tot apagat. Prova ara de posar la temperatura a <strong>32 °C</strong> per forçar l'error!`;
-            }
+            if (errorCard) errorCard.style.display = 'block';
+            return;
+        }
+
+        if (logBox) {
+            logBox.style.background = '#0f172a';
+            logBox.style.color = '#fde047';
+            logBox.style.borderColor = '#334155';
+            logBox.innerHTML = `⚠️ <strong>Condicions actuals (${t} °C, ${h}% humitat):</strong> Per reproduir els errors crítics, selecciona el botó <em>«☀️ Canícula Seca»</em> o <em>«❄️ Matinada Freda i Seca»</em> i torna a prémer «Executar Diagnòstic»!`;
         }
     } else {
+        // Ambdós bugs resolts
         if (logBox) {
             logBox.style.background = '#064e3b';
             logBox.style.color = '#a7f3d0';
             logBox.style.borderColor = '#10b981';
-            if (t > 26) {
-                logBox.innerHTML = `✅ <strong>Comportament correcte (${t} °C):</strong> Temperatura alta (&gt; 26 °C) ➔ S'activen els <strong>Ventiladors ❄️</strong>! Les tomaqueres estan salvades!`;
-            } else if (t < 18) {
-                logBox.innerHTML = `✅ <strong>Comportament correcte (${t} °C):</strong> Temperatura baixa (&lt; 18 °C) ➔ S'activa la <strong>Calefacció 🔥</strong> per protegir del fred!`;
-            } else {
-                logBox.innerHTML = `✅ <strong>Comportament correcte (${t} °C):</strong> Temperatura suau (18-26 °C) ➔ Tot apagat, estalvi d'energia 🌱.`;
-            }
+            const accioClima = t > 28 ? 'Ventiladors freds activats ❄️' : (t < 16 ? 'Calefactor tèrmic activat 🔥' : 'Climatització en repòs 🌱');
+            const accioReg = h < 35 ? 'Reg per degoteig obert 💧' : 'Vàlvula de reg tancada 🛑';
+            logBox.innerHTML = `✅ <strong>BUCLE CONTINU EXECUTAT IMPEBLEMENT:</strong><br>1r Pas (Climatització): ${accioClima} ➔ 2n Pas (Reg continu): ${accioReg} ➔ 3r Pas: Pausa de 15 min ➔ <strong>Retorn al bucle ↺ per a la següent lectura de sensors</strong>!`;
         }
     }
 }
 
-function selectBugFixOption(optIndex) {
-    bugState.selectedOption = optIndex;
-    for (let i = 1; i <= 3; i++) {
-        const el = document.getElementById(`bug-opt-${i}`);
-        if (el) el.classList.toggle('selected', i === optIndex);
-    }
-}
-
-function applyBugFix() {
+function applyGreenhouseBugFixes() {
     const fb = document.getElementById('bug-fix-feedback');
     const finishBtn = document.getElementById('btn-finish-stage-9');
-    const flawedNode = document.getElementById('bug-node-calefaccio-calor');
+    const flawedCalor = document.getElementById('bug-node-calor');
+    const bypassAlert = document.getElementById('bug-arrow-fred-bypass');
+    const loopInd = document.getElementById('greenhouse-loop-indicator');
 
-    if (bugState.selectedOption === 1) { // Opció 1: Canviar l'acció a "Activar Ventiladors d'aire fred ❄️"
-        bugState.bugFixed = true;
-        if (flawedNode) {
-            flawedNode.classList.remove('bug-node-flawed');
-            flawedNode.classList.add('bug-node-fixed');
-            flawedNode.innerHTML = `Activar Ventiladors d'aire fred ❄️`;
+    const opt1 = document.querySelector('input[name="bug-fix-1"]:checked');
+    const opt2 = document.querySelector('input[name="bug-fix-2"]:checked');
+
+    if (!opt1 || !opt2) {
+        alert("⚠️ Si us plau, respon a les dues preguntes del Taller de Depuració.");
+        return;
+    }
+
+    if (opt1.value === 'fans' && opt2.value === 'reconnect') {
+        bugState.fixedBug1 = true;
+        bugState.fixedBug2 = true;
+
+        if (flawedCalor) {
+            flawedCalor.classList.remove('bug-node-flawed');
+            flawedCalor.classList.add('bug-node-fixed');
+            flawedCalor.innerHTML = `Activar Ventiladors i Extractors Freds ❄️`;
         }
+
+        if (bypassAlert) {
+            bypassAlert.style.background = '#ecfdf5';
+            bypassAlert.style.borderColor = '#10b981';
+            bypassAlert.style.color = '#065f46';
+            bypassAlert.innerHTML = `✅ Fletxa connectada correctament al Sistema de Reg abans del bucle`;
+        }
+
+        if (loopInd) {
+            loopInd.style.borderLeftColor = '#10b981';
+            loopInd.style.borderTopColor = '#10b981';
+            loopInd.style.borderBottomColor = '#10b981';
+            const t = loopInd.querySelector('span');
+            if (t) t.style.color = '#059669';
+            const arr = loopInd.querySelector('div');
+            if (arr) arr.style.color = '#059669';
+        }
+
         if (fb) {
             fb.style.display = 'block';
             fb.style.background = '#ecfdf5';
             fb.style.color = '#065f46';
             fb.style.border = '2px solid #10b981';
-            fb.innerHTML = `🎉 <strong>MOLT BÉ! Has eliminat el bug!</strong><br>Ara quan la temperatura supera els 26 °C, el sistema engega la ventilació correctament. L'hivernacle funciona a la perfecció!`;
+            fb.innerHTML = `🎉 <strong>AMBDÓS BUGS HAN ESTAT REPARATS AMB ÈXIT!</strong><br>Ara l'algorisme engega els ventiladors en dies caniculars i sempre comprova la humitat del sòl en nits fredes abans de reiniciar el bucle de 15 minuts.`;
         }
+
         if (finishBtn) finishBtn.style.display = 'inline-block';
         runBugDiagnosis();
     } else {
@@ -2419,60 +2459,76 @@ function applyBugFix() {
             fb.style.background = '#fef2f2';
             fb.style.color = '#991b1b';
             fb.style.border = '2px solid #ef4444';
-            fb.innerHTML = `❌ <strong>Aquesta opció no resol el problema (-15 XP).</strong> Revisa quina acció és lògica fer quan fa massa calor (> 26 °C).`;
+            fb.innerHTML = `❌ <strong>Alguna de les solucions seleccionades no és correcta (-15 XP).</strong> Revisa quina acció refresca l'ambient quan fa massa calor i com ha d'enllaçar el flux de la calefacció amb el reg.`;
         }
     }
+}
+
+function finishStage9() {
+    showVictory(9, "Repte 7 Superat: Caçador de Bugs 🐛", "Has trobat els 2 errors de codi, has restaurat el bucle continu i has salvat les tomaqueres de l'hivernacle!");
 }
 
 // --- STAGE 10: REPTE 8 — TAULA DE TRAÇA I VARIABLES (CAIXER AUTOMÀTIC) ---
 const TRACE_STEPS_DATA = [
     {
         pas: "Inici",
-        accio: "Inserció de targeta",
+        nodeId: "atm-node-0",
+        nodeNom: "💳 Inserir Targeta i PIN",
+        accio: "Client introdueix targeta",
         intents: 0,
         saldo: "120 €",
-        estat: "Client introdueix targeta",
-        explicacio: "Valors inicials a la memòria: Intents = 0, Saldo = 120 €."
+        estat: "Sessió iniciada a la memòria",
+        explicacio: "Valors inicials a la memòria RAM: Intents = 0, Saldo = 120 €. La màquina espera que l'usuari teclegi el PIN."
     },
     {
         pas: "Pas 1",
-        accio: "PIN '9999' (Incorrecte)",
+        nodeId: "atm-node-6",
+        nodeNom: "Intents = Intents + 1",
+        accio: "PIN '9999' erroni (1r error)",
         intents: 1,
         saldo: "120 €",
-        estat: "1r error (Intents passa a 1)",
-        explicacio: "PIN incorrecte: la variable Intents s'incrementa en 1 (0 + 1 = 1). Com que 1 < 3, permet reintentar."
+        estat: "Intents s'incrementa a 1 (1 < 3)",
+        explicacio: "La decisió «PIN correcte?» pren la branca NO. S'executa «Intents = Intents + 1» (0 + 1 = 1). Com que 1 < 3, la decisió «Intents ≥ 3?» pren el camí de bucle ↺ per reintentar."
     },
     {
         pas: "Pas 2",
-        accio: "PIN '1111' (Incorrecte)",
+        nodeId: "atm-node-6",
+        nodeNom: "Intents = Intents + 1",
+        accio: "PIN '1111' erroni (2n error)",
         intents: 2,
         saldo: "120 €",
-        estat: "2n error (Intents passa a 2)",
-        explicacio: "Torna a fallar: Intents s'incrementa de nou (1 + 1 = 2). Com que 2 < 3, permet un últim intent."
+        estat: "Intents s'incrementa a 2 (2 < 3)",
+        explicacio: "Torna a fallar el PIN (branca NO). La memòria suma un altre intent fallit: Intents passa a 2. El bucle ↺ li dóna un últim intent."
     },
     {
         pas: "Pas 3",
-        accio: "PIN '1234' (Correcte!)",
+        nodeId: "atm-node-2",
+        nodeNom: "Demanar import a retirar",
+        accio: "PIN '1234' correcte!",
         intents: 2,
         saldo: "120 €",
         estat: "PIN validat amb èxit",
-        explicacio: "PIN correcte! El caixer surt del bucle d'errors i sol·licita l'import a retirar (40 €)."
+        explicacio: "El PIN és vàlid: la decisió pren la branca SÍ. Surt del bucle d'errors i avança cap a «Demanar import a retirar (40 €)»."
     },
     {
         pas: "Pas 4",
+        nodeId: "atm-node-3",
+        nodeNom: "Import (40 €) ≤ Saldo?",
         accio: "Comprovació: 40 € ≤ 120 €? (SÍ)",
         intents: 2,
-        saldo: "80 €",
-        estat: "Saldo restant: 120 - 40 = 80 €",
-        explicacio: "Com que hi ha prou saldo, s'executa l'operació matemàtica: Saldo = Saldo - 40 € = 80 €."
+        saldo: "120 €",
+        estat: "Condició SÍ: prou diners",
+        explicacio: "El rombe «Import ≤ Saldo?» avalua cert (40 € ≤ 120 €). El flux continua cap a l'operació matemàtica del saldo."
     },
     {
         pas: "Pas 5",
-        accio: "Dispensar 40 € i rebut",
+        nodeId: "atm-node-4",
+        nodeNom: "Saldo = Saldo - 40 €",
+        accio: "Dispensar 40 € i Rebut 💵",
         intents: 2,
         saldo: "80 €",
-        estat: "Operació finalitzada amb èxit 💵",
-        explicacio: "S'entreguen els bitllets i la sessió es tanca amb èxit."
+        estat: "Saldo = 120 - 40 = 80 €",
+        explicacio: "S'executa l'operació matemàtica a la memòria: Saldo passa de 120 € a 80 €, es dispensen els 40 € i la sessió finalitza amb èxit."
     }
 ];
 
@@ -2483,9 +2539,13 @@ function renderTraceTable() {
     const tbody = document.getElementById('trace-table-body');
     const chipIntents = document.getElementById('trace-chip-intents');
     const chipSaldo = document.getElementById('trace-chip-saldo');
-    const chipEstat = document.getElementById('trace-chip-estat');
     const logEl = document.getElementById('trace-step-log');
     if (!tbody) return;
+
+    // Desactivar highlight anterior a tots els nodes del diagrama
+    document.querySelectorAll('.atm-flow-node').forEach(node => {
+        node.classList.remove('active-node');
+    });
 
     tbody.innerHTML = '';
     for (let i = 0; i <= traceCurrentStep; i++) {
@@ -2494,8 +2554,9 @@ function renderTraceTable() {
         if (i === traceCurrentStep) tr.className = 'active-row';
         tr.innerHTML = `
             <td><strong>${item.pas}</strong></td>
+            <td style="color:#6d28d9; font-weight:700;">${item.nodeNom}</td>
             <td>${item.accio}</td>
-            <td style="color:#d97706; font-weight:800;">${item.intents}</td>
+            <td style="color:#d97706; font-weight:800;">${item.intents} / 3</td>
             <td style="color:#059669; font-weight:800;">${item.saldo}</td>
             <td>${item.estat}</td>
         `;
@@ -2505,8 +2566,13 @@ function renderTraceTable() {
     const curr = TRACE_STEPS_DATA[traceCurrentStep];
     if (chipIntents) chipIntents.textContent = `${curr.intents} / 3`;
     if (chipSaldo) chipSaldo.textContent = curr.saldo;
-    if (chipEstat) chipEstat.textContent = curr.estat;
-    if (logEl) logEl.innerHTML = `📍 <strong>${curr.pas}:</strong> ${curr.explicacio}`;
+    if (logEl) logEl.innerHTML = `📍 <strong>${curr.pas} (${curr.nodeNom}):</strong> ${curr.explicacio}`;
+
+    // Il·luminar el node actiu al diagrama de flux
+    const activeBlock = document.getElementById(curr.nodeId);
+    if (activeBlock) {
+        activeBlock.classList.add('active-node');
+    }
 }
 
 function runTraceNextStep() {
@@ -2523,9 +2589,40 @@ function resetTraceSim() {
 
 function selectTraceAnswer(qNum, answerVal) {
     traceUserAnswers[qNum] = answerVal;
-    for (let i = 1; i <= 4; i++) {
-        const el = document.getElementById(`trace-q${qNum}-opt-${i}`);
-        if (el) el.classList.toggle('selected', el.getAttribute('data-val') === String(answerVal));
+
+    // Actualitzar visualment tots els botons de la pregunta
+    if (qNum === 1) {
+        [0, 1, 2, 3].forEach(val => {
+            const btn = document.getElementById(`trace-q1-opt-${val}`);
+            if (btn) {
+                const isSel = (answerVal === val);
+                btn.classList.toggle('selected', isSel);
+                btn.innerHTML = `${val} ${val === 1 ? 'intent' : 'intents'} ${isSel ? ' (Seleccionat ✔️)' : ''}`;
+            }
+        });
+    } else if (qNum === 2) {
+        [120, 80, 40, 0].forEach(val => {
+            const btn = document.getElementById(`trace-q2-opt-${val}`);
+            if (btn) {
+                const isSel = (answerVal === val);
+                btn.classList.toggle('selected', isSel);
+                btn.innerHTML = `${val} € ${isSel ? ' (Seleccionat ✔️)' : ''}`;
+            }
+        });
+    } else if (qNum === 3) {
+        const labels = {
+            block: "SÍ a «Intents ≥ 3» ➔ Bloquejar targeta per seguretat",
+            retry: "NO a «Intents ≥ 3» ➔ Donar 5 intents més",
+            money: "Entregar els 40 € igualment"
+        };
+        ['block', 'retry', 'money'].forEach(key => {
+            const btn = document.getElementById(`trace-q3-opt-${key}`);
+            if (btn) {
+                const isSel = (answerVal === key);
+                btn.classList.toggle('selected', isSel);
+                btn.innerHTML = `${labels[key]} ${isSel ? ' (Seleccionat ✔️)' : ''}`;
+            }
+        });
     }
 }
 
@@ -2535,7 +2632,7 @@ function checkTraceAnswers() {
 
     const q1Ok = traceUserAnswers[1] === 2;
     const q2Ok = traceUserAnswers[2] === 80;
-    const q3Ok = traceUserAnswers[3] === 1;
+    const q3Ok = traceUserAnswers[3] === 'block';
 
     if (q1Ok && q2Ok && q3Ok) {
         if (fb) {
@@ -2543,7 +2640,7 @@ function checkTraceAnswers() {
             fb.style.background = '#ecfdf5';
             fb.style.color = '#065f46';
             fb.style.border = '2px solid #10b981';
-            fb.innerHTML = `🎉 <strong>EXCEL·LENT! Has desxifrat la traça a la perfecció!</strong><br>Has entès com un algorisme utilitza variables i operacions matemàtiques a la memòria per prendre decisions.`;
+            fb.innerHTML = `🎉 <strong>EXCEL·LENT! Has desxifrat la traça del diagrama a la perfecció!</strong><br>Has entès com un algorisme utilitza variables de memòria, condicions límit (Intents ≥ 3) i bucles ↺ per prendre decisions de seguretat.`;
         }
         if (finishBtn) finishBtn.style.display = 'inline-block';
     } else {
@@ -2553,9 +2650,13 @@ function checkTraceAnswers() {
             fb.style.background = '#fef2f2';
             fb.style.color = '#991b1b';
             fb.style.border = '2px solid #ef4444';
-            fb.innerHTML = `❌ <strong>Alguna de les respostes no és correcta (-15 XP).</strong> Revisa la taula de traça de dalt per comprovar els valors de les variables a cada pas.`;
+            fb.innerHTML = `❌ <strong>Alguna de les respostes no és correcta (-15 XP).</strong> Revisa la taula de traça i el diagrama per comprovar els valors de les variables a cada iteració.`;
         }
     }
+}
+
+function finishStage10() {
+    showVictory(10, "Repte 8 Superat: Taula de Traça 📊", "Has seguit l'execució pas a pas de la memòria d'un caixer automàtic i has comprès com funcionen les variables!");
 }
 
 // --- STAGE 11: REPTE 9 — LA CAIXA NEGRA (ENGINYERIA INVERSA D'UN ASCENSOR) ---
@@ -2678,6 +2779,10 @@ function verifyBlackboxCandidate() {
             fb.innerHTML = `❌ <strong>Aquest diagrama no coincideix amb els experiments realitzats (-15 XP).</strong> Revisa les proves del teu quadern: fixat què passa amb la sobrecàrrega a qualsevol pis i quan s'exigeix la clau.`;
         }
     }
+}
+
+function finishStage11() {
+    showVictory(11, "Repte 9 Superat: Enginyeria Inversa de la Caixa Negra!", "Has deduït amb precisió científica l'algorisme secret de l'ascensor! El teu Diploma Oficial t'espera a la Fase 12!");
 }
 
 window.addEventListener('resize', () => {
